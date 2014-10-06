@@ -1,0 +1,57 @@
+
+# Generate interactive ROC plots from R using ggplot
+
+Most ROC curve plots obscure the cutoff values and inhibit
+    interpretation and comparison of multiple curves. This attempts to address
+    those shortcomings by providing plotting and interactive tools. Functions
+    are provided to generate an interactive ROC curve plot for web use, and
+    print versions. An interacive Shiny application is also included.
+    
+## Installation
+
+This package is not currently on CRAN. To install, use `devtools`
+
+```{r install}
+devtools::install_github("sachsmc/plotROC")
+```
+
+## Basic usage
+
+See examples live [here](http://sachsmc.github.io/plotROC)
+
+```{r test-a, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+library(plotROC)
+D.ex <- rbinom(100, 1, .5)
+
+rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
+
+myrocplot <- ggroc(rocdata)
+
+cat(svgize_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "a"))
+```
+
+That is an svg element. Try zooming in!
+
+## Generate an interactive plot to view in Rstudio viewer or web browser
+
+```{r inter, eval = FALSE}
+standalone_svg_roc(rocdata)
+```
+
+
+# Themes and annotations
+
+```{r test-b, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+library(ggthemes)
+myplot2 <- myrocplot + theme_igray()
+
+cat(svgize_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "b"))
+```
+
+```{r test-c, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+
+myplot2 <- myrocplot + theme_solarized() + annotate("text", x = .5, y = .5, label = "Reference line", hjust = 0, vjust = 1)
+
+cat(svgize_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "c"))
+```
+
