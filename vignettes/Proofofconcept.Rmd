@@ -1,0 +1,92 @@
+---
+title: "ROC Curves using ggplot + d3.js"
+author: "Michael Sachs"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+      self_contained: false
+vignette: >
+  %\VignetteIndexEntry{proof}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+```{r test-a, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+library(plotROC)
+D.ex <- rbinom(100, 1, .5)
+
+rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
+
+myrocplot <- ggroc(rocdata)
+
+cat(svgize_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "a"))
+```
+
+# Themes and annotations
+
+```{r test-b, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+library(ggthemes)
+myplot2 <- myrocplot + theme_igray()
+
+cat(svgize_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "b"))
+```
+
+```{r test-c, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+
+myplot2 <- myrocplot + theme_solarized() + annotate("text", x = .5, y = .5, label = "Reference line", hjust = 0, vjust = 1)
+
+cat(svgize_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "c"))
+```
+
+# Just for fun, transitions
+
+
+```{r test-d, fig.keep='none', results = 'asis', echo = TRUE, fig.width=10, fig.height=6}
+library(ggplot2)
+library(ggthemes)
+library(gridSVG)
+library(grid)
+
+p <- ggplot(mtcars, aes(x = mpg, y = hp)) + geom_point(size = 5) + 
+  scale_y_continuous(limits = c(-50, 500)) + scale_x_continuous(limits = c(0, 50))
+p
+
+grid.force()
+
+objnames <- grid::grid.ls(print = FALSE)$name
+ptns <- grep("geom_point.points", objnames, value = TRUE)[1]
+
+grid.garnish(ptns, tip = paste(mtcars$cyl), group = FALSE, global = TRUE, grep = TRUE)
+
+ptns <- paste0("cars", ptns)
+
+grid.export(NULL, prefix = "cars")$svg
+```
+
+<button id="moveme">Move the points!</button>
+
+<script>
+
+function randCol() {
+
+    return "rgb(" + Math.round(Math.random()*255) + ", " + Math.round(Math.random()*255) + ", " + Math.round(Math.random()*255) + ")";
+
+} 
+
+d3.select("#moveme").on("click", function(){
+
+  d3.selectAll("[id^='`r ptns`.1.']")
+    .transition().duration(500)
+    .attr("fill", randCol())
+    .attr("y", function(d){ return Number(d3.select(this).attr("y")) + 50 * (Math.random() - .5); })
+    .attr("x", function(d){ return Number(d3.select(this).attr("x")) + 25 * (Math.random() - .5); });
+  
+});
+
+
+</script>
+
+
+
+
+

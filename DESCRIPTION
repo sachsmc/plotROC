@@ -1,0 +1,15 @@
+Package: plotROC
+Type: Package
+Title: Generates useful ROC curve charts for print and interactive use
+Version: 0.1
+Date: 2014-10-06
+Author: Michael Sachs
+Maintainer: Michael Sachs <sachsmc@gmail.com>
+Description: Most ROC curve plots obscure the cutoff values and inhibit
+    interpretation and comparison of multiple curves. This attempts to address
+    those shortcomings by providing plotting and interactive tools. Functions
+    are provided to generate an interactive ROC curve plot for web use, and
+    print versions. An interacive Shiny application is also included.
+License: MIT + file LICENSE
+Depends:
+    R (>= 3.0.0)
