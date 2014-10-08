@@ -5,6 +5,9 @@
 \usage{
 modCss(font.size)
 }
+\arguments{
+\item{font.size}{String describing font size}
+}
 \description{
 Add custom font size, more customizations to come
 }

@@ -1,4 +1,6 @@
 
+[![Build Status](https://travis-ci.org/sachsmc/plotROC.png?branch=master)](https://travis-ci.org/sachsmc/plotROC)
+
 # Generate interactive ROC plots from R using ggplot
 
 Most ROC curve plots obscure the cutoff values and inhibit
@@ -38,6 +40,13 @@ That is an svg element. Try zooming in!
 standalone_svg_roc(rocdata)
 ```
 
+# For using in print
+
+```{r print, fig.width = 6, fig.height = 6}
+printize_roc(myrocplot, rocdata)
+```
+
+
 
 # Themes and annotations
 
@@ -55,3 +64,13 @@ myplot2 <- myrocplot + theme_solarized() + annotate("text", x = .5, y = .5, labe
 cat(svgize_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "c"))
 ```
 
+
+# Acknowledgements
+
+This package would not be possible without the following:
+
+  - [ggplot2](http://ggplot2.org/)
+  - [gridSVG](http://sjp.co.nz/projects/gridsvg/)
+  - [d3.js](http://d3js.org)
+  
+  

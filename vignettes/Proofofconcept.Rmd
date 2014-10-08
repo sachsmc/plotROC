@@ -38,6 +38,14 @@ myplot2 <- myrocplot + theme_solarized() + annotate("text", x = .5, y = .5, labe
 cat(svgize_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "c"))
 ```
 
+# For using in print
+
+```{r print, fig.width = 6, fig.height = 6}
+printize_roc(myrocplot, rocdata)
+```
+
+
+
 # Just for fun, transitions
 
 

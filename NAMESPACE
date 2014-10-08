@@ -2,5 +2,6 @@
 
 export(calculate_roc)
 export(ggroc)
+export(printize_roc)
 export(standalone_svg_roc)
 export(svgize_roc)
