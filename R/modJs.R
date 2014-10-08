@@ -1,4 +1,6 @@
 #' Modify js to use custom name
+#' @param name Name of the points grob
+#' @param prefix Prefix of the svg
 #' 
 #' @keywords Internal
 

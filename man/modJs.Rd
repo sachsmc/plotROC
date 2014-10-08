@@ -5,6 +5,11 @@
 \usage{
 modJs(name, prefix)
 }
+\arguments{
+\item{name}{Name of the points grob}
+
+\item{prefix}{Prefix of the svg}
+}
 \description{
 Modify js to use custom name
 }

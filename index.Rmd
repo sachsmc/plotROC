@@ -1,5 +1,5 @@
 ---
-title: "ROC Curves using ggplot + d3.js"
+title: "ROC Curves using ggplot2 + gridSVG + d3.js"
 author: "Michael Sachs"
 date: "`r Sys.Date()`"
 output: 
@@ -21,6 +21,9 @@ margin-left: -160px;
 <a href="http://github.com/sachsmc/plotROC">View on github</a>
 </header>
 
+
+# Interactive SVG ROC Curves
+## Hover over to view the cutoff values
 
 ```{r test-a, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
 library(plotROC)
@@ -56,6 +59,18 @@ cat(svgize_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "b"))
 myplot2 <- myrocplot + theme_solarized() + annotate("text", x = .5, y = .5, label = "Reference line", hjust = 0, vjust = 1)
 
 cat(svgize_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "c"))
+```
+
+# For using in print
+
+```{r print, fig.width = 6, fig.height = 6}
+printize_roc(myrocplot, rocdata)
+```
+
+# Themes work in print too, but I don't recommend colors
+
+```{r print2, fig.width = 6, fig.height = 6}
+printize_roc(myrocplot, rocdata) + theme_igray() + ggtitle("My awesome new biomarker")
 ```
 
 # Just for fun, transitions
@@ -107,6 +122,14 @@ d3.select("#moveme").on("click", function(){
 </script>
 
 
+# Acknowledgements
+
+This package would not be possible without the following:
+
+  - [ggplot2](http://ggplot2.org/)
+  - [gridSVG](http://sjp.co.nz/projects/gridsvg/)
+  - [d3.js](http://d3js.org)
+  
 
 
 
