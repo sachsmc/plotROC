@@ -13,9 +13,13 @@ ggroc <- function(rocdata){
   
   stopifnot("rocdata" %in% class(rocdata))
   
+  min_br <-  c(seq(0, .1, by = .01), seq(.9, 1, by = .01))
+  br <- c(0, .1, .25, .5, .75, .9, 1)
+  
   p1 <- ggplot2::ggplot(rocdata, ggplot2::aes_string(x = "FPF", y = "TPF"))  + ggplot2::geom_point(color = "red", alpha = 0) +
     ggplot2::geom_abline(intercept = 0, slope = 1, lty = 2) + 
-    ggplot2::scale_x_continuous("False positive fraction") + ggplot2::scale_y_continuous("True positive fraction") 
+    ggplot2::scale_x_continuous("False positive fraction", minor_breaks = min_br, breaks = br) + 
+    ggplot2::scale_y_continuous("True positive fraction", minor_breaks = min_br, breaks = br) 
     
   if(nrow(rocdata) > 20){ p1 + ggplot2::geom_path() } else {
     
