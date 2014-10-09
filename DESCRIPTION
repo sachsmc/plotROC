@@ -1,7 +1,7 @@
 Package: plotROC
 Type: Package
 Title: Generates useful ROC curve charts for print and interactive use
-Version: 0.2
+Version: 0.3
 Date: 2014-10-08
 Author: Michael Sachs
 Maintainer: Michael Sachs <sachsmc@gmail.com>

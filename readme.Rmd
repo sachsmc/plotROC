@@ -20,6 +20,7 @@ devtools::install_github("sachsmc/plotROC")
 ## Basic usage
 
 See examples live [here](http://sachsmc.github.io/plotROC)
+See the Shiny web application here: http://sachsmc.shinyapps.io/plotROC
 
 ```{r test-a, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
 library(plotROC)
