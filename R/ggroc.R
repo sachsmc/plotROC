@@ -77,14 +77,17 @@ printize_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20){
 #' @param font.size Character string that determines font size of cutoff labels
 #' @param prefix A string to assign to the objects within the svg. Enables
 #'   unique idenfication by the javascript code
+#'  @param width Width in inches of plot
+#'  @param height Height in inches of plot
 #'   
 #' @export
 #' 
 #' @return A string containing the svg code necessary to plot the ROC curve in a
 #'   browser
 #'   
-svgize_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix = "a"){
+svgize_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix = "a", width = 6, height = 6){
   
+  pdf(tempfile(fileext= ".pdf"), width = width, height = height)
   print(ggroc_p)
   grid::grid.force()
   
@@ -99,6 +102,7 @@ svgize_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix = "a"){
   tmpFile <- tempfile()
   svgString <- gridSVG::grid.export(name = tmpFile, prefix = prefix)$svg
   
+  dev.off()
   svgString <- paste(readLines(tmpFile, warn = FALSE), collapse = "\n")
   
   d3String <- getD3()
