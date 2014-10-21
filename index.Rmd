@@ -24,7 +24,6 @@ margin-left: -160px;
 
 # Interactive SVG ROC Curves
 
-View the Shiny application here: http://sachsmc.shinyapps.io/plotROC
 
 ## Hover over to view the cutoff values
 
@@ -34,7 +33,7 @@ D.ex <- rbinom(100, 1, .5)
 
 rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
 
-myrocplot <- ggroc(rocdata)
+myrocplot <- ggroc(rocdata, label = "Example")
 
 cat(export_interactive_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "a"))
 ```
@@ -76,9 +75,8 @@ plot_journal_roc(myrocplot, rocdata) + theme_igray() + ggtitle("My awesome new b
 ```{r multi, fig.width = 6, fig.height = 6}
 D.ex <- rbinom(100, 1, .5)
 
-rocdata1 <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
-rocdata2 <- calculate_roc(rnorm(100, mean = D.ex, sd = .5), D.ex)
-datalist <- list(rocdata1, rocdata2)
+fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex, sd = .4), M3 = runif(100), D = D.ex)
+datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
 
 rocplot <- multi_ggroc(datalist)
 plot_journal_roc(rocplot, datalist)
@@ -87,6 +85,20 @@ plot_journal_roc(rocplot, datalist)
 ```{r test-multi, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
 cat(export_interactive_roc(rocplot, cutoffs = lapply(datalist, function(d) d$c), font.size = "12px", prefix = "bmulti"))
 ```
+
+## Labels
+```{r multi2, fig.width = 6, fig.height = 6}
+D.ex <- rbinom(100, 1, .5)
+
+fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex, sd = .4), M3 = runif(100), D = D.ex)
+datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
+
+rocplot <- multi_ggroc(datalist, label = c("M1", "M2", "M3"))
+plot_journal_roc(rocplot, datalist)
+```
+
+
+
 
 # Just for fun, transitions
 

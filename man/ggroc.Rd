@@ -3,7 +3,8 @@
 \alias{ggroc}
 \title{Plot an ROC curve}
 \usage{
-ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF")
+ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF", label = NULL,
+  label.adj.x = 0, label.adj.y = 0, label.angle = 45)
 }
 \arguments{
 \item{rocdata}{Data frame as returned by calculate_roc}
@@ -11,6 +12,14 @@ ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF")
 \item{fpf_string}{Column name identifying false positive fraction}
 
 \item{tpf_string}{Column name identifying true positive fraction}
+
+\item{label}{Optional direct label for the ROC curve}
+
+\item{label.adj.x}{Adjustment for the positioning of the label}
+
+\item{label.adj.y}{Adjustment for the positioning of the label}
+
+\item{label.angle}{Adjustment for angle of label}
 }
 \value{
 A ggplot object

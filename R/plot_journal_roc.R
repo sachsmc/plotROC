@@ -62,7 +62,7 @@ plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20){
         
       }
   
-  ggroc_p + geom_abline(intercept = 0, slope = 1, lty = 1, lwd = .5, color = "grey90")
+  ggroc_p + ggplot2::geom_abline(intercept = 0, slope = 1, lty = 1, lwd = .5, color = "grey90")
   
   }
   
