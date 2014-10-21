@@ -3,159 +3,108 @@
 #' Given a result computed by \link{calculate_roc}, plot the curve using ggplot and sensible defaults
 #' 
 #' @param rocdata Data frame as returned by calculate_roc
+#' @param fpf_string Column name identifying false positive fraction
+#' @param tpf_string Column name identifying true positive fraction
+#' @param label Optional direct label for the ROC curve
+#' @param label.adj.x Adjustment for the positioning of the label
+#' @param label.adj.y Adjustment for the positioning of the label
+#' @param label.angle Adjustment for angle of label
 #' 
 #' @export
 #' 
 #' @return A ggplot object
 #' 
 
-ggroc <- function(rocdata){
+ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", label = NULL, label.adj.x = 0, label.adj.y = 0, label.angle = 45){
   
-  stopifnot("rocdata" %in% class(rocdata))
+  stopifnot(fpf_string %in% colnames(rocdata))
+  stopifnot(tpf_string %in% colnames(rocdata))
   
   min_br <-  c(seq(0, .1, by = .01), seq(.9, 1, by = .01))
   br <- c(0, .1, .25, .5, .75, .9, 1)
   
-  p1 <- ggplot2::ggplot(rocdata, ggplot2::aes_string(x = "FPF", y = "TPF"))  + ggplot2::geom_point(color = "red", alpha = 0) +
+  p1 <- ggplot2::ggplot(rocdata, ggplot2::aes_string(x = fpf_string, y = tpf_string))  + ggplot2::geom_point(color = "red", alpha = 0) +
     ggplot2::geom_abline(intercept = 0, slope = 1, lty = 2) + 
     ggplot2::scale_x_continuous("False positive fraction", minor_breaks = min_br, breaks = br) + 
-    ggplot2::scale_y_continuous("True positive fraction", minor_breaks = min_br, breaks = br) 
+    ggplot2::scale_y_continuous("True positive fraction", minor_breaks = min_br, breaks = br) + ggplot2::geom_path() 
     
-  if(nrow(rocdata) > 20){ p1 + ggplot2::geom_path() } else {
+  if(!is.null(label)){
     
-    p1 + ggplot2::geom_line()
+    xy <- rocdata[rocdata$TPF + rocdata$FPF < 1, c(fpf_string, tpf_string)][1,]
+    X <- xy[1] + label.adj.x + .05
+    Y <- xy[2] - .05 + label.adj.y
+    p1 <- p1 + ggplot2::geom_text(data = data.frame(FPF = X, TPF = Y, label = label), 
+                                  ggplot2::aes_string(x = "FPF", y  = "TPF", label = "label"), angle = label.angle)
     
   }
   
+  p1
+    
+  
 }
 
-
-#' Plot an ROC curve for use in print
+#' Plot multiple ROC curves
 #' 
-#' Given a ggroc object, creates a plot suitable for print, with sensible defaults
+#' Given a list of results computed by \link{calculate_roc}, plot the curve using ggplot and sensible defaults
 #' 
-#' @param ggroc_p An object as returned by \link{ggroc}. It can be modified with
-#'   annotations, themes, etc.
-#' @param rocdata An object as returned by \link{ggroc}. It can be modified with annotations, themes, etc. 
-#' @param font.size Integer that determines font size of cutoff labels
-#' @param n.cuts Number of cutoffs to display
-#' 
+#' @param datalist List of data frames as returned by calculate_roc
+#' @param fpf_string Column names identifying false positive fraction
+#' @param tpf_string Column names identifying true positive fraction
+#' @param lty Line types to distinguish curves
+#' @param label Optional vector of direct labels for the ROC curve, same length as \code{datalist}
+#' @param label.adj.x Adjustment for the positioning of the label, same length as \code{datalist}
+#' @param label.adj.y Adjustment for the positioning of the label, same length as \code{datalist}
+#' @param label.angle Adjustment for angle of label, same length as \code{datalist}
 #' 
 #' @export
 #' 
 #' @return A ggplot object
-printize_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20){
+#' 
+
+multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf_string = rep("TPF", length(datalist)), 
+                        lty = 1:length(datalist), label = NULL, label.adj.x = rep(0, length(datalist)), 
+                        label.adj.y = rep(0, length(datalist)), label.angle = rep(45, length(datalist))){
   
-  if(nrow(rocdata) < n.cuts){ 
-    dex <- 1:nrow(rocdata)
-  } else {
+  stopifnot(all(sapply(1:length(datalist), function(i) fpf_string[i] %in% colnames(datalist[[i]]))))
+  stopifnot(all(sapply(1:length(datalist), function(i) tpf_string[i] %in% colnames(datalist[[i]]))))
+  
+  min_br <-  c(seq(0, .1, by = .01), seq(.9, 1, by = .01))
+  br <- c(0, .1, .25, .5, .75, .9, 1)
+  
+  p1 <- ggplot2::ggplot(datalist[[1]], ggplot2::aes_string(x = fpf_string[1], y = tpf_string[1]))  + ggplot2::geom_point(color = "red", alpha = 0) +
+    ggplot2::geom_abline(intercept = 0, slope = 1, lty = 1, color = "white") + 
+    ggplot2::scale_x_continuous("False positive fraction", minor_breaks = min_br, breaks = br) + 
+    ggplot2::scale_y_continuous("True positive fraction", minor_breaks = min_br, breaks = br) + ggplot2::geom_path(lty = lty[1]) 
+  
+  if(!is.null(label)){
     
-    dex <- seq(1, nrow(rocdata), length.out = n.cuts)
+    xy <- datalist[[1]][datalist[[1]]$TPF + datalist[[1]]$FPF < 1, c(fpf_string[1], tpf_string[1])][1,]
+    X <- xy[1] + label.adj.x[1] + .05
+    Y <- xy[2] - .05 + label.adj.y[1]
+    p1 <- p1 + ggplot2::geom_text(data = data.frame(FPF = X, TPF = Y, label = label[1]), 
+                                  ggplot2::aes_string(x = "FPF", y  = "TPF", label = "label"), angle = label.angle[1])
     
   }
   
-  subdat <- rocdata[dex, ]
-  strdat <- subdat
-  strdat$FPF <- strdat$FPF - .01
-  strdat$TPF <- strdat$TPF + .01
-  strdat$c <- paste(round(strdat$c, 1))
-  
-  ggroc_p + ggplot2::theme_bw() + ggplot2::geom_point(data = subdat, ggplot2::aes_string(x = "FPF", y = "TPF")) + 
-    ggplot2::geom_text(data = strdat, ggplot2::aes_string(x = "FPF", y = "TPF", label = "c"), hjust = 1, vjust = 0, size = font.size)
-  
-}
-
-#' Generate svg code for an ROC curve object. Includes necessary styling and
-#' Javascript code
-#' 
-#' If you intend to include more than one of these objects in a single page, use
-#' a different \code{prefix} string for each one.
-#' 
-#' @param ggroc_p An object as returned by \link{ggroc}. It can be modified with
-#'   annotations, themes, etc.
-#' @param cutoffs Vector of cutoff values
-#' @param font.size Character string that determines font size of cutoff labels
-#' @param prefix A string to assign to the objects within the svg. Enables
-#'   unique idenfication by the javascript code
-#'  @param width Width in inches of plot
-#'  @param height Height in inches of plot
-#'   
-#' @export
-#' 
-#' @return A string containing the svg code necessary to plot the ROC curve in a
-#'   browser
-#'   
-svgize_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix = "a", width = 6, height = 6){
-  
-  pdf(tempfile(fileext= ".pdf"), width = width, height = height)
-  print(ggroc_p)
-  grid::grid.force()
-  
-  objnames <- grid::grid.ls(print = FALSE)$name
-  ptns <- grep("geom_point.points", objnames, value = TRUE)[1]
-  
-  gridSVG::grid.garnish(path = ptns, cutoff = paste(cutoffs), group = FALSE, global = TRUE)
-  
-  cssString <- modCss(font.size)
-  jsString <- modJs(ptns, prefix = prefix)
-  
-  tmpFile <- tempfile()
-  svgString <- gridSVG::grid.export(name = tmpFile, prefix = prefix)$svg
-  
-  dev.off()
-  svgString <- paste(readLines(tmpFile, warn = FALSE), collapse = "\n")
-  
-  d3String <- getD3()
-  
-  paste(c(cssString, d3String, svgString, jsString), collapse = "\n\n")
-  
-}
-
-#' Generate a standalone html document displaying an interactive ROC curve
-#' 
-#' @param rocdata An object as returned by \link{ggroc}. It can be modified with annotations, themes, etc. 
-#' @param file A path to save the result to. If NULL, will save to a temporary directory
-#' @param font.size Character string that determines font size of cutoff labels
-#' 
-#' @export
-#' 
-#' @return NULL opens an interactive document in the browswer
-#'
-
-standalone_svg_roc <- function(rocdata, file = NULL, font.size = "12px"){
-  
-  p1 <- ggroc(rocdata) 
-  if(is.null(file)){
+  for(i in 2:length(datalist)){
     
-    tmpDir <- tempdir()
-    tmpPlot <- tempfile(tmpdir = tmpDir, fileext = ".html")
+    p1 <- p1 + ggplot2::geom_path(data = datalist[[i]], ggplot2::aes_string(x = fpf_string[i], y = tpf_string[i]), lty = lty[i]) + 
+      ggplot2::geom_point(data = datalist[[i]], ggplot2::aes_string(x = fpf_string[i], y = tpf_string[i]), color = "red", alpha = 0)
     
-  } else {
-    tmpPlot <- ifelse(length(grep(".html", file)) > 0, file, paste(file, "html", sep = "."))
-    tmpDir <- "."
+    if(!is.null(label)){
+      
+      xy <- datalist[[i]][datalist[[i]]$TPF + datalist[[i]]$FPF < 1, c(fpf_string[i], tpf_string[i])][1,]
+      X <- xy[1] + label.adj.x[i] + .05
+      Y <- xy[2] - .05 + label.adj.y[i]
+      p1 <- p1 + ggplot2::geom_text(data = data.frame(FPF = X, TPF = Y, label = label[i]), 
+                                    ggplot2::aes_string(x = "FPF", y  = "TPF", label = "label"), angle = label.angle[i])
+      
+    }
+    
   }
   
-  print(p1)
-  body <- svgize_roc(p1, cutoffs = rocdata$c, font.size = font.size)
-  
-  cat("<!DOCTYPE html>
-<html xmlns=\"http://www.w3.org/1999/xhtml\">
-\n", file = tmpPlot)
-  cat(body, file = tmpPlot, append = TRUE)
-  cat("\n</html>", file = tmpPlot, append = TRUE)
-  
-  ## copy d3 to directory
-  
-  file.copy(system.file("d3.v3.min.js", package = "plotROC"), tmpDir)
-  
-  ## open in browswer if possible
-  
-  viewer <- getOption("viewer")
-  if (!is.null(viewer)){
-    viewer(tmpPlot)
-    } else {
-    utils::browseURL(tmpPlot)
-  }
+  p1
   
 }
+
 
