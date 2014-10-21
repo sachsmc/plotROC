@@ -1,16 +1,16 @@
 #' Modify js to use custom name
-#' @param name Name of the points grob
+#' @param selector css selector for the geompoints.object
 #' @param prefix Prefix of the svg
 #' 
 #' @keywords Internal
 
 
-modJs <- function(name, prefix){
+modJs <- function(selector, prefix){
 jsstring <- '<script>
   // extract data from points to bind
 var rocdata = [];
 
-d3.selectAll("[id^=\'%s%s.1.\']").each(function(d, i){
+d3.selectAll("%s").each(function(d, i){
   
   me = d3.select(this);
   rocdata.push({"x": me.attr("x"), 
@@ -26,16 +26,23 @@ var voronoi = d3.geom.voronoi()
 
 var tess = voronoi(rocdata);
 
+
+var rocdata2 = [];
 for(var i = 0; i < rocdata.length; i++){
   
   rocdata[i].vtess = tess[i];
+  if(rocdata[i].vtess == undefined){ continue; } else {
+    
+	  rocdata2.push(rocdata[i]);
+	
+  }
   
 } 
 
 var svg = d3.select("g#%sgridSVG");
 var cells = svg.append("g").attr("class", "vors").selectAll("g");		
 
-cell = cells.data(rocdata);
+cell = cells.data(rocdata2);
 cell.exit().remove();
 
 var cellEnter = cell.enter().append("g");
@@ -62,7 +69,7 @@ cellEnter.append("g")
 </script>
   '
 
-sprintf(jsstring, prefix, name, prefix)
+sprintf(jsstring, selector, prefix)
 
 }
   

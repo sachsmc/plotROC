@@ -3,10 +3,14 @@
 \alias{ggroc}
 \title{Plot an ROC curve}
 \usage{
-ggroc(rocdata)
+ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF")
 }
 \arguments{
 \item{rocdata}{Data frame as returned by calculate_roc}
+
+\item{fpf_string}{Column name identifying false positive fraction}
+
+\item{tpf_string}{Column name identifying true positive fraction}
 }
 \value{
 A ggplot object

@@ -3,10 +3,10 @@
 \alias{modJs}
 \title{Modify js to use custom name}
 \usage{
-modJs(name, prefix)
+modJs(selector, prefix)
 }
 \arguments{
-\item{name}{Name of the points grob}
+\item{selector}{css selector for the geompoints.object}
 
 \item{prefix}{Prefix of the svg}
 }
