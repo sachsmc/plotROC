@@ -20,7 +20,8 @@ devtools::install_github("sachsmc/plotROC")
 ## Basic usage
 
 See examples live [here](http://sachsmc.github.io/plotROC)
-See the Shiny web application here: http://sachsmc.shinyapps.io/plotROC
+
+## Hover over to view the cutoff values
 
 ```{r test-a, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
 library(plotROC)
@@ -30,7 +31,7 @@ rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
 
 myrocplot <- ggroc(rocdata)
 
-cat(svgize_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "a"))
+cat(export_interactive_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "a"))
 ```
 
 That is an svg element. Try zooming in!
@@ -38,15 +39,8 @@ That is an svg element. Try zooming in!
 ## Generate an interactive plot to view in Rstudio viewer or web browser
 
 ```{r inter, eval = FALSE}
-standalone_svg_roc(rocdata)
+plot_interactive_roc(rocdata)
 ```
-
-# For using in print
-
-```{r print, fig.width = 6, fig.height = 6}
-printize_roc(myrocplot, rocdata)
-```
-
 
 
 # Themes and annotations
@@ -55,15 +49,40 @@ printize_roc(myrocplot, rocdata)
 library(ggthemes)
 myplot2 <- myrocplot + theme_igray()
 
-cat(svgize_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "b"))
+cat(export_interactive_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "b"))
 ```
 
-```{r test-c, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
 
-myplot2 <- myrocplot + theme_solarized() + annotate("text", x = .5, y = .5, label = "Reference line", hjust = 0, vjust = 1)
+# For using in print
 
-cat(svgize_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "c"))
+```{r print, fig.width = 6, fig.height = 6}
+plot_journal_roc(myrocplot, rocdata)
 ```
+
+# Themes work in print too, but I don't recommend colors
+
+```{r print2, fig.width = 6, fig.height = 6}
+plot_journal_roc(myrocplot, rocdata) + theme_igray() + ggtitle("My awesome new biomarker")
+```
+
+
+# Multiple ROC Curves
+
+```{r multi, fig.width = 6, fig.height = 6}
+D.ex <- rbinom(100, 1, .5)
+
+rocdata1 <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
+rocdata2 <- calculate_roc(rnorm(100, mean = D.ex, sd = .5), D.ex)
+datalist <- list(rocdata1, rocdata2)
+
+rocplot <- multi_ggroc(datalist)
+plot_journal_roc(rocplot, datalist)
+```
+
+```{r test-multi, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+cat(export_interactive_roc(rocplot, cutoffs = lapply(datalist, function(d) d$c), font.size = "12px", prefix = "bmulti"))
+```
+
 
 
 # Acknowledgements
@@ -74,4 +93,7 @@ This package would not be possible without the following:
   - [gridSVG](http://sjp.co.nz/projects/gridsvg/)
   - [d3.js](http://d3js.org)
   
+
+
+
   

@@ -5,7 +5,7 @@ shinyServer(function(input, output, session){
   library(plotROC)
   library(ggthemes)
   library(ggplot2)
-  
+  library(gridSVG)
   
   data <- reactive({ 
     tmp <- get(input$data)  ## remove missing values
