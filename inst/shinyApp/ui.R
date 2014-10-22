@@ -26,20 +26,39 @@ shinyUI(navbarPage("ROC Plot",
                                         column(4, 
                                                h4("Specify Variables"),
                                                selectInput("D", "Outcome variable", choices = colnames(example), selected = colnames(example)[3]), 
-                                               selectInput("M", "Marker", choices = colnames(example)), selected = colnames(example)[1]), 
+                                               checkboxInput("multi", "Check to plot multiple curves"), 
+                                               conditionalPanel("input.multi == false",
+                                                  selectInput("M", "Marker", choices = colnames(example), selected = colnames(example)[1])
+                                               ), 
+                                               conditionalPanel("input.multi == true", 
+                                                  selectInput("Ms", "Marker", choices = colnames(example), multiple = TRUE, selected = colnames(example)[1])              
+                                                                )), 
                                         column(4, 
                                                h4("Plot options"),
                                                textInput("title", "Plot Title", value = ""), 
-                                               numericInput("n.cuts", "Number of cutoff labels", 20, min = 0, max = 20), 
-                                               numericInput("font.size", "Label Font Size", 12, min = 1, max = 32)
+                                               textInput("label", "Curve Labels", value = ""), 
+                                               helpText("separate multiple curve labels with commas"),
+                                               numericInput("adj.x", "label adjust X", 0, min = -1, max = 1, step = .01),
+                                               numericInput("adj.y", "label adjust Y", 0, min = -1, max = 1, step = .01),
+                                               numericInput("angle", "label angle", 45, min = 0, max = 180, step = 1), 
+                                               numericInput("n.cuts", "Number of cutoff values", 20, min = 0, max = 20), 
+                                               numericInput("font.size", "Cutoff font size", 12, min = 1, max = 32)
                                                )
                                       )
                                       
                                       )
                             
                             ), 
-                   tabPanel("Help and Documentation"), 
-                   tabPanel("About"))
+                   tabPanel("Help and Documentation", 
+                            bootstrapPage(
+                              includeHTML("help.html")
+                                   )
+                            ), 
+                   tabPanel("About", 
+                            bootstrapPage(
+                              includeHTML("about.html")
+                              )
+                            ))
         
 ) ## end ui
 

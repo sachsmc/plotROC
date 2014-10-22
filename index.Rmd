@@ -23,6 +23,10 @@ margin-left: -160px;
 
 
 # Interactive SVG ROC Curves
+After installing, run the interactive Shiny app
+```{r shiny, eval = FALSE}
+shiny_plotROC()
+```
 
 
 ## Hover over to view the cutoff values
@@ -99,6 +103,14 @@ plot_journal_roc(rocplot, datalist)
 
 
 
+# Acknowledgements
+
+This package would not be possible without the following:
+
+  - [ggplot2](http://ggplot2.org/)
+  - [gridSVG](http://sjp.co.nz/projects/gridsvg/)
+  - [d3.js](http://d3js.org)
+  
 
 # Just for fun, transitions
 
@@ -149,14 +161,6 @@ d3.select("#moveme").on("click", function(){
 </script>
 
 
-# Acknowledgements
-
-This package would not be possible without the following:
-
-  - [ggplot2](http://ggplot2.org/)
-  - [gridSVG](http://sjp.co.nz/projects/gridsvg/)
-  - [d3.js](http://d3js.org)
-  
 
 
 

@@ -32,7 +32,8 @@ plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20){
   strdat$c <- paste(round(strdat$c, 1))
   
   ggroc_p + ggplot2::theme_bw() + ggplot2::geom_point(data = subdat, ggplot2::aes_string(x = "FPF", y = "TPF")) + 
-    ggplot2::geom_text(data = strdat, ggplot2::aes_string(x = "FPF", y = "TPF", label = "c"), hjust = 1, vjust = 0, size = font.size)
+    ggplot2::geom_text(data = strdat, ggplot2::aes_string(x = "FPF", y = "TPF", label = "c"), hjust = 1, vjust = 0, size = font.size) + 
+    ggplot2::geom_abline(intercept = 0, slope = 1, lty = 1, lwd = .5, color = "grey90")
   
   } else if(is.list(rocdata)){
     

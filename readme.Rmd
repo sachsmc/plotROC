@@ -21,6 +21,13 @@ devtools::install_github("sachsmc/plotROC")
 
 See examples live [here](http://sachsmc.github.io/plotROC)
 
+# Interactive SVG ROC Curves
+After installing, run the interactive Shiny app
+```{r shiny, eval = FALSE}
+shiny_plotROC()
+```
+
+
 ## Hover over to view the cutoff values
 
 ```{r test-a, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
@@ -29,7 +36,7 @@ D.ex <- rbinom(100, 1, .5)
 
 rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
 
-myrocplot <- ggroc(rocdata)
+myrocplot <- ggroc(rocdata, label = "Example")
 
 cat(export_interactive_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "a"))
 ```
@@ -71,9 +78,8 @@ plot_journal_roc(myrocplot, rocdata) + theme_igray() + ggtitle("My awesome new b
 ```{r multi, fig.width = 6, fig.height = 6}
 D.ex <- rbinom(100, 1, .5)
 
-rocdata1 <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
-rocdata2 <- calculate_roc(rnorm(100, mean = D.ex, sd = .5), D.ex)
-datalist <- list(rocdata1, rocdata2)
+fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex, sd = .4), M3 = runif(100), D = D.ex)
+datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
 
 rocplot <- multi_ggroc(datalist)
 plot_journal_roc(rocplot, datalist)
@@ -81,6 +87,17 @@ plot_journal_roc(rocplot, datalist)
 
 ```{r test-multi, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
 cat(export_interactive_roc(rocplot, cutoffs = lapply(datalist, function(d) d$c), font.size = "12px", prefix = "bmulti"))
+```
+
+## Labels
+```{r multi2, fig.width = 6, fig.height = 6}
+D.ex <- rbinom(100, 1, .5)
+
+fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex, sd = .4), M3 = runif(100), D = D.ex)
+datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
+
+rocplot <- multi_ggroc(datalist, label = c("M1", "M2", "M3"))
+plot_journal_roc(rocplot, datalist)
 ```
 
 
@@ -93,7 +110,28 @@ This package would not be possible without the following:
   - [gridSVG](http://sjp.co.nz/projects/gridsvg/)
   - [d3.js](http://d3js.org)
   
+# License
+The MIT License (MIT)
 
+Copyright (c) 2014 Michael C Sachs
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
 
   
