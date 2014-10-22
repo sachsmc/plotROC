@@ -12,6 +12,11 @@ vignette: >
 ---
 
 # Interactive SVG ROC Curves
+After installing, run the interactive Shiny app
+```{r shiny, eval = FALSE}
+shiny_plotROC()
+```
+
 
 ## Hover over to view the cutoff values
 
@@ -21,7 +26,7 @@ D.ex <- rbinom(100, 1, .5)
 
 rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
 
-myrocplot <- ggroc(rocdata)
+myrocplot <- ggroc(rocdata, label = "Example")
 
 cat(export_interactive_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "a"))
 ```
@@ -63,9 +68,8 @@ plot_journal_roc(myrocplot, rocdata) + theme_igray() + ggtitle("My awesome new b
 ```{r multi, fig.width = 6, fig.height = 6}
 D.ex <- rbinom(100, 1, .5)
 
-rocdata1 <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
-rocdata2 <- calculate_roc(rnorm(100, mean = D.ex, sd = .5), D.ex)
-datalist <- list(rocdata1, rocdata2)
+fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex, sd = .4), M3 = runif(100), D = D.ex)
+datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
 
 rocplot <- multi_ggroc(datalist)
 plot_journal_roc(rocplot, datalist)
@@ -75,53 +79,17 @@ plot_journal_roc(rocplot, datalist)
 cat(export_interactive_roc(rocplot, cutoffs = lapply(datalist, function(d) d$c), font.size = "12px", prefix = "bmulti"))
 ```
 
-# Just for fun, transitions
+## Labels
+```{r multi2, fig.width = 6, fig.height = 6}
+D.ex <- rbinom(100, 1, .5)
 
+fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex, sd = .4), M3 = runif(100), D = D.ex)
+datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
 
-```{r test-d, fig.keep='none', results = 'asis', echo = TRUE, fig.width=10, fig.height=6}
-library(ggplot2)
-library(ggthemes)
-library(gridSVG)
-library(grid)
-
-p <- ggplot(mtcars, aes(x = mpg, y = hp)) + geom_point(size = 5) + 
-  scale_y_continuous(limits = c(-50, 500)) + scale_x_continuous(limits = c(0, 50))
-p
-
-grid.force()
-
-objnames <- grid::grid.ls(print = FALSE)$name
-ptns <- grep("geom_point.points", objnames, value = TRUE)[1]
-
-grid.garnish(ptns, tip = paste(mtcars$cyl), group = FALSE, global = TRUE, grep = TRUE)
-
-ptns <- paste0("cars", ptns)
-
-grid.export(NULL, prefix = "cars")$svg
+rocplot <- multi_ggroc(datalist, label = c("M1", "M2", "M3"))
+plot_journal_roc(rocplot, datalist)
 ```
 
-<button id="moveme">Move the points!</button>
-
-<script>
-
-function randCol() {
-
-    return "rgb(" + Math.round(Math.random()*255) + ", " + Math.round(Math.random()*255) + ", " + Math.round(Math.random()*255) + ")";
-
-} 
-
-d3.select("#moveme").on("click", function(){
-
-  d3.selectAll("[id^='`r ptns`.1.']")
-    .transition().duration(500)
-    .attr("fill", randCol())
-    .attr("y", function(d){ return Number(d3.select(this).attr("y")) + 50 * (Math.random() - .5); })
-    .attr("x", function(d){ return Number(d3.select(this).attr("x")) + 25 * (Math.random() - .5); });
-  
-});
-
-
-</script>
 
 
 # Acknowledgements
@@ -132,7 +100,6 @@ This package would not be possible without the following:
   - [gridSVG](http://sjp.co.nz/projects/gridsvg/)
   - [d3.js](http://d3js.org)
   
-
 
 
 

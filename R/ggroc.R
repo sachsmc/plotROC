@@ -24,7 +24,7 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", label = NULL,
   br <- c(0, .1, .25, .5, .75, .9, 1)
   
   p1 <- ggplot2::ggplot(rocdata, ggplot2::aes_string(x = fpf_string, y = tpf_string))  + ggplot2::geom_point(color = "red", alpha = 0) +
-    ggplot2::geom_abline(intercept = 0, slope = 1, lty = 2) + 
+    ggplot2::geom_abline(intercept = 0, slope = 1, lty = 1, color = "white") + 
     ggplot2::scale_x_continuous("False positive fraction", minor_breaks = min_br, breaks = br) + 
     ggplot2::scale_y_continuous("True positive fraction", minor_breaks = min_br, breaks = br) + ggplot2::geom_path() 
     

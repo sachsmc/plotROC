@@ -15,8 +15,15 @@ shinyServer(function(input, output, session){
   
   rocdata <- reactive({
       
+    if(input$multi == TRUE & length(input$Ms) > 1){
+      
+      calculate_multi_roc(data(), input$Ms, input$D)
+      
+    } else {
+      
       calculate_roc(data()[,input$M], data()[,input$D])
-    
+      
+    }
   })
   
   
@@ -45,31 +52,54 @@ shinyServer(function(input, output, session){
     cne <- colnames(data())
     
     updateSelectInput(session, "M", choices = cne, selected = cne[1])
+    updateSelectInput(session, "Ms", choices = cne, selected = cne[1])
     updateSelectInput(session, "D", choices = cne, selected = cne[2])
     
     updateNumericInput(session, "n.cuts", max = nrow(data()))
     }
   })
   
+  thisggroc <- reactive({
+    
+    if(input$multi == TRUE & length(input$Ms) > 1){
+        validate(
+          need(length(unique(data()[,input$D])) == 2, 'Outcome must only have 2 levels.'),
+          need(input$Ms != '', 'Please choose a more marker variable.')
+        )
+        
+        if(input$label == "") lab <- NULL else { 
+            lab <- sapply(strsplit(input$label, ",")[[1]], trim)
+            validate(need(length(lab) == length(rocdata()), "Separate labels with commas"))
+          } 
+        multi_ggroc(rocdata(), label = lab, label.adj.x = rep(input$adj.x, length(rocdata())), 
+                    label.adj.y = rep(input$adj.y, length(rocdata())), label.angle = rep(input$angle, length(rocdata()))) + ggtitle(input$title)
+    } else {
+    
+      if(input$label == "") lab <- NULL else lab <- input$label 
+        ggroc(rocdata(), label = lab, label.adj.x = input$adj.x, label.adj.y = input$adj.y, label.angle = input$angle) + ggtitle(input$title)
+        
+    }
+    
+  })
+  
+  inter_cutoffs <- reactive({
+    
+    if(input$multi == TRUE & length(input$Ms) > 1){
+      lapply(rocdata(), function(d) d$c) 
+    } else {
+      rocdata()$c
+    }
+  })
+  
   output$printPlot <- renderPlot({
     
-    validate(
-      need(length(unique(data()[,input$D])) == 2, 'Outcome must only have 2 levels.'),
-      need(input$M != '', 'Please choose a marker variable.')
-    )
-    
-    printize_roc(ggroc(rocdata()) + ggtitle(input$title), rocdata(), font.size = input$font.size/4, n.cuts = input$n.cuts)
+    plot_journal_roc(thisggroc(), rocdata(), font.size = input$font.size/4, n.cuts = input$n.cuts)
     
     })
   
   output$intPlot <- renderUI({
     
-    validate(
-      need(length(unique(data()[,input$D])) == 2, 'Outcome must only have 2 levels.'),
-      need(input$M != '', 'Please choose a marker variable.')
-    )
-    
-    HTML(svgize_roc(ggroc(rocdata()) + ggtitle(input$title), rocdata()$c, font.size = paste0(input$font.size, "px")))
+    HTML(export_interactive_roc(thisggroc(), inter_cutoffs(), font.size = paste0(input$font.size, "px")))
     
   })
   
@@ -81,7 +111,7 @@ shinyServer(function(input, output, session){
        content = function(file) {
          
          ggsave(filename = file, 
-                plot = printize_roc(ggroc(rocdata()) + ggtitle(input$title), rocdata(), font.size = input$font.size/4, n.cuts = input$n.cuts), 
+                plot = plot_journal_roc(thisggroc(), rocdata(), font.size = input$font.size/4, n.cuts = input$n.cuts), 
                 width = 7, height = 7, device = pdf)
          
          
@@ -97,7 +127,7 @@ shinyServer(function(input, output, session){
       cat("<!DOCTYPE html>
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 \n", file = file)
-      cat(svgize_roc(ggroc(rocdata()) + ggtitle(input$title), rocdata()$c, font.size = paste0(input$font.size, "px")), file = file, append = TRUE)
+      cat(export_interactive_roc(thisggroc(), inter_cutoffs(), font.size = paste0(input$font.size, "px")), file = file, append = TRUE)
       cat("\n</html>", file = file, append = TRUE)
       
       
