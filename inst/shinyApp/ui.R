@@ -29,7 +29,8 @@ shinyUI(navbarPage("ROC Plot",
                                                checkboxInput("multi", "Check to plot multiple curves"), 
                                                conditionalPanel("input.multi == false",
                                                   selectInput("M", "Marker", choices = colnames(example), selected = colnames(example)[1]), 
-                                                  numericInput("alpha", "Confidence level", .05, min = .01, max = .99, step = .01)
+                                                  numericInput("alpha", "Confidence level", .05, min = .01, max = .99, step = .01), 
+                                                  textInput("ci.at", "Cutoffs for CIs (separate multiple by commas)", value = "")
                                                ), 
                                                conditionalPanel("input.multi == true", 
                                                   selectInput("Ms", "Marker", choices = colnames(example), multiple = TRUE, selected = colnames(example)[1])              

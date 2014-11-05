@@ -86,6 +86,12 @@ cat(export_interactive_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", pre
 plot_journal_roc(myrocplot, rocdata)
 ```
 
+# Confidence intervals for print
+
+```{r printci, fig.width = 6, fig.height = 6}
+plot_journal_roc(myrocplot, rocdata, n.cuts = 10, ci.at = c(-.5, .5, 2.1))
+```
+
 # Themes work in print too, but I don't recommend colors
 
 ```{r print2, fig.width = 6, fig.height = 6}

@@ -13,6 +13,8 @@ ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
 
 \item{tpf_string}{Column name identifying true positive fraction}
 
+\item{ci}{Logical, if TRUE will create invisible confidence regions for use in the interactive plot}
+
 \item{label}{Optional direct label for the ROC curve}
 
 \item{label.adj.x}{Adjustment for the positioning of the label}

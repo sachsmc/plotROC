@@ -5,6 +5,7 @@
 #' @param rocdata Data frame as returned by calculate_roc
 #' @param fpf_string Column name identifying false positive fraction
 #' @param tpf_string Column name identifying true positive fraction
+#' @param ci Logical, if TRUE will create invisible confidence regions for use in the interactive plot
 #' @param label Optional direct label for the ROC curve
 #' @param label.adj.x Adjustment for the positioning of the label
 #' @param label.adj.y Adjustment for the positioning of the label

@@ -77,7 +77,14 @@ export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix 
 
 plot_interactive_roc <- function(rocdata, file = NULL, font.size = "12px"){
   
-  p1 <- ggroc(rocdata) 
+  if(!is.data.frame(rocdata)){
+    p1 <- multi_ggroc(rocdata)
+  } else {
+  
+    ci <- "TP.L" %in% colnames(rocdata)
+    p1 <- ggroc(rocdata, ci = ci) 
+  
+  }
   if(is.null(file)){
     
     tmpDir <- tempdir()
@@ -89,7 +96,12 @@ plot_interactive_roc <- function(rocdata, file = NULL, font.size = "12px"){
   }
   
   print(p1)
-  body <- export_interactive_roc(p1, cutoffs = rocdata$c, font.size = font.size)
+  
+  if(!is.data.frame(rocdata)) {
+    body <- export_interactive_roc(p1, cutoffs = lapply(rocdata, function(d) d$c), font.size = font.size)
+  } else {
+    body <- export_interactive_roc(p1, cutoffs = rocdata$c, font.size = font.size)
+  }
   
   cat("<!DOCTYPE html>
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
