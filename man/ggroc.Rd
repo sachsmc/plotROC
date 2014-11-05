@@ -3,8 +3,8 @@
 \alias{ggroc}
 \title{Plot an ROC curve}
 \usage{
-ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF", label = NULL,
-  label.adj.x = 0, label.adj.y = 0, label.angle = 45)
+ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
+  label = NULL, label.adj.x = 0, label.adj.y = 0, label.angle = 45)
 }
 \arguments{
 \item{rocdata}{Data frame as returned by calculate_roc}

@@ -15,7 +15,8 @@
 #' @return A ggplot object
 #' 
 
-ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", label = NULL, label.adj.x = 0, label.adj.y = 0, label.angle = 45){
+ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
+                  label = NULL, label.adj.x = 0, label.adj.y = 0, label.angle = 45){
   
   stopifnot(fpf_string %in% colnames(rocdata))
   stopifnot(tpf_string %in% colnames(rocdata))
@@ -35,6 +36,12 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", label = NULL,
     Y <- xy[2] - .05 + label.adj.y
     p1 <- p1 + ggplot2::geom_text(data = data.frame(FPF = X, TPF = Y, label = label), 
                                   ggplot2::aes_string(x = "FPF", y  = "TPF", label = "label"), angle = label.angle)
+    
+  }
+  
+  if(ci){
+    
+    p1 <- p1 + ggplot2::geom_rect(ggplot2::aes_string(xmin = "FP.L", xmax = "FP.U", ymin = "TP.L", ymax = "TP.U"), alpha = 0)
     
   }
   

@@ -8,6 +8,7 @@ modCss <- function(font.size){
 cssstring <- '
 <style type = "text/css">
 
+
 .tess {
 fill: blue;
 stroke: blue;
@@ -28,16 +29,12 @@ opacity: 0;
 fill-opacity: 1;
 }
 
-.vors :hover circle {
+.dotvis {
 fill: red;
+stroke-width: 0px;
+fill-opacity: 1;
 opacity: 1;
 }
-
-.vors :hover text {
-
-opacity: 1;
-
-}   
 
 .hidetext {
 
@@ -49,9 +46,22 @@ opacity: 0;
 position: relative;
 
 }
+
+.showtext {
+
+font-size: %s;
+stroke-opacity: 0;
+fill-opacity: 1;
+fill: black;
+opacity: 1;
+position: relative;
+
+}
+
+
 </style>
 '
 
-sprintf(cssstring, font.size)
+sprintf(cssstring, font.size, font.size)
 
 }

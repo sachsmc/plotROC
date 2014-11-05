@@ -1,5 +1,31 @@
 
-##What is an ROC curve?
+
+
+#Usage
+The web app comes pre-loaded with an example dataset. Use this example to familiarize yourself with the functions. 
+
+## Uploading data
+To upload your own data, click on the "upload data" button. Data files must be comma delimited, with the first row containing a header of the column names. This can be done in Excel by saving the file as .csv. 
+
+## Specify the outcome
+The first step is to specify the outcome variable by choosing one from the drop-down list. The outcome variable must be binary, meaning that it can only have 2 levels, typically 0/1. 
+
+## Specify the marker variable(s)
+The next step is to specify the marker variable. This can and should be continuous. To create multiple curves on a single plot, check the check box that is labeled "Check to plot multiple curves". Then you can select multiple marker variables from the selection box. 
+
+## Customize
+Plot customization options are on the lower right. You can add a title, curve labels, adjust the label positioning, and adjust the cutoff number and font size. 
+
+## Download
+Click the download buttons to save your plots to your computer. Downloading the interactive plot will generate html code that can be opened in a web browser. Open this code in a text editor and you can copy it directly into your own web-page. Downloading the print plot will save a pdf version. 
+
+## Help and feedback
+
+We welcome you feedback. If you have difficulties, or suggestions for improvements, send me an email at michael.sachs@nih.gov. 
+
+<hr/>
+
+#What is an ROC curve?
 
 In medicine and other applications, we often use a biomarker or a test to predict an underlying condition, disease state, or future event. For a binary test and a binary disease state, the following table summarizes the possible errors that one can make using the test as a prediction of a disease state measured by some gold standard
 
@@ -84,35 +110,9 @@ negative</td>
 </tr>
 </table>
 
-
-##Continuous test
 If the test is continuous, say $M$, then a *test positive* is defined as $M > c$. Now we consider measures of accuracy as functions of $c$, i.e.
 
 $$ TPF(c) = Pr\{M > c | D = 1\} $$
 $$ FPF(c) = Pr\{M > c | D = 0\} $$
 
 The ROC curve is a plot of $FPF(c)$ versus $TPF(c)$. It's purpose is to allow the viewer to assess the accuracy of the test $M$ for any possible value of the cutoff $c$. This aids in deciding what cutoff to use in practice, comparing different tests for the same thing, and for evaluating the overall accuracy. A key advantage of our approach is that the values of the cutoffs are visible! 
-
-##Usage
-The web app comes pre-loaded with an example dataset. Use this example to familiarize yourself with the functions. 
-
-### Uploading data
-To upload your own data, click on the "upload data" button. Data files must be comma delimited, with the first row containing a header of the column names. This can be done in Excel by saving the file as .csv. 
-
-### Specify the outcome
-The first step is to specify the outcome variable by choosing one from the drop-down list. The outcome variable must be binary, meaning that it can only have 2 levels, typically 0/1. 
-
-### Specify the marker variable(s)
-The next step is to specify the marker variable. This can and should be continuous. To create multiple curves on a single plot, check the check box that is labeled "Check to plot multiple curves". Then you can select multiple marker variables from the selection box. 
-
-### Customize
-Plot customization options are on the lower right. You can add a title, curve labels, adjust the label positioning, and adjust the cutoff number and font size. 
-
-### Download
-Click the download buttons to save your plots to your computer. Downloading the interactive plot will generate html code that can be opened in a web browser. Open this code in a text editor and you can copy it directly into your own web-page. Downloading the print plot will save a pdf version. 
-
-## Help and feedback
-
-We welcome you feedback. If you have difficulties, or suggestions for improvements, send me an email at michael.sachs@nih.gov. 
-
-

@@ -52,8 +52,37 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
-<div id="what-is-an-roc-curve" class="section level2">
-<h2>What is an ROC curve?</h2>
+<div id="usage" class="section level1">
+<h1>Usage</h1>
+<p>The web app comes pre-loaded with an example dataset. Use this example to familiarize yourself with the functions.</p>
+<div id="uploading-data" class="section level2">
+<h2>Uploading data</h2>
+<p>To upload your own data, click on the “upload data” button. Data files must be comma delimited, with the first row containing a header of the column names. This can be done in Excel by saving the file as .csv.</p>
+</div>
+<div id="specify-the-outcome" class="section level2">
+<h2>Specify the outcome</h2>
+<p>The first step is to specify the outcome variable by choosing one from the drop-down list. The outcome variable must be binary, meaning that it can only have 2 levels, typically 0/1.</p>
+</div>
+<div id="specify-the-marker-variables" class="section level2">
+<h2>Specify the marker variable(s)</h2>
+<p>The next step is to specify the marker variable. This can and should be continuous. To create multiple curves on a single plot, check the check box that is labeled “Check to plot multiple curves”. Then you can select multiple marker variables from the selection box.</p>
+</div>
+<div id="customize" class="section level2">
+<h2>Customize</h2>
+<p>Plot customization options are on the lower right. You can add a title, curve labels, adjust the label positioning, and adjust the cutoff number and font size.</p>
+</div>
+<div id="download" class="section level2">
+<h2>Download</h2>
+<p>Click the download buttons to save your plots to your computer. Downloading the interactive plot will generate html code that can be opened in a web browser. Open this code in a text editor and you can copy it directly into your own web-page. Downloading the print plot will save a pdf version.</p>
+</div>
+<div id="help-and-feedback" class="section level2">
+<h2>Help and feedback</h2>
+<p>We welcome you feedback. If you have difficulties, or suggestions for improvements, send me an email at <a href="mailto:michael.sachs@nih.gov">michael.sachs@nih.gov</a>.</p>
+<hr />
+</div>
+</div>
+<div id="what-is-an-roc-curve" class="section level1">
+<h1>What is an ROC curve?</h1>
 <p>In medicine and other applications, we often use a biomarker or a test to predict an underlying condition, disease state, or future event. For a binary test and a binary disease state, the following table summarizes the possible errors that one can make using the test as a prediction of a disease state measured by some gold standard</p>
 <style>
 td { border: 1px #aaa solid;
@@ -171,40 +200,9 @@ True negative fraction</a> (TNF, Specificity) =<br /> Σ True negative
 </td>
 </tr>
 </table>
-</div>
-<div id="continuous-test" class="section level2">
-<h2>Continuous test</h2>
 <p>If the test is continuous, say <span class="math">\(M\)</span>, then a <em>test positive</em> is defined as <span class="math">\(M &gt; c\)</span>. Now we consider measures of accuracy as functions of <span class="math">\(c\)</span>, i.e.</p>
 <p><span class="math">\[ TPF(c) = Pr\{M &gt; c | D = 1\} \]</span> <span class="math">\[ FPF(c) = Pr\{M &gt; c | D = 0\} \]</span></p>
 <p>The ROC curve is a plot of <span class="math">\(FPF(c)\)</span> versus <span class="math">\(TPF(c)\)</span>. It’s purpose is to allow the viewer to assess the accuracy of the test <span class="math">\(M\)</span> for any possible value of the cutoff <span class="math">\(c\)</span>. This aids in deciding what cutoff to use in practice, comparing different tests for the same thing, and for evaluating the overall accuracy. A key advantage of our approach is that the values of the cutoffs are visible!</p>
-</div>
-<div id="usage" class="section level2">
-<h2>Usage</h2>
-<p>The web app comes pre-loaded with an example dataset. Use this example to familiarize yourself with the functions.</p>
-<div id="uploading-data" class="section level3">
-<h3>Uploading data</h3>
-<p>To upload your own data, click on the “upload data” button. Data files must be comma delimited, with the first row containing a header of the column names. This can be done in Excel by saving the file as .csv.</p>
-</div>
-<div id="specify-the-outcome" class="section level3">
-<h3>Specify the outcome</h3>
-<p>The first step is to specify the outcome variable by choosing one from the drop-down list. The outcome variable must be binary, meaning that it can only have 2 levels, typically 0/1.</p>
-</div>
-<div id="specify-the-marker-variables" class="section level3">
-<h3>Specify the marker variable(s)</h3>
-<p>The next step is to specify the marker variable. This can and should be continuous. To create multiple curves on a single plot, check the check box that is labeled “Check to plot multiple curves”. Then you can select multiple marker variables from the selection box.</p>
-</div>
-<div id="customize" class="section level3">
-<h3>Customize</h3>
-<p>Plot customization options are on the lower right. You can add a title, curve labels, adjust the label positioning, and adjust the cutoff number and font size.</p>
-</div>
-<div id="download" class="section level3">
-<h3>Download</h3>
-<p>Click the download buttons to save your plots to your computer. Downloading the interactive plot will generate html code that can be opened in a web browser. Open this code in a text editor and you can copy it directly into your own web-page. Downloading the print plot will save a pdf version.</p>
-</div>
-</div>
-<div id="help-and-feedback" class="section level2">
-<h2>Help and feedback</h2>
-<p>We welcome you feedback. If you have difficulties, or suggestions for improvements, send me an email at <a href="mailto:michael.sachs@nih.gov">michael.sachs@nih.gov</a>.</p>
 </div>
 
 
