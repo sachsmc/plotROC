@@ -27,6 +27,9 @@ export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix 
   
   objnames <- grid::grid.ls(print = FALSE)$name
   ptns <- grep("geom_point.points", objnames, value = TRUE)
+  rects <- grep("geom_rect.rect", objnames, value = TRUE)
+  cis <- length(rects) > 0
+  if(!cis) rects <- "qk2d4gb6q7ur"
   
   if(is.list(cutoffs)){
     
@@ -43,7 +46,7 @@ export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix 
   } else {
   
   gridSVG::grid.garnish(path = ptns, cutoff = paste(cutoffs), group = FALSE, global = TRUE)
-  jsString <- modJs(paste0("[id^=\'", prefix, ptns, ".1.\']"), prefix = prefix)
+  jsString <- modJs(paste0("[id^=\'", prefix, ptns, ".1.\']"), prefix = prefix, rects)
   
   }
   

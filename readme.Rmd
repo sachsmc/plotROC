@@ -41,6 +41,18 @@ myrocplot <- ggroc(rocdata, label = "Example")
 cat(export_interactive_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "a"))
 ```
 
+
+## Click to view confidence region
+
+```{r test-a-ci, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+
+rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex, CI = TRUE)
+
+myrocplot <- ggroc(rocdata, label = "Example", ci = TRUE)
+
+cat(export_interactive_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "aci"))
+```
+
 That is an svg element. Try zooming in!
 
 ## Generate an interactive plot to view in Rstudio viewer or web browser
@@ -99,6 +111,7 @@ datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
 rocplot <- multi_ggroc(datalist, label = c("M1", "M2", "M3"))
 plot_journal_roc(rocplot, datalist)
 ```
+
 
 
 

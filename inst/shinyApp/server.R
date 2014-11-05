@@ -21,7 +21,7 @@ shinyServer(function(input, output, session){
       
     } else {
       
-      calculate_roc(data()[,input$M], data()[,input$D])
+      calculate_roc(data()[,input$M], data()[,input$D], CI = TRUE, alpha = input$alpha)
       
     }
   })
@@ -76,7 +76,7 @@ shinyServer(function(input, output, session){
     } else {
     
       if(input$label == "") lab <- NULL else lab <- input$label 
-        ggroc(rocdata(), label = lab, label.adj.x = input$adj.x, label.adj.y = input$adj.y, label.angle = input$angle) + ggtitle(input$title)
+        ggroc(rocdata(), ci = TRUE, label = lab, label.adj.x = input$adj.x, label.adj.y = input$adj.y, label.angle = input$angle) + ggtitle(input$title)
         
     }
     

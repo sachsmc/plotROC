@@ -21,6 +21,13 @@ margin-left: -160px;
 <a href="http://github.com/sachsmc/plotROC">View on github</a>
 </header>
 
+# Installation
+
+This package is not currently on CRAN. To install, use `devtools`
+
+```{r install, eval = FALSE}
+devtools::install_github("sachsmc/plotROC")
+```
 
 # Interactive SVG ROC Curves
 After installing, run the interactive Shiny app
@@ -40,6 +47,18 @@ rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
 myrocplot <- ggroc(rocdata, label = "Example")
 
 cat(export_interactive_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "a"))
+```
+
+
+## Click to view confidence region
+
+```{r test-a-ci, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+
+rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex, CI = TRUE)
+
+myrocplot <- ggroc(rocdata, label = "Example", ci = TRUE)
+
+cat(export_interactive_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "aci"))
 ```
 
 That is an svg element. Try zooming in!

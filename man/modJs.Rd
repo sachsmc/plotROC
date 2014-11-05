@@ -3,12 +3,14 @@
 \alias{modJs}
 \title{Modify js to use custom name}
 \usage{
-modJs(selector, prefix)
+modJs(selector, prefix, rect = "")
 }
 \arguments{
 \item{selector}{css selector for the geompoints.object}
 
 \item{prefix}{Prefix of the svg}
+
+\item{rect}{If not empty, the selector for the geom_rects for the CIs}
 }
 \description{
 Modify js to use custom name

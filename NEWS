@@ -1,0 +1,8 @@
+# plotROC 1.2
+  * New feature: click on interactive plot to display confidence region
+
+# plotROC 1.1
+  * New feature: Support for multiple curves
+
+# plotROC 1.0
+  * Initial release

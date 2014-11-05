@@ -6,21 +6,26 @@
 calculate_multi_roc(data, M_string, D_string)
 }
 \arguments{
-\item{data}{Data frame containing at least 1 marker and the common class labels}
+\item{data}{Data frame containing at least 1 marker and the common class
+labels}
 
 \item{M_string}{vector of marker column names}
 
 \item{D_string}{class label column name}
 }
 \value{
-List of data frame containing cutoffs, and estimated true and false positive fractions
+List of data frame containing cutoffs, and estimated true and false
+  positive fractions
 }
 \description{
-Calculate ROC curves given labels and predictions. Designed to work with the \code{multi_ggroc} function, this takes a dataframe and computes the ROC curve for a given list of markers.
+Calculate ROC curves given labels and predictions. Designed to work with the
+\code{multi_ggroc} function, this takes a dataframe and computes the ROC
+curve for a given list of markers.
 }
 \examples{
 D.ex <- rbinom(100, 1, .5)
-fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex, sd = .4), D = D.ex)
+fakedata <- data.frame(M1 = rnorm(100, mean = D.ex),
+   M2 = rnorm(100, mean = D.ex, sd = .4), D = D.ex)
 calculate_multi_roc(fakedata, c("M1", "M2"), "D")
 }
 
