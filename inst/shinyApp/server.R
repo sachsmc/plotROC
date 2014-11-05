@@ -93,7 +93,12 @@ shinyServer(function(input, output, session){
   
   output$printPlot <- renderPlot({
     
-    plot_journal_roc(thisggroc(), rocdata(), font.size = input$font.size/4, n.cuts = input$n.cuts)
+    if(input$ci.at == "") ci.at <- NULL else {
+      
+      ci.at <- as.numeric(sapply(strsplit(input$ci.at, ",")[[1]], trim))
+      
+    }
+    plot_journal_roc(thisggroc(), rocdata(), font.size = input$font.size/4, n.cuts = input$n.cuts, ci.at = ci.at)
     
     })
   
@@ -110,8 +115,15 @@ shinyServer(function(input, output, session){
        },
        content = function(file) {
          
+         if(input$ci.at == "") ci.at <- NULL else {
+           
+           ci.at <- as.numeric(sapply(strsplit(input$ci.at, ",")[[1]], trim))
+           ci.at <- ci.at[!is.na(ci.at)]
+           
+         }
+         
          ggsave(filename = file, 
-                plot = plot_journal_roc(thisggroc(), rocdata(), font.size = input$font.size/4, n.cuts = input$n.cuts), 
+                plot = plot_journal_roc(thisggroc(), rocdata(), font.size = input$font.size/4, n.cuts = input$n.cuts, ci.at = ci.at), 
                 width = 7, height = 7, device = pdf)
          
          

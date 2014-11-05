@@ -3,22 +3,30 @@
 \alias{plot_journal_roc}
 \title{Plot an ROC curve for use in print}
 \usage{
-plot_journal_roc(ggroc_p, rocdata, font.size = 3, n.cuts = 20)
+plot_journal_roc(ggroc_p, rocdata, font.size = 3, n.cuts = 20,
+  ci.at = NULL, alpha = 0.3)
 }
 \arguments{
-\item{ggroc_p}{An object as returned by \link{ggroc}. It can be modified with
-annotations, themes, etc.}
+\item{ggroc_p}{An object as returned by \link{ggroc} or \link{multi_ggroc}.
+It can be modified with annotations, themes, etc.}
 
-\item{rocdata}{An object as returned by \link{ggroc}. It can be modified with annotations, themes, etc.}
+\item{rocdata}{An object as returned by \link{calculate_roc}.}
 
 \item{font.size}{Integer that determines font size of cutoff labels}
 
 \item{n.cuts}{Number of cutoffs to display}
+
+\item{ci.at}{Cutoff values at which to plot confidence regions, if non-NULL,
+\code{rocdata} must contain limits for the confidence region, as returned
+by \link{calculate_roc}}
+
+\item{alpha}{Alpha level for confidence region boxes. Defaults to 0.3. Must be between 0 and 1}
 }
 \value{
 A ggplot object
 }
 \description{
-Given a ggroc object, creates a plot suitable for print, with sensible defaults
+Given a ggroc object, creates a plot suitable for print, with sensible
+defaults
 }
 
