@@ -4,7 +4,7 @@
 #' 
 #' @param M continuous marker values or predictions of class labels
 #' @param D class labels
-#' @param CI Logical, if true, will calculate exact joint confidence regions for
+#' @param ci Logical, if true, will calculate exact joint confidence regions for
 #'   the TPF and FPF
 #' @param alpha Confidence level, ignored if \code{CI = FALSE}
 #'   
@@ -22,9 +22,9 @@
 #' 
 #' D.ex <- rbinom(100, 1, .5)
 #' calculate_roc(rnorm(100, mean = D.ex), D.ex)
-#' calculate_roc(rnorm(100, mean = D.ex), D.ex, CI = TRUE)
+#' calculate_roc(rnorm(100, mean = D.ex), D.ex, ci = TRUE)
 
-calculate_roc <- function(M, D, CI = FALSE, alpha = .05){
+calculate_roc <- function(M, D, ci = FALSE, alpha = .05){
   
   if(length(unique(D)) != 2) stop("Only labels with 2 classes supported")
   if(sum(c(is.na(M), is.na(D))) > 0) stop("No missing data allowed")
@@ -35,7 +35,7 @@ calculate_roc <- function(M, D, CI = FALSE, alpha = .05){
   
   df <- data.frame(cbind(c, TPF, FPF))
   
-  if(CI){
+  if(ci){
     
     stopifnot(is.finite(alpha) && alpha < 1 && alpha > 0)
     ## calculate binomial confidence regions using Clopper and Pearson method
