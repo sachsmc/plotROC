@@ -16,7 +16,7 @@ annotations, themes, etc.}
 \item{font.size}{Character string that determines font size of cutoff labels}
 
 \item{prefix}{A string to assign to the objects within the svg. Enables
- unique idenfication by the javascript code}
+unique idenfication by the javascript code}
 
 \item{width}{Width in inches of plot}
 
@@ -24,10 +24,12 @@ annotations, themes, etc.}
 }
 \value{
 A string containing the svg code necessary to plot the ROC curve in a
-  browser
+  web browser
 }
 \description{
 If you intend to include more than one of these objects in a single page, use
-a different \code{prefix} string for each one.
+a different \code{prefix} string for each one. To use this function in knitr,
+use the chunk options \code{fig.keep='none'} and  \code{results = 'asis'},
+then \code{cat()} the resulting string to the output. See the vignette for examples
 }
 

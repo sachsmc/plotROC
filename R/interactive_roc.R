@@ -1,23 +1,25 @@
 
-#' Generate svg code for an ROC curve object. Includes necessary styling and
+#' Generate svg code for an ROC curve object. Includes necessary styling and 
 #' Javascript code
 #' 
 #' If you intend to include more than one of these objects in a single page, use
-#' a different \code{prefix} string for each one.
+#' a different \code{prefix} string for each one. To use this function in knitr,
+#' use the chunk options \code{fig.keep='none'} and  \code{results = 'asis'},
+#' then \code{cat()} the resulting string to the output. See the vignette for examples
 #' 
 #' @param ggroc_p An object as returned by \link{ggroc}. It can be modified with
 #'   annotations, themes, etc.
 #' @param cutoffs Vector of cutoff values
 #' @param font.size Character string that determines font size of cutoff labels
-#' @param prefix A string to assign to the objects within the svg. Enables
+#' @param prefix A string to assign to the objects within the svg. Enables 
 #'   unique idenfication by the javascript code
-#'  @param width Width in inches of plot
-#'  @param height Height in inches of plot
+#' @param width Width in inches of plot
+#' @param height Height in inches of plot
 #'   
 #' @export
 #' 
 #' @return A string containing the svg code necessary to plot the ROC curve in a
-#'   browser
+#'   web browser
 #'   
 export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix = "a", width = 6, height = 6){
   
