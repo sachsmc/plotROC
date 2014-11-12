@@ -3,14 +3,14 @@
 \alias{calculate_roc}
 \title{Calculate the ROC curve}
 \usage{
-calculate_roc(M, D, CI = FALSE, alpha = 0.05)
+calculate_roc(M, D, ci = FALSE, alpha = 0.05)
 }
 \arguments{
 \item{M}{continuous marker values or predictions of class labels}
 
 \item{D}{class labels}
 
-\item{CI}{Logical, if true, will calculate exact joint confidence regions for
+\item{ci}{Logical, if true, will calculate exact joint confidence regions for
 the TPF and FPF}
 
 \item{alpha}{Confidence level, ignored if \code{CI = FALSE}}
@@ -31,6 +31,6 @@ Confidence intervals for TPF and FPF are calculated using the exact
 \examples{
 D.ex <- rbinom(100, 1, .5)
 calculate_roc(rnorm(100, mean = D.ex), D.ex)
-calculate_roc(rnorm(100, mean = D.ex), D.ex, CI = TRUE)
+calculate_roc(rnorm(100, mean = D.ex), D.ex, ci = TRUE)
 }
 
