@@ -3,7 +3,7 @@
 #' Calculate ROC curve given labels and predictions
 #' 
 #' @param M continuous marker values or predictions of class labels
-#' @param D class labels
+#' @param D class labels, must be coded as 0 and 1
 #' @param ci Logical, if true, will calculate exact joint confidence regions for
 #'   the TPF and FPF
 #' @param alpha Confidence level, ignored if \code{CI = FALSE}
@@ -27,6 +27,7 @@
 calculate_roc <- function(M, D, ci = FALSE, alpha = .05){
   
   if(length(unique(D)) != 2) stop("Only labels with 2 classes supported")
+  if(!all(D %in% c(0, 1))) stop("D must be coded as 0 and 1")
   if(sum(c(is.na(M), is.na(D))) > 0) stop("No missing data allowed")
   
   c <- sort(M)
