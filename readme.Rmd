@@ -11,9 +11,15 @@ Most ROC curve plots obscure the cutoff values and inhibit
     
 ## Installation
 
-This package is not currently on CRAN. To install, use `devtools`
+This package is on CRAN. It can be installed with
 
-```{r install}
+```{r instcran, eval = FALSE}
+install.packages("plotROC")
+```
+
+To install the latest Github version, use `devtools`
+
+```{r install, eval = FALSE}
 devtools::install_github("sachsmc/plotROC")
 ```
 

@@ -1,3 +1,10 @@
+plotROC 1.3
+------------
+  * Added tests
+  * Fixed vignette
+  * Allow arbitrary class labels
+  * Cleanup after interactive plot creation
+
 plotROC 1.2
 -------------
   * New feature: click on interactive plot to display confidence region

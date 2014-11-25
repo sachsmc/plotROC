@@ -6,7 +6,7 @@
 modCss(font.size)
 }
 \arguments{
-\item{font.size}{String describing font size}
+\item{font.size}{String describing font size, 12px, for example}
 }
 \description{
 Add custom font size, more customizations to come

@@ -12,13 +12,15 @@
 #' @param ci.at Cutoff values at which to plot confidence regions, if non-NULL,
 #'   \code{rocdata} must contain limits for the confidence region, as returned
 #'   by \link{calculate_roc}
-#' @param alpha Alpha level for confidence region boxes. Defaults to 0.3. Must be between 0 and 1
+#' @param opacity Opacity level for confidence region boxes. Defaults to 0.3. Must be between 0 and 1
 #'   
 #'   
 #' @export
 #' 
 #' @return A ggplot object
-plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20, ci.at = NULL, alpha = .3){
+plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20, ci.at = NULL, opacity = .3){
+  
+  stopifnot(opacity <= 1 & opacity >= 0)
   
   if(is.data.frame(rocdata)){
     
@@ -64,7 +66,7 @@ plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20, ci.at
 
   if(!is.null(ci.at)){
     rocdata$op <- 0
-    rocdata$op[ci_dex] <- alpha
+    rocdata$op[ci_dex] <- opacity
     
     p1 + ggplot2::geom_rect(data = rocdata, ggplot2::aes_string(xmin = "FP.L", xmax = "FP.U", ymin = "TP.L", ymax = "TP.U"), alpha = rocdata$op)
     

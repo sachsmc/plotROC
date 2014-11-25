@@ -1,7 +1,8 @@
-#' Modify js to use custom name
+#' Modify javascript function to use custom name
 #' @param selector css selector for the geompoints.object
 #' @param prefix Prefix of the svg
-#' @param rect If not empty, the selector for the geom_rects for the CIs
+#' @param rect If not empty, the selector for the geom_rects for the confidence
+#'   regions
 #'   
 #' @keywords Internal
 

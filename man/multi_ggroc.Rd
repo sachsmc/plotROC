@@ -10,7 +10,7 @@ multi_ggroc(datalist, fpf_string = rep("FPF", length(datalist)),
   length(datalist)))
 }
 \arguments{
-\item{datalist}{List of data frames as returned by calculate_roc}
+\item{datalist}{List of data frames each containing true and false positive fractions and cutoffs}
 
 \item{fpf_string}{Column names identifying false positive fraction}
 

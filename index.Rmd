@@ -76,7 +76,7 @@ D.ex <- rbinom(100, 1, .5)
 M.ex <- rnorm(100, mean = D.ex)
 ```
 
-Next we use the `calculate_roc` function to compute the empirical ROC curve. This returns a data.frame with three components: the cutoff values, the TPF and the FPF. 
+Next we use the `calculate_roc` function to compute the empirical ROC curve. The disease status need not be coded as 0/1, but `plotROC` assumes that the lowest value in sort order signifies disease-free status. This returns a data.frame with three components: the cutoff values, the TPF and the FPF. 
 
 ```{r calc}
 rocdata <- calculate_roc(M.ex, D.ex)
