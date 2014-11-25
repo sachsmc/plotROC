@@ -1,19 +1,21 @@
-#' Calculate the ROC curve
+#' Calculate the Empirical ROC curve
 #' 
 #' Calculate ROC curve given labels and predictions
 #' 
 #' @param M continuous marker values or predictions of class labels
-#' @param D class labels
+#' @param D class labels, must be coded as 0 and 1. If not numeric with 0/1,
+#'   then plotROC assumes the first level in sort order is healthy status, with
+#'   a warning.
 #' @param ci Logical, if true, will calculate exact joint confidence regions for
 #'   the TPF and FPF
-#' @param alpha Confidence level, ignored if \code{CI = FALSE}
+#' @param alpha Confidence level, ignored if \code{ci = FALSE}
 #'   
-#' @return Data frame containing cutoffs, and estimated true and false positive
-#'   fractions
+#' @return A dataframe containing cutoffs, estimated true and false positive 
+#'   fractions, and confidence intervals if \code{ci = TRUE}.
 #'   
-#' @details Confidence intervals for TPF and FPF are calculated using the exact
-#'   method of Clopper and Pearson (1934) each at the level \code{1 - sqrt(1 -
-#'   alpha)}. Based on result 2.4 from Pepe (2003), the cross-product of these
+#' @details Confidence intervals for TPF and FPF are calculated using the exact 
+#'   method of Clopper and Pearson (1934) each at the level \code{1 - sqrt(1 - 
+#'   alpha)}. Based on result 2.4 from Pepe (2003), the cross-product of these 
 #'   intervals yields a 1 - alpha % confidence region for (FPF, TPF).
 #'   
 #' @export
@@ -26,8 +28,9 @@
 
 calculate_roc <- function(M, D, ci = FALSE, alpha = .05){
   
-  if(length(unique(D)) != 2) stop("Only labels with 2 classes supported")
   if(sum(c(is.na(M), is.na(D))) > 0) stop("No missing data allowed")
+  
+  D <- verify_d(D)
   
   c <- sort(M)
   TPF <- sapply(c, function(x) mean(M[D == 1] > x))
@@ -67,18 +70,18 @@ calculate_roc <- function(M, D, ci = FALSE, alpha = .05){
 }
 
 
-#' Calculate the ROC curve for multiple biomarkers
+#' Calculate the Empirical ROC curves for multiple biomarkers
 #' 
 #' Calculate ROC curves given labels and predictions. Designed to work with the
-#' \code{multi_ggroc} function, this takes a dataframe and computes the ROC
+#' \code{multi_ggroc} function, this takes a \code{data.frame} and computes the ROC
 #' curve for a given list of markers.
 #' 
-#' @param data Data frame containing at least 1 marker and the common class
-#'   labels
+#' @param data data frame containing at least 1 marker and the common class
+#'   labels, coded as 0 and 1
 #' @param M_string vector of marker column names
 #' @param D_string class label column name
 #'   
-#' @return List of data frame containing cutoffs, and estimated true and false
+#' @return List of data frames containing cutoffs, and estimated true and false
 #'   positive fractions
 #'   
 #' @export
@@ -94,8 +97,7 @@ calculate_multi_roc <- function(data, M_string, D_string){
   
   out_list <- vector("list", length = length(M_string))
 
-  D <- data[D_string][,1]
-  if(length(unique(D)) != 2) stop("Only labels with 2 classes supported")
+  D <- verify_d(data[D_string][,1])
   
   for(i in 1:length(out_list)){
         
@@ -112,6 +114,31 @@ calculate_multi_roc <- function(data, M_string, D_string){
   }
   
   out_list
+  
+}
+
+
+#' Check that D is OK
+#' 
+#' Checks for two classes and gives informative error messages
+#' 
+#' @param D Vector that will be checked for 2-class labels
+#' 
+#' @keywords Internal
+#' 
+verify_d <- function(D){
+
+  if(length(unique(D)) != 2) stop("Only labels with 2 classes supported")
+  
+  slev <- sort(unique(D))
+  if(slev[1] == 0 & slev[2] == 1) return(D)
+  
+  warning(paste0("D not labeled 0/1, assuming ", slev[1], " = 0 and ", slev[2], " = 1!"))
+  
+  zero1 <- c(0, 1)
+  names(zero1) <- slev
+  
+  zero1[D]
   
 }
 

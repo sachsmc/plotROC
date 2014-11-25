@@ -7,19 +7,20 @@ ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
   label = NULL, label.adj.x = 0, label.adj.y = 0, label.angle = 45)
 }
 \arguments{
-\item{rocdata}{Data frame as returned by calculate_roc}
+\item{rocdata}{Data frame containing true and false positive fractions, and cutoff values}
 
-\item{fpf_string}{Column name identifying false positive fraction}
+\item{fpf_string}{Column name identifying false positive fraction column}
 
-\item{tpf_string}{Column name identifying true positive fraction}
+\item{tpf_string}{Column name identifying true positive fraction column}
 
-\item{ci}{Logical, if TRUE will create invisible confidence regions for use in the interactive plot}
+\item{ci}{Logical, if TRUE will create invisible confidence regions for use
+in the interactive plot}
 
 \item{label}{Optional direct label for the ROC curve}
 
-\item{label.adj.x}{Adjustment for the positioning of the label}
+\item{label.adj.x}{Adjustment for the horizontal positioning of the label}
 
-\item{label.adj.y}{Adjustment for the positioning of the label}
+\item{label.adj.y}{Adjustment for the vertical positioning of the label}
 
 \item{label.angle}{Adjustment for angle of label}
 }
@@ -27,6 +28,8 @@ ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
 A ggplot object
 }
 \description{
-Given a result computed by \link{calculate_roc}, plot the curve using ggplot and sensible defaults
+Given a data frame or list of data frames as computed by \link{calculate_roc}
+plot the curve using ggplot and sensible
+defaults.
 }
 

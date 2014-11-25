@@ -1,5 +1,5 @@
 #' Add custom font size, more customizations to come
-#' @param font.size String describing font size
+#' @param font.size String describing font size, 12px, for example
 #' @keywords Internal
 
 

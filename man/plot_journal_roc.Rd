@@ -4,7 +4,7 @@
 \title{Plot an ROC curve for use in print}
 \usage{
 plot_journal_roc(ggroc_p, rocdata, font.size = 3, n.cuts = 20,
-  ci.at = NULL, alpha = 0.3)
+  ci.at = NULL, opacity = 0.3)
 }
 \arguments{
 \item{ggroc_p}{An object as returned by \link{ggroc} or \link{multi_ggroc}.
@@ -20,7 +20,7 @@ It can be modified with annotations, themes, etc.}
 \code{rocdata} must contain limits for the confidence region, as returned
 by \link{calculate_roc}}
 
-\item{alpha}{Alpha level for confidence region boxes. Defaults to 0.3. Must be between 0 and 1}
+\item{opacity}{Opacity level for confidence region boxes. Defaults to 0.3. Must be between 0 and 1}
 }
 \value{
 A ggplot object

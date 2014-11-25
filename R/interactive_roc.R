@@ -1,27 +1,34 @@
 
-#' Generate svg code for an ROC curve object. Includes necessary styling and
-#' Javascript code
+#' Generate svg code for an ROC curve object
 #' 
-#' If you intend to include more than one of these objects in a single page, use
-#' a different \code{prefix} string for each one.
+#' Takes a ggplot object as returned by \link{ggroc} or \link{multi_ggroc} and
+#' returns a string that contains html suitable for creating a standalone
+#' interactive ROC curve plot. 
 #' 
-#' @param ggroc_p An object as returned by \link{ggroc}. It can be modified with
-#'   annotations, themes, etc.
+#' @details If you intend to include more than one of these objects in a single
+#'   page, use a different \code{prefix} string for each one. To use this
+#'   function in knitr, use the chunk options \code{fig.keep='none'} and 
+#'   \code{results = 'asis'}, then \code{cat()} the resulting string to the
+#'   output. See the vignette for examples. Older browsers (< IE7) are not supported. 
+#'   
+#' @param ggroc_p An object as returned by \link{ggroc} or \link{multi_ggroc}.
+#'   It can be modified with annotations, themes, etc.
 #' @param cutoffs Vector of cutoff values
 #' @param font.size Character string that determines font size of cutoff labels
-#' @param prefix A string to assign to the objects within the svg. Enables
+#' @param prefix A string to assign to the objects within the svg. Enables 
 #'   unique idenfication by the javascript code
-#'  @param width Width in inches of plot
-#'  @param height Height in inches of plot
+#' @param width Width in inches of plot
+#' @param height Height in inches of plot
 #'   
 #' @export
 #' 
-#' @return A string containing the svg code necessary to plot the ROC curve in a
-#'   browser
+#' @return A character object containing the html necessary to plot the ROC curve in a
+#'   web browser
 #'   
 export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix = "a", width = 6, height = 6){
   
-  pdf(tempfile(fileext= ".pdf"), width = width, height = height)
+  tmpPlot <- tempfile(fileext= ".pdf")
+  pdf(tmpPlot, width = width, height = height)
   print(ggroc_p)
   grid::grid.force()
   
@@ -59,6 +66,8 @@ export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix 
   
   d3String <- getD3()
   
+  unlink(tmpPlot)
+  
   paste(c(cssString, d3String, svgString, jsString), collapse = "\n\n")
   
 }
@@ -66,13 +75,13 @@ export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix 
 
 #' Generate a standalone html document displaying an interactive ROC curve
 #' 
-#' @param rocdata An object as returned by \link{ggroc}. It can be modified with annotations, themes, etc. 
+#' @param rocdata An object as returned by \link{ggroc} or \link{multi_ggroc}. It can be modified with annotations, themes, etc. 
 #' @param file A path to save the result to. If NULL, will save to a temporary directory
 #' @param font.size Character string that determines font size of cutoff labels
 #' 
 #' @export
 #' 
-#' @return NULL opens an interactive document in the browswer
+#' @return NULL opens an interactive document in the default web browser
 #'
 
 plot_interactive_roc <- function(rocdata, file = NULL, font.size = "12px"){

@@ -1,20 +1,23 @@
 #' Plot an ROC curve
 #' 
-#' Given a result computed by \link{calculate_roc}, plot the curve using ggplot and sensible defaults
+#' Given a data frame or list of data frames as computed by \link{calculate_roc}
+#' plot the curve using ggplot and sensible
+#' defaults. 
 #' 
-#' @param rocdata Data frame as returned by calculate_roc
-#' @param fpf_string Column name identifying false positive fraction
-#' @param tpf_string Column name identifying true positive fraction
-#' @param ci Logical, if TRUE will create invisible confidence regions for use in the interactive plot
+#' @param rocdata Data frame containing true and false positive fractions, and cutoff values
+#' @param fpf_string Column name identifying false positive fraction column
+#' @param tpf_string Column name identifying true positive fraction column
+#' @param ci Logical, if TRUE will create invisible confidence regions for use
+#'   in the interactive plot
 #' @param label Optional direct label for the ROC curve
-#' @param label.adj.x Adjustment for the positioning of the label
-#' @param label.adj.y Adjustment for the positioning of the label
+#' @param label.adj.x Adjustment for the horizontal positioning of the label
+#' @param label.adj.y Adjustment for the vertical positioning of the label
 #' @param label.angle Adjustment for angle of label
-#' 
+#'   
 #' @export
 #' 
 #' @return A ggplot object
-#' 
+#'   
 
 ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
                   label = NULL, label.adj.x = 0, label.adj.y = 0, label.angle = 45){
@@ -55,7 +58,7 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
 #' 
 #' Given a list of results computed by \link{calculate_roc}, plot the curve using ggplot and sensible defaults
 #' 
-#' @param datalist List of data frames as returned by calculate_roc
+#' @param datalist List of data frames each containing true and false positive fractions and cutoffs
 #' @param fpf_string Column names identifying false positive fraction
 #' @param tpf_string Column names identifying true positive fraction
 #' @param lty Line types to distinguish curves
