@@ -81,7 +81,7 @@ export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix 
 #' 
 #' @export
 #' 
-#' @return NULL opens an interactive document in the default web browser
+#' @return NULL opens an interactive document in Rstudio or the default web browser
 #'
 
 plot_interactive_roc <- function(rocdata, file = NULL, font.size = "12px"){

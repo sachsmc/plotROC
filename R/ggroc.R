@@ -1,13 +1,15 @@
 #' Plot an ROC curve
 #' 
 #' Given a data frame or list of data frames as computed by \link{calculate_roc}
-#' plot the curve using ggplot and sensible
-#' defaults. 
+#' plot the curve using ggplot and sensible defaults. Pass the resulting object
+#' and data to \link{export_interactive_roc}, \link{plot_interactive_roc}, or
+#' \link{plot_journal_roc}.
 #' 
-#' @param rocdata Data frame containing true and false positive fractions, and cutoff values
+#' @param rocdata Data frame containing true and false positive fractions, and
+#'   cutoff values
 #' @param fpf_string Column name identifying false positive fraction column
 #' @param tpf_string Column name identifying true positive fraction column
-#' @param ci Logical, if TRUE will create invisible confidence regions for use
+#' @param ci Logical, if TRUE will create invisible confidence regions for use 
 #'   in the interactive plot
 #' @param label Optional direct label for the ROC curve
 #' @param label.adj.x Adjustment for the horizontal positioning of the label
@@ -56,21 +58,29 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
 
 #' Plot multiple ROC curves
 #' 
-#' Given a list of results computed by \link{calculate_roc}, plot the curve using ggplot and sensible defaults
+#' Given a list of results computed by \link{calculate_roc}, plot the curve
+#' using ggplot with sensible defaults. Pass the resulting object and data to
+#' \link{export_interactive_roc}, \link{plot_interactive_roc}, or
+#' \link{plot_journal_roc}.
 #' 
-#' @param datalist List of data frames each containing true and false positive fractions and cutoffs
+#' @param datalist List of data frames each containing true and false positive
+#'   fractions and cutoffs
 #' @param fpf_string Column names identifying false positive fraction
 #' @param tpf_string Column names identifying true positive fraction
 #' @param lty Line types to distinguish curves
-#' @param label Optional vector of direct labels for the ROC curve, same length as \code{datalist}
-#' @param label.adj.x Adjustment for the positioning of the label, same length as \code{datalist}
-#' @param label.adj.y Adjustment for the positioning of the label, same length as \code{datalist}
-#' @param label.angle Adjustment for angle of label, same length as \code{datalist}
-#' 
+#' @param label Optional vector of direct labels for the ROC curve, same length
+#'   as \code{datalist}
+#' @param label.adj.x Adjustment for the positioning of the label, same length
+#'   as \code{datalist}
+#' @param label.adj.y Adjustment for the positioning of the label, same length
+#'   as \code{datalist}
+#' @param label.angle Adjustment for angle of label, same length as
+#'   \code{datalist}
+#'   
 #' @export
 #' 
 #' @return A ggplot object
-#' 
+#'   
 
 multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf_string = rep("TPF", length(datalist)), 
                         lty = 1:length(datalist), label = NULL, label.adj.x = rep(0, length(datalist)), 

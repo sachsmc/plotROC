@@ -1,6 +1,6 @@
 #' Calculate the Empirical ROC curve
 #' 
-#' Calculate ROC curve given labels and predictions
+#' Calculate the empirical ROC curve estimate given labels and predictions
 #' 
 #' @param M continuous marker values or predictions of class labels
 #' @param D class labels, must be coded as 0 and 1. If not numeric with 0/1,
@@ -72,7 +72,7 @@ calculate_roc <- function(M, D, ci = FALSE, alpha = .05){
 
 #' Calculate the Empirical ROC curves for multiple biomarkers
 #' 
-#' Calculate ROC curves given labels and predictions. Designed to work with the
+#' Calculate empirical ROC curve estimates given labels and predictions. Designed to work with the
 #' \code{multi_ggroc} function, this takes a \code{data.frame} and computes the ROC
 #' curve for a given list of markers.
 #' 
@@ -118,7 +118,7 @@ calculate_multi_roc <- function(data, M_string, D_string){
 }
 
 
-#' Check that D is OK
+#' Check that D is OK for using as binary disease status
 #' 
 #' Checks for two classes and gives informative error messages
 #' 

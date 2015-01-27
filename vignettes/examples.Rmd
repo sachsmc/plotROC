@@ -1,11 +1,11 @@
 ---
-title: "ROC Curves using ggplot, gridSVG, and d3.js"
+title: "Generate Useful ROC Curve Charts for Print and Interactive Use"
 author: "Michael C Sachs"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{examples}
+  %\VignetteIndexEntry{plotROC Examples}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---

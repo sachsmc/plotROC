@@ -1,8 +1,7 @@
 
 #' Plot an ROC curve for use in print
 #' 
-#' Given a ggroc object, creates a plot suitable for print, with sensible
-#' defaults
+#' Given a ggroc object, creates a plot suitable for print.
 #' 
 #' @param ggroc_p An object as returned by \link{ggroc} or \link{multi_ggroc}.
 #'   It can be modified with annotations, themes, etc.
