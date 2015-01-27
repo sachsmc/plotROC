@@ -1,0 +1,198 @@
+---
+title: "Generate Useful ROC Curve Charts for Print and Interactive Use"
+author: "Michael C Sachs"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{plotROC Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+# Introduction
+
+## About ROC Curves
+
+The Receiver Operating Characteristic (ROC) curve is used to assess the accuracy of a continuous measurement for predicting a binary outcome. In medicine, ROC curves have a long history of use for evaluating diagnostic tests in radiology and general diagnostics. ROC curves have also been used for a long time in signal detection theory. 
+
+The accuracy of a diagnostic test can be evaluated by considering the two possible types of errors: false positives, and false negatives. For a continuous measurement that we denote as $M$, convention dictates that a test positive is defined as $M$ exceeding some fixed threshold $c$: $M > c$. In reference to the binary outcome that we denote as $D$, a good outcome of the test is when the test is positive among an individual who truly has a disease: $D = 1$. A bad outcome is when the test is positive among an individual who does not have the disease $D = 0$. 
+
+Formally, for a fixed cutoff $c$, the true positive fraction is the probability of a test positive among the diseased population:
+
+$$ TPF(c) = P\{ M > c | D = 1 \} $$
+
+and the false positive fraction is the probability of a test positive among the healthy population:
+
+$$ FPF(c) = P\{ M > c | D = 0 \} $$
+
+Since the cutoff $c$ is not usually fixed in advance, we can plot the TPF against the FPF for all possible values of $c$. This is exactly what the ROC curve is, $FPF(c)$ on the $x$ axis and $TPF(c)$ along the $y$ axis. 
+
+## Motivation
+
+In the medical literature, ROC curves are commonly plotted without the cutoff values displayed. Other problems with ROC curve plots are abundant in the medical literature. We aim to solve some of these problems by providing a plotting interface for the ROC curve that comes with sensible defaults. It is easy to create interactive ROC curves for local or web-based use. The next section details the usage of the `plotROC` package. 
+
+# Usage
+
+## Shiny application
+
+Try out the package before installation at http://sachsmc.shinyapps.io/plotROC
+
+## Installation
+
+The latest version of the plotROC package can be installed from github:
+
+```{r inst, eval = FALSE}
+devtools::install_github("sachsmc/plotROC")
+```
+
+
+## Quick start
+After installing, run the interactive Shiny app
+```{r shiny, eval = FALSE}
+shiny_plotROC()
+```
+
+This comes with an example data set to demonstrate the features of this package. You can also upload your own dataset. 
+
+## Command line basic usage
+
+We start by creating an example data set. The marker we generate is moderately accurate for predicting disease status. 
+
+```{r dataset}
+library(plotROC)
+D.ex <- rbinom(100, 1, .5)
+M.ex <- rnorm(100, mean = D.ex)
+```
+
+Next we use the `calculate_roc` function to compute the empirical ROC curve. The disease status need not be coded as 0/1, but `plotROC` assumes that the lowest value in sort order signifies disease-free status. This returns a data.frame with three components: the cutoff values, the TPF and the FPF. 
+
+```{r calc}
+rocdata <- calculate_roc(M.ex, D.ex)
+str(rocdata)
+```
+
+The `rocdata` is passed to the `ggroc` function with an optional label. This creates a ggplot object of the ROC curve. We create an interactive ROC plot using the `export_interactive_roc` function. Since this document was created with `knitr`, we `cat` the results so that it is displayed correctly.
+
+```{r test-a, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+myrocplot <- ggroc(rocdata, label = "Example")
+cat(export_interactive_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "a"))
+```
+
+That is an svg element. Try zooming in and you will see that it is scalable!
+
+The same data.frame `rocdata` can be used to generate an interactive plot to view in Rstudio viewer or web browser.
+
+```{r inter, eval = FALSE}
+plot_interactive_roc(rocdata)
+```
+
+The same `ggroc` object that we called `myrocplot` can be used to generate an ROC plot suitable for use in print. It annotates the cutoff values and is completely in black and white. 
+
+```{r print, fig.width = 6, fig.height = 6}
+plot_journal_roc(myrocplot, rocdata)
+```
+
+
+## Advanced options
+
+### Click to view confidence region
+
+For interactive plots, we use the `ci = TRUE` option in `calculcate_roc` and `ggroc` to create click events. On click, an exact confidence region for the TPF and FPF is overlaid. 
+
+```{r test-a-ci, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+
+rocdata <- calculate_roc(M.ex, D.ex, ci = TRUE)
+myrocplot <- ggroc(rocdata, label = "Example", ci = TRUE)
+cat(export_interactive_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "aci"))
+```
+
+For use in print, pass a small list of locations at which to display the confidence regions. 
+
+```{r printci, fig.width = 6, fig.height = 6}
+plot_journal_roc(myrocplot, rocdata, n.cuts = 10, ci.at = c(-.5, .5, 2.1))
+```
+
+### Multiple ROC curves
+
+If you have multiple measurements of different types on the same subjects, you can use the `calculate_multi_roc` function to compute the empirical ROC curve for each measurement.  Then the `multi_ggroc` function creates the appropriate type of ggplot object. Confidence regions are not supported for multiple curves. 
+
+```{r multistart}
+D.ex <- rbinom(100, 1, .5)
+
+fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex, sd = .4), M3 = runif(100), D = D.ex)
+datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
+rocplot <- multi_ggroc(datalist)
+```
+
+This multi ggroc object can be passed to the `plot_journal_roc` and the `export_interactive_roc` functions, as desired. 
+
+```{r multi, fig.width = 6, fig.height = 6}
+plot_journal_roc(rocplot, datalist)
+```
+
+```{r test-multi, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+cat(export_interactive_roc(rocplot, cutoffs = lapply(datalist, function(d) d$c), font.size = "12px", prefix = "bmulti"))
+```
+
+Labels can be added easily with the `label` option. 
+
+```{r multi2, fig.width = 6, fig.height = 6}
+rocplot <- multi_ggroc(datalist, label = c("M1", "M2", "M3"))
+plot_journal_roc(rocplot, datalist)
+```
+
+### Themes and annotations
+
+`plotROC` uses the `ggplot2` package to create ggplot objects. Therefore, themes and annotations can be added to `ggroc` objects in the usual way. 
+
+```{r test-b, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+library(ggthemes)
+myplot2 <- myrocplot + theme_igray() + ggtitle("Click me")
+
+cat(export_interactive_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "b"))
+```
+
+```{r print2, fig.width = 6, fig.height = 6}
+plot_journal_roc(myrocplot, rocdata) + theme_igray() + ggtitle("My awesome new biomarker")
+```
+
+### Other estimation methods
+
+By default `calculate_roc` computes the empirical ROC curve. There are other estimation methods out there, see Pepe (2003) _The Statistical Evaluation of Medical Tests for Classification and Prediction_ for more information.
+
+Any estimation method can be used, as long as the cutoff, the TPF and the FPF are returned. Then you can simply pass those values in a data.frame to the `ggroc` function. For example, let's try the binormal method to create a smooth curve. 
+
+```{r binormalsetup}
+D.ex <- rbinom(100, 1, .5)
+M.ex <- rnorm(100, mean = D.ex, sd = .5)
+
+mu1 <- mean(M.ex[D.ex == 1])
+mu0 <- mean(M.ex[D.ex == 0])
+s1 <- sd(M.ex[D.ex == 1])
+s0 <- sd(M.ex[D.ex == 0])
+c.ex <- seq(min(M.ex), max(M.ex), length.out = 300)
+
+binorm_rocdata <- data.frame(c = c.ex, FPF = pnorm((mu0 - c.ex)/s0), TPF = pnorm((mu1 - c.ex)/s1))
+```
+
+Then we can pass this data.frame to the `ggroc` function as before. 
+
+```{r binormal, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+binorm_plot <- ggroc(binorm_rocdata, label = "Binormal")
+cat(export_interactive_roc(binorm_plot, cutoffs = c.ex, font.size = "12px", prefix = "bin"))
+```
+
+
+# Acknowledgements
+
+This package would not be possible without the following:
+
+  - [ggplot2](http://ggplot2.org/)
+  - [gridSVG](http://sjp.co.nz/projects/gridsvg/)
+  - [d3.js](http://d3js.org)
+  
+
+
+
+
