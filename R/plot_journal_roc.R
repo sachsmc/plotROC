@@ -7,7 +7,7 @@
 #'   It can be modified with annotations, themes, etc.
 #' @param rocdata An object as returned by \link{calculate_roc}.
 #' @param font.size Integer that determines font size of cutoff labels
-#' @param n.cuts Number of cutoffs to display
+#' @param n.cuts Number of cutoffs to display 
 #' @param ci.at Cutoff values at which to plot confidence regions, if non-NULL,
 #'   \code{rocdata} must contain limits for the confidence region, as returned
 #'   by \link{calculate_roc}
@@ -20,6 +20,7 @@
 plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20, ci.at = NULL, opacity = .3){
   
   stopifnot(opacity <= 1 & opacity >= 0)
+  stopifnot(n.cuts >= 0)
   
   if(is.data.frame(rocdata)){
     
@@ -90,10 +91,12 @@ plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20, ci.at
         strdat <- subdat
         strdat$FPF <- strdat$FPF - .01
         strdat$TPF <- strdat$TPF + .01
-        
-        strdat$FPF[1] <- strdat$FPF[1] + .03 * (i - 1)
-        strdat$TPF[nrow(strdat)] <- strdat$TPF[nrow(strdat)] + .03 * (i - 1)
         strdat$c <- paste(round(strdat$c, 1))
+        
+        if(dim(strdat)[1] > 0) {
+          strdat$FPF[1] <- strdat$FPF[1] + .03 * (i - 1)
+          strdat$TPF[nrow(strdat)] <- strdat$TPF[nrow(strdat)] + .03 * (i - 1)
+        }
         
         ggroc_p <- ggroc_p + ggplot2::theme_bw() + ggplot2::geom_point(data = subdat, ggplot2::aes_string(x = "FPF", y = "TPF")) + 
           ggplot2::geom_text(data = strdat, ggplot2::aes_string(x = "FPF", y = "TPF", label = "c"), hjust = 1, vjust = 0, size = font.size)

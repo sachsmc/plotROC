@@ -1,3 +1,7 @@
+plotROC 1.3.1
+-----------
+  * fix multi plot with n.cuts = 0 bug
+
 plotROC 1.3
 ------------
   * Added tests
