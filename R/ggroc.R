@@ -92,10 +92,11 @@ multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf
   min_br <-  c(seq(0, .1, by = .01), seq(.9, 1, by = .01))
   br <- c(0, .1, .25, .5, .75, .9, 1)
   
-  p1 <- ggplot2::ggplot(datalist[[1]], ggplot2::aes_string(x = fpf_string[1], y = tpf_string[1]))  + ggplot2::geom_point(color = "red", alpha = 0) +
+  p1 <- ggplot2::ggplot(datalist[[1]], ggplot2::aes_string(x = fpf_string[1], y = tpf_string[1]))  + 
+    ggplot2::geom_point(color = "red", alpha = 0) +
     ggplot2::geom_abline(intercept = 0, slope = 1, lty = 1, color = "white") + 
     ggplot2::scale_x_continuous("False positive fraction", minor_breaks = min_br, breaks = br) + 
-    ggplot2::scale_y_continuous("True positive fraction", minor_breaks = min_br, breaks = br) + ggplot2::geom_path(lty = lty[1]) 
+    ggplot2::scale_y_continuous("True positive fraction", minor_breaks = min_br, breaks = br) + ggplot2::geom_path(linetype = lty[1]) 
   
   if(!is.null(label)){
     
