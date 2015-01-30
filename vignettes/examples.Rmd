@@ -122,13 +122,13 @@ D.ex <- rbinom(100, 1, .5)
 
 fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex, sd = .4), M3 = runif(100), D = D.ex)
 datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
-rocplot <- multi_ggroc(datalist)
+rocplot <- multi_ggroc(datalist, label = c("M1", "M2", "M3"))
 ```
 
 This multi ggroc object can be passed to the `plot_journal_roc` and the `export_interactive_roc` functions, as desired. 
 
 ```{r multi, fig.width = 6, fig.height = 6}
-plot_journal_roc(rocplot, datalist)
+plot_journal_roc(rocplot, datalist, lty = rep(1, 3), color = c("blue", "green", "purple"), legend = TRUE)
 ```
 
 ```{r test-multi, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}

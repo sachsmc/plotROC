@@ -38,25 +38,10 @@ export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix 
   cis <- length(rects) > 0
   if(!cis) rects <- "qk2d4gb6q7ur"
   
-  if(is.list(cutoffs)){
-    
-    for(i in 1:length(cutoffs)){
-      
-      gridSVG::grid.garnish(path = ptns[i], cutoff = paste(cutoffs[[i]]), group = FALSE, global = TRUE)
-      
-    }
-    
-    pointns <- paste0("[id^=\'", paste0(prefix, ptns), ".1.\']")
-    
-    jsString <- modJs(selector= paste(pointns, collapse = ","), prefix = prefix)
-    
-  } else {
-  
-  gridSVG::grid.garnish(path = ptns, cutoff = paste(cutoffs), group = FALSE, global = TRUE)
+
+  gridSVG::grid.garnish(path = ptns, cutoff = paste(unlist(cutoffs)), group = FALSE, global = TRUE)
   jsString <- modJs(paste0("[id^=\'", prefix, ptns, ".1.\']"), prefix = prefix, rects)
-  
-  }
-  
+    
   cssString <- modCss(font.size)
   tmpFile <- tempfile()
   svgString <- gridSVG::grid.export(name = tmpFile, prefix = prefix)$svg

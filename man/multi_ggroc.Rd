@@ -5,10 +5,11 @@
 \title{Plot multiple ROC curves}
 \usage{
 multi_ggroc(datalist, fpf_string = rep("FPF", length(datalist)),
-  tpf_string = rep("TPF", length(datalist)), lty = 1:length(datalist),
-  label = NULL, label.adj.x = rep(0, length(datalist)),
-  label.adj.y = rep(0, length(datalist)), label.angle = rep(45,
-  length(datalist)))
+  tpf_string = rep("TPF", length(datalist)), label = NULL,
+  label.adj.x = rep(0, length(datalist)), label.adj.y = rep(0,
+  length(datalist)), label.angle = rep(45, length(datalist)),
+  lty = 1:length(datalist), color = NULL, plotmath = TRUE,
+  legend = FALSE, ...)
 }
 \arguments{
 \item{datalist}{List of data frames each containing true and false positive
@@ -17,8 +18,6 @@ fractions and cutoffs}
 \item{fpf_string}{Column names identifying false positive fraction}
 
 \item{tpf_string}{Column names identifying true positive fraction}
-
-\item{lty}{Line types to distinguish curves}
 
 \item{label}{Optional vector of direct labels for the ROC curve, same length
 as \code{datalist}}
@@ -30,7 +29,17 @@ as \code{datalist}}
 as \code{datalist}}
 
 \item{label.angle}{Adjustment for angle of label, same length as
-  \code{datalist}}
+\code{datalist}}
+
+\item{lty}{Vector of positive integers denoting line types to distinguish curves}
+
+\item{color}{Optional vector of colors to distinguish curves. If NULL, all curves will be black.}
+
+\item{plotmath}{Logical. If TRUE, labels will be parsed as expressions. See \code{?plotmath} for details.}
+
+\item{legend}{Logical. If TRUE, legend with labels is plotted in lower right corner of plot.}
+
+\item{...}{Other aethetics settings passed to \code{geom_path}, e.g. \code{lwd} or \code{size}.}
 }
 \value{
 A ggplot object
