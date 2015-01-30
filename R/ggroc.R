@@ -9,6 +9,7 @@
 #'   cutoff values
 #' @param fpf_string Column name identifying false positive fraction column
 #' @param tpf_string Column name identifying true positive fraction column
+#' @param c_string Column name identifying cutoff values
 #' @param ci Logical, if TRUE will create invisible confidence regions for use 
 #'   in the interactive plot
 #' @param label Optional direct label for the ROC curve
@@ -26,7 +27,7 @@
 #' @return A ggplot object
 #'   
 
-ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
+ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", c_string = "c", ci = FALSE,
                   label = NULL, label.adj.x = 0, label.adj.y = 0, label.angle = 45, plotmath = FALSE,
                   xlabel = "False positive fraction", ylabel = "True positive fraction"){
   
@@ -57,6 +58,9 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
     
   }
   
+  colnames(rocdata[, c(fpf_string, tpf_string, c_string)]) <- c("FPF", "TPF", "c")
+  p1$rocdata <- rocdata
+  p1$roctype <- "single"
   p1
     
   
@@ -73,6 +77,7 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
 #'   fractions and cutoffs
 #' @param fpf_string Column names identifying false positive fraction
 #' @param tpf_string Column names identifying true positive fraction
+#' @param c_string Column names identifying cutoff values
 #' @param label Optional vector of direct labels for the ROC curve, same length
 #'   as \code{datalist}
 #' @param label.adj.x Adjustment for the positioning of the label, same length
@@ -91,6 +96,7 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
 #'   
 
 multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf_string = rep("TPF", length(datalist)), 
+                        c_string = rep("c", length(datalist)),
                         label = NULL, label.adj.x = rep(0, length(datalist)), 
                         label.adj.y = rep(0, length(datalist)), label.angle = rep(45, length(datalist)),
                         plotmath = FALSE, xlabel = "False positive fraction", ylabel = "True positive fraction"){
@@ -149,6 +155,17 @@ multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf
       }
     }
   
+  
+  datalist <- lapply(1:length(datalist), function(i){
+    
+    df <- datalist[[i]]
+    colnames(df[, c(fpf_string[i], tpf_string[i], c_string[i])]) <- c("FPF", "TPF", "c")
+    df
+    
+  })
+  
+  p1$rocdata <- datalist
+  p1$roctype <- "multi"
   p1
   
 }

@@ -5,7 +5,6 @@
 #' 
 #' @param ggroc_p An object as returned by \link{ggroc} or \link{multi_ggroc}.
 #'   It can be modified with annotations, themes, etc.
-#' @param rocdata An object as returned by \link{calculate_roc}.
 #' @param font.size Integer that determines font size of cutoff labels
 #' @param n.cuts Number of cutoffs to display 
 #' @param ci.at Cutoff values at which to plot confidence regions, if non-NULL,
@@ -22,11 +21,13 @@
 #' @export
 #' 
 #' @return A ggplot object
-plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20, ci.at = NULL, opacity = .3, 
+plot_journal_roc <- function(ggroc_p, font.size = 3, n.cuts = 20, ci.at = NULL, opacity = .3, 
                              lty = NULL, color = NULL, lwd = NULL, legend = FALSE){
   
   stopifnot(opacity <= 1 & opacity >= 0)
   stopifnot(n.cuts >= 0)
+  
+  rocdata <- ggroc_p$rocdata
   
   if(is.data.frame(rocdata)){  ## single curve
        

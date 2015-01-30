@@ -4,12 +4,10 @@
 \alias{plot_interactive_roc}
 \title{Generate a standalone html document displaying an interactive ROC curve}
 \usage{
-plot_interactive_roc(ggroc, cutoffs, file = NULL, ...)
+plot_interactive_roc(ggroc, file = NULL, ...)
 }
 \arguments{
 \item{ggroc}{An object as returned by \link{ggroc} or \link{multi_ggroc}. It can be modified with annotations, themes, etc.}
-
-\item{cutoffs}{Vector of cutoff values}
 
 \item{file}{A path to save the result to. If NULL, will save to a temporary directory}
 

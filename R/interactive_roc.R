@@ -13,7 +13,7 @@
 #'   
 #' @param ggroc_p An object as returned by \link{ggroc} or \link{multi_ggroc}.
 #'   It can be modified with annotations, themes, etc.
-#' @param cutoffs Vector of cutoff values
+#' @param cutoffs Optional vector or list of vectors to over-ride the default cutoff labels. Useful for rescaling or rounding. 
 #' @param font.size Character string that determines font size of cutoff labels
 #' @param prefix A string to assign to the objects within the svg. Enables 
 #'   unique idenfication by the javascript code
@@ -30,11 +30,13 @@
 #' @return A character object containing the html necessary to plot the ROC curve in a
 #'   web browser
 #'   
-export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix = "a", width = 6, height = 6, 
+export_interactive_roc <- function(ggroc_p, cutoffs = NULL, font.size = "12px", prefix = "a", width = 6, height = 6, 
                                    lty = NULL, color = NULL, lwd = NULL, legend = FALSE){
   
+  if(is.null(cutoffs) & ggroc_p$roctype == "single"){ cutoffs <- ggroc_p$rocdata$c 
+  } else if(is.null(cutoffs) & ggroc_p$roctype == "multi") cutoffs <- lapply(ggroc_p$rocdata, function(df) df$c)
   
-  if(any(!is.null(lty), !is.null(color), !is.null(lwd)) & !is.list(cutoffs)){
+  if(any(!is.null(lty), !is.null(color), !is.null(lwd)) & ggroc_p$roctype == "single"){
     
     args <- list(linetype = lty, color = color, size = lwd)
     args[sapply(args, is.null)] <- NULL
@@ -103,7 +105,6 @@ export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix 
 #' Generate a standalone html document displaying an interactive ROC curve
 #' 
 #' @param ggroc An object as returned by \link{ggroc} or \link{multi_ggroc}. It can be modified with annotations, themes, etc. 
-#' @param cutoffs Vector of cutoff values
 #' @param file A path to save the result to. If NULL, will save to a temporary directory
 #' @param ... arguments passed to \link{export_interactive_roc}
 #' 
@@ -112,7 +113,7 @@ export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix 
 #' @return NULL opens an interactive document in Rstudio or the default web browser
 #'
 
-plot_interactive_roc <- function(ggroc, cutoffs, file = NULL, ...){
+plot_interactive_roc <- function(ggroc, file = NULL, ...){
   
   if(is.null(file)){
     
@@ -125,7 +126,7 @@ plot_interactive_roc <- function(ggroc, cutoffs, file = NULL, ...){
   }
   
 
-  body <- export_interactive_roc(ggroc, cutoffs = cutoffs, ...)
+  body <- export_interactive_roc(ggroc, ...)
   
   cat("<!DOCTYPE html>
 <html xmlns=\"http://www.w3.org/1999/xhtml\">

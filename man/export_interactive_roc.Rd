@@ -4,15 +4,15 @@
 \alias{export_interactive_roc}
 \title{Generate svg code for an ROC curve object}
 \usage{
-export_interactive_roc(ggroc_p, cutoffs, font.size = "12px", prefix = "a",
-  width = 6, height = 6, lty = NULL, color = NULL, lwd = NULL,
-  legend = FALSE)
+export_interactive_roc(ggroc_p, cutoffs = NULL, font.size = "12px",
+  prefix = "a", width = 6, height = 6, lty = NULL, color = NULL,
+  lwd = NULL, legend = FALSE)
 }
 \arguments{
 \item{ggroc_p}{An object as returned by \link{ggroc} or \link{multi_ggroc}.
 It can be modified with annotations, themes, etc.}
 
-\item{cutoffs}{Vector of cutoff values}
+\item{cutoffs}{Optional vector or list of vectors to over-ride the default cutoff labels. Useful for rescaling or rounding.}
 
 \item{font.size}{Character string that determines font size of cutoff labels}
 

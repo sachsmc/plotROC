@@ -4,9 +4,9 @@
 \alias{ggroc}
 \title{Plot an ROC curve}
 \usage{
-ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
-  label = NULL, label.adj.x = 0, label.adj.y = 0, label.angle = 45,
-  plotmath = FALSE, xlabel = "False positive fraction",
+ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF", c_string = "c",
+  ci = FALSE, label = NULL, label.adj.x = 0, label.adj.y = 0,
+  label.angle = 45, plotmath = FALSE, xlabel = "False positive fraction",
   ylabel = "True positive fraction")
 }
 \arguments{
@@ -16,6 +16,8 @@ cutoff values}
 \item{fpf_string}{Column name identifying false positive fraction column}
 
 \item{tpf_string}{Column name identifying true positive fraction column}
+
+\item{c_string}{Column name identifying cutoff values}
 
 \item{ci}{Logical, if TRUE will create invisible confidence regions for use
 in the interactive plot}
