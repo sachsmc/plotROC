@@ -21,7 +21,7 @@ shinyServer(function(input, output, session){
       
     } else {
       
-      calculate_roc(data()[,input$M], data()[,input$D], CI = TRUE, alpha = input$alpha)
+      calculate_roc(data()[,input$M], data()[,input$D], ci = TRUE, alpha = input$alpha)
       
     }
   })
@@ -64,7 +64,7 @@ shinyServer(function(input, output, session){
     if(input$multi == TRUE & length(input$Ms) > 1){
         validate(
           need(length(unique(data()[,input$D])) == 2, 'Outcome must only have 2 levels.'),
-          need(input$Ms != '', 'Please choose a more marker variable.')
+          need(input$Ms != '', 'Please choose a marker variable.')
         )
         
         if(input$label == "") lab <- NULL else { 
@@ -82,14 +82,6 @@ shinyServer(function(input, output, session){
     
   })
   
-  inter_cutoffs <- reactive({
-    
-    if(input$multi == TRUE & length(input$Ms) > 1){
-      lapply(rocdata(), function(d) d$c) 
-    } else {
-      rocdata()$c
-    }
-  })
   
   output$printPlot <- renderPlot({
     
@@ -98,13 +90,13 @@ shinyServer(function(input, output, session){
       ci.at <- as.numeric(sapply(strsplit(input$ci.at, ",")[[1]], trim))
       
     }
-    plot_journal_roc(thisggroc(), rocdata(), font.size = input$font.size/4, n.cuts = input$n.cuts, ci.at = ci.at)
+    plot_journal_roc(thisggroc(), font.size = input$font.size/4, n.cuts = input$n.cuts, ci.at = ci.at)
     
     })
   
   output$intPlot <- renderUI({
     
-    HTML(export_interactive_roc(thisggroc(), inter_cutoffs(), font.size = paste0(input$font.size, "px")))
+    HTML(export_interactive_roc(thisggroc(), font.size = paste0(input$font.size, "px")))
     
   })
   
@@ -123,7 +115,7 @@ shinyServer(function(input, output, session){
          }
          
          ggsave(filename = file, 
-                plot = plot_journal_roc(thisggroc(), rocdata(), font.size = input$font.size/4, n.cuts = input$n.cuts, ci.at = ci.at), 
+                plot = plot_journal_roc(thisggroc(), font.size = input$font.size/4, n.cuts = input$n.cuts, ci.at = ci.at), 
                 width = 7, height = 7, device = pdf)
          
          
@@ -139,7 +131,7 @@ shinyServer(function(input, output, session){
       cat("<!DOCTYPE html>
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 \n", file = file)
-      cat(export_interactive_roc(thisggroc(), inter_cutoffs(), font.size = paste0(input$font.size, "px")), file = file, append = TRUE)
+      cat(export_interactive_roc(thisggroc(), font.size = paste0(input$font.size, "px")), file = file, append = TRUE)
       cat("\n</html>", file = file, append = TRUE)
       
       
