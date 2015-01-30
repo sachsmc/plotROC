@@ -56,11 +56,11 @@ In the medical literature, ROC curves are commonly plotted without the cutoff va
 
 ## Shiny application
 
-I created a \pkg{shiny} application [@shiny] in order to make the features more accessible to non-\proglang{R} users. A limited subset of the functions of the \pkg{plotROC} can be performed on an example dataset or on data that users upload to the website. Resulting plots can be saved to the users' machine as a pdf or as a stand-alone html file.  It can be used in any modern web browser with no other dependencies at the website here: http://sachsmc.shinyapps.io/plotROC. 
+I created a [shiny application](http://shiny.rstudio.com) in order to make the features more accessible to non-R users. A limited subset of the functions of the plotROC package can be performed on an example dataset or on data that users upload to the website. Resulting plots can be saved to the users' machine as a pdf or as a stand-alone html file.  It can be used in any modern web browser with no other dependencies at the website here: http://sachsmc.shinyapps.io/plotROC. 
 
 ## Installation and loading
 
-\pkg{plotROC} can be installed from the Comprehensive \proglang{R} Archive Network, or installed from github. 
+**plotROC** can be installed from the CRAN, or installed from github. 
 
 ```{r load, eval = FALSE}
 install.packages("plotROC")
@@ -153,7 +153,7 @@ plot_journal_roc(multi.rocplot)
 
 Both `plot_journal_roc` and `export_interactive_roc` support a number of options to customize the look of the plots. By default, multiple curves are distinguished by different line types and direct labels. For multiple ROC curves that are similar to one another, those defaults can make it difficult to interpret the plots. Therefore, we also support colors and legends. The x- and y-axis can be changed by passing options to `ggroc` or `multi_ggroc`. The next code block illustrates the available options. 
 
-```{r multi3, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+```{r multi3, message = FALSE, warning = FALSE, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
 colorplot <- multi_ggroc(estimate.list, 
                          xlabel = "1 - Specificity", 
                          ylabel = "Sensitivity")
@@ -168,7 +168,7 @@ cat(
 
 ### Click to view confidence region
 
-I use the `ci = TRUE` option in `calculcate_roc` and `ggroc` to compute confidence regions for points on the ROC curve using the @clopper1934use exact method. Briefly, exact confidence intervals are calculated for the $FPF$ and $TPF$ separately, each at level $1 - \sqrt{1 - \alpha}$. Based on result 2.4 from @pepe2003statistical, the cross-product of these intervals yields a $100 * (1 - \alpha)$ percent rectangular confidence region for the pair. The significance level can be specified using the `alpha` option. 
+I use the `ci = TRUE` option in `calculcate_roc` and `ggroc` to compute confidence regions for points on the ROC curve using the Clopper and Pearson (1934) exact method. Briefly, exact confidence intervals are calculated for the $FPF$ and $TPF$ separately, each at level $1 - \sqrt{1 - \alpha}$. Based on result 2.4 from Pepe (2003), the cross-product of these intervals yields a $100 * (1 - \alpha)$ percent rectangular confidence region for the pair. The significance level can be specified using the `alpha` option. 
 
 ```{r test-a-ci}
 roc.ci <- calculate_roc(paired.data$M1, paired.data$D, ci = TRUE, alpha = 0.05)
