@@ -7,6 +7,7 @@ shinyUI(navbarPage("ROC Plot",
                                       fluidRow(
                                         column(6, 
                                                h4("Interactive Plot"), 
+                                               helpText("Mouse over to view cutoff labels. Click to view confidence region."),
                                                htmlOutput("intPlot"),
                                                downloadButton("activeDownload", label = "Download", class = NULL)
                                                ), 
