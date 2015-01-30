@@ -22,6 +22,7 @@ To install the latest Github version, use `devtools`
 
 ```{r install, eval = FALSE}
 devtools::install_github("sachsmc/plotROC")
+library(plotROC)
 ```
 
 ## Basic usage
@@ -37,7 +38,7 @@ shiny_plotROC()
 
 ## Hover over to view the cutoff values
 
-```{r test-a, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+```{r test-a, fig.keep='none', results = 'asis', echo = -1, fig.width=6, fig.height=6}
 library(plotROC)
 D.ex <- rbinom(100, 1, .5)
 
@@ -45,7 +46,7 @@ rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
 
 myrocplot <- ggroc(rocdata, label = "Example")
 
-cat(export_interactive_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "a"))
+cat(export_interactive_roc(myrocplot, font.size = "12px", prefix = "a"))
 ```
 
 
@@ -57,7 +58,7 @@ rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex, CI = TRUE)
 
 myrocplot <- ggroc(rocdata, label = "Example", ci = TRUE)
 
-cat(export_interactive_roc(myrocplot, cutoffs = rocdata$c, font.size = "12px", prefix = "aci"))
+cat(export_interactive_roc(myrocplot, font.size = "12px", prefix = "aci"))
 ```
 
 That is an svg element. Try zooming in!
@@ -75,20 +76,20 @@ plot_interactive_roc(rocdata)
 library(ggthemes)
 myplot2 <- myrocplot + theme_igray()
 
-cat(export_interactive_roc(myplot2, cutoffs = rocdata$c, font.size = "12px", prefix = "b"))
+cat(export_interactive_roc(myplot2, font.size = "12px", prefix = "b"))
 ```
 
 
 # For using in print
 
 ```{r print, fig.width = 6, fig.height = 6}
-plot_journal_roc(myrocplot, rocdata)
+plot_journal_roc(myrocplot)
 ```
 
 # Themes work in print too, but I don't recommend colors
 
 ```{r print2, fig.width = 6, fig.height = 6}
-plot_journal_roc(myrocplot, rocdata) + theme_igray() + ggtitle("My awesome new biomarker")
+plot_journal_roc(myrocplot) + theme_igray() + ggtitle("My awesome new biomarker")
 ```
 
 
@@ -101,11 +102,11 @@ fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex
 datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
 
 rocplot <- multi_ggroc(datalist)
-plot_journal_roc(rocplot, datalist)
+plot_journal_roc(rocplot)
 ```
 
 ```{r test-multi, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
-cat(export_interactive_roc(rocplot, cutoffs = lapply(datalist, function(d) d$c), font.size = "12px", prefix = "bmulti"))
+cat(export_interactive_roc(rocplot, font.size = "12px", prefix = "bmulti"))
 ```
 
 ## Labels
@@ -116,7 +117,7 @@ fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex
 datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
 
 rocplot <- multi_ggroc(datalist, label = c("M1", "M2", "M3"))
-plot_journal_roc(rocplot, datalist)
+plot_journal_roc(rocplot)
 ```
 
 
