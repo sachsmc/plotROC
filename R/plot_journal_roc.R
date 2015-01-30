@@ -98,8 +98,10 @@ plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20, ci.at
           strdat$TPF[nrow(strdat)] <- strdat$TPF[nrow(strdat)] + .03 * (i - 1)
         }
         
-        ggroc_p <- ggroc_p + ggplot2::theme_bw() + ggplot2::geom_point(data = subdat, ggplot2::aes_string(x = "FPF", y = "TPF")) + 
-          ggplot2::geom_text(data = strdat, ggplot2::aes_string(x = "FPF", y = "TPF", label = "c"), hjust = 1, vjust = 0, size = font.size)
+        ggroc_p <- ggroc_p + ggplot2::theme_bw() + 
+          ggplot2::geom_point(data = subdat, ggplot2::aes_string(x = "FPF", y = "TPF", linetype = NULL)) + 
+          ggplot2::geom_text(data = strdat, ggplot2::aes_string(x = "FPF", y = "TPF", label = "c", linetype = NULL), 
+                             hjust = 1, vjust = 0, size = font.size)
         
       }
   

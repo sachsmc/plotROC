@@ -67,7 +67,8 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
 #'   fractions and cutoffs
 #' @param fpf_string Column names identifying false positive fraction
 #' @param tpf_string Column names identifying true positive fraction
-#' @param lty Line types to distinguish curves
+#' @param lty Vector of positive integers denoting line types to distinguish curves
+#' @param color Optional vector of colors to distinguish curves. If NULL, all curves will be black. 
 #' @param label Optional vector of direct labels for the ROC curve, same length
 #'   as \code{datalist}
 #' @param label.adj.x Adjustment for the positioning of the label, same length
@@ -77,6 +78,8 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
 #' @param label.angle Adjustment for angle of label, same length as
 #'   \code{datalist}
 #'   @param plotmath Logical. If TRUE, labels will be parsed as expressions. See \code{?plotmath} for details. 
+#'   @param legend Logical. If TRUE, legend with labels is plotted in lower right corner of plot. 
+#'   @param ... Other aethetics settings passed to \code{geom_path}, e.g. \code{lwd} or \code{size}.
 #'   
 #' @export
 #' 
@@ -84,9 +87,10 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
 #'   
 
 multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf_string = rep("TPF", length(datalist)), 
-                        lty = 1:length(datalist), label = NULL, label.adj.x = rep(0, length(datalist)), 
-                        label.adj.y = rep(0, length(datalist)), label.angle = rep(45, length(datalist)), 
-                        plotmath = TRUE){
+                        label = NULL, label.adj.x = rep(0, length(datalist)), 
+                        label.adj.y = rep(0, length(datalist)), label.angle = rep(45, length(datalist)),
+                        lty = 1:length(datalist), color = NULL, 
+                        plotmath = TRUE, legend = FALSE){
   
   stopifnot(all(sapply(1:length(datalist), function(i) fpf_string[i] %in% colnames(datalist[[i]]))))
   stopifnot(all(sapply(1:length(datalist), function(i) tpf_string[i] %in% colnames(datalist[[i]]))))
@@ -114,12 +118,20 @@ multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf
   })
   plotframe <- do.call(rbind, ldatalist)
   
-  p1 <- ggplot2::ggplot(plotframe, ggplot2::aes_string(x = "FPF", y = "TPF", linetype = "Marker")) + ggplot2::geom_path() + 
+  p1 <- ggplot2::ggplot(plotframe, ggplot2::aes_string(x = "FPF", y = "TPF", linetype = "Marker", color = "Marker")) + 
+    ggplot2::geom_path(...) + 
     ggplot2::geom_point(color = "red", alpha = 0) +
     ggplot2::geom_abline(intercept = 0, slope = 1, lty = 1, color = "white") + 
     ggplot2::scale_x_continuous("False positive fraction", minor_breaks = min_br, breaks = br) + 
-    ggplot2::scale_y_continuous("True positive fraction", minor_breaks = min_br, breaks = br) 
-  
+    ggplot2::scale_y_continuous("True positive fraction", minor_breaks = min_br, breaks = br) + 
+    ggplot2::scale_linetype_manual(values = lty)
+    
+    
+  if(legend){
+    p1 <- p1 + ggplot2::theme(legend.justification=c(1,0), legend.position=c(1,0)) # anchor bottom-right/bottom-right
+  } else {
+    p1 <- p1 + ggplot2::theme(legend.position = "none")
+  }
    
   if(!is.null(label)){
    
@@ -128,14 +140,29 @@ multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf
       xy <- datalist[[i]][datalist[[i]][, tpf_string[i]] + datalist[[i]][, fpf_string[i]] < 1, c(fpf_string[i], tpf_string[i])][1,]
       X <- xy[1] + label.adj.x[i] + .05
       Y <- xy[2] - .05 + label.adj.y[i]
-      p1 <- p1 + ggplot2::geom_text(data = data.frame(FPF = X, TPF = Y, label = label[i], Marker = NA), 
-                                    ggplot2::aes_string(x = "FPF", y  = "TPF", label = "label", linetype = NULL), 
+      p1 <- p1 + ggplot2::geom_text(data = data.frame(FPF = X, TPF = Y, label = label[i]), 
+                                    ggplot2::aes_string(x = "FPF", y  = "TPF", label = "label", 
+                                                        color = NULL, linetype = NULL), 
                                     angle = label.angle[i], 
                                     parse = plotmath)
       
     
       }
     }
+  
+  if(is.null(color)){
+    
+    p1 <- p1 + ggplot2::scale_color_manual(values = rep("black", length(datalist)))
+    
+  } else if(length(color) < length(datalist)){
+    
+    p1 <- p1 + ggplot2::scale_color_brewer(type = "qual")
+    
+  } else {
+    
+    p1 <- p1 + ggplot2::scale_color_manual(values = color)
+    
+  }
   
   p1
   
