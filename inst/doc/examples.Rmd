@@ -10,6 +10,26 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
+```{r, echo=FALSE}
+library(knitr)
+knit_hooks$set(source = function(x, options){
+  if (!is.null(options$verbatim) && options$verbatim){
+    opts = gsub(",\\s*verbatim\\s*=\\s*TRUE\\s*", "", options$params.src)
+    opts = gsub(",\\s*eval\\s*=\\s*FALSE\\s*", "", opts)
+    bef = sprintf('\n\n    ```{r %s}\n', opts, "\n")
+    stringr::str_c(
+      bef, 
+      knitr:::indent_block(paste(x, collapse = '\n'), "    "), 
+      "\n    ```\n"
+    )
+  } else {
+    stringr::str_c("\n\n```", tolower(options$engine), "\n", 
+      paste(x, collapse = '\n'), "\n```\n\n"
+    )
+  }
+})
+```
+
 # Introduction
 
 ## About ROC Curves
@@ -36,134 +56,160 @@ In the medical literature, ROC curves are commonly plotted without the cutoff va
 
 ## Shiny application
 
-Try out the package before installation at http://sachsmc.shinyapps.io/plotROC
+I created a \pkg{shiny} application [@shiny] in order to make the features more accessible to non-\proglang{R} users. A limited subset of the functions of the \pkg{plotROC} can be performed on an example dataset or on data that users upload to the website. Resulting plots can be saved to the users' machine as a pdf or as a stand-alone html file.  It can be used in any modern web browser with no other dependencies at the website here: http://sachsmc.shinyapps.io/plotROC. 
 
-## Installation
+## Installation and loading
 
-The latest version of the plotROC package can be installed from github:
+\pkg{plotROC} can be installed from the Comprehensive \proglang{R} Archive Network, or installed from github. 
 
-```{r inst, eval = FALSE}
+```{r load, eval = FALSE}
+install.packages("plotROC")
 devtools::install_github("sachsmc/plotROC")
+library(plotROC)
 ```
 
-
 ## Quick start
-After installing, run the interactive Shiny app
+After installing, the interactive Shiny application can be run locally. 
 ```{r shiny, eval = FALSE}
 shiny_plotROC()
 ```
 
-This comes with an example data set to demonstrate the features of this package. You can also upload your own dataset. 
-
 ## Command line basic usage
 
-We start by creating an example data set. The marker we generate is moderately accurate for predicting disease status. 
+I start by creating an example data set. The marker I generate is moderately accurate for predicting disease status. 
 
-```{r dataset}
+```{r dataset, echo = -1}
 library(plotROC)
-D.ex <- rbinom(100, 1, .5)
+D.ex <- rbinom(100, size = 1, prob = .5)
 M.ex <- rnorm(100, mean = D.ex)
 ```
 
-Next we use the `calculate_roc` function to compute the empirical ROC curve. The disease status need not be coded as 0/1, but `plotROC` assumes that the lowest value in sort order signifies disease-free status. This returns a data.frame with three components: the cutoff values, the TPF and the FPF. 
+Next I use the `calculate_roc` function to compute the empirical ROC curve. The disease status need not be coded as 0/1, but if it is not, `calculate_roc` assumes (with a warning) that the lowest value in sort order signifies disease-free status. This returns a dataframe with three columns: the cutoff values, the TPF and the FPF. 
 
 ```{r calc}
-rocdata <- calculate_roc(M.ex, D.ex)
-str(rocdata)
+roc.estimate <- calculate_roc(M.ex, D.ex)
+str(roc.estimate)
 ```
 
-The `rocdata` is passed to the `ggroc` function with an optional label. This creates a ggplot object of the ROC curve. We create an interactive ROC plot using the `export_interactive_roc` function. Since this document was created with `knitr`, we `cat` the results so that it is displayed correctly.
 
-```{r test-a, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
-myrocplot <- ggroc(rocdata, label = "Example")
-cat(export_interactive_roc(myrocplot, font.size = "12px", prefix = "a", color = "red"))
+The `rocdata` is passed to the `ggroc` function with an optional label. This creates a ggplot object of the ROC curve using the [ggplot2 package](http://ggplot2.org/). 
+
+```{r test-a}
+single.rocplot <- ggroc(roc.estimate, label = "Example")
 ```
 
-That is an svg element. Try zooming in and you will see that it is scalable!
-
-The same data.frame `rocdata` can be used to generate an interactive plot to view in Rstudio viewer or web browser.
+The `myrocplot` object can be used to create an interactive plot and display it in the Rstudio viewer or default web browser by passing it to the `plot_interactive_roc` function. Give the function an optional path to an html file as an argument called `file` to save the interactive plot as a complete web page. Hovering over the display shows the cutoff value at the point nearest to the cursor. Clicking makes the cutoff label stick until the next click, and if confidence regions are available, clicks will also display those as grey rectangles. 
 
 ```{r inter, eval = FALSE}
-plot_interactive_roc(myrocplot)
+plot_interactive_roc(single.rocplot)
 ```
 
-The same `ggroc` object that we called `myrocplot` can be used to generate an ROC plot suitable for use in print. It annotates the cutoff values and is completely in black and white. 
+An interactive ROC plot can be exported by using the `export_interactive_roc` function, which returns a character string containing the necessary `HTML` and `JavaScript`. The character string can be copy-pasted into an html document, or better yet, incorporated directly into a dynamic document using `knitr` ([knitr homepage](http://yihui.name/knitr)). 
 
-```{r print, fig.width = 6, fig.height = 6}
-plot_journal_roc(myrocplot)
+In a `knitr` document, it is necessary to use the `cat` function on the results and use the chunk options `results = 'asis'` and `fig.keep='none'` so that the interactive plot is displayed correctly. For documents that contain multiple interactive plots, it is necessary to assign each plot a unique name using the `prefix` argument of `export_interactive_roc`. This is necessary to ensure that the JavaScript code manipulates the correct svg elements. The next code block shows an example `knitr` chunk that can be used in an .Rmd document to display an interactive plot. 
+
+```{r int-no, fig.keep='none', results = 'asis', eval = FALSE, verbatim = TRUE}
+cat(
+  export_interactive_roc(single.rocplot, 
+                        prefix = "a")
+  )
 ```
 
+The result is shown below:
+
+```{r int-yes, fig.keep='none', results = 'asis', fig.width=6, fig.height=6}
+cat(
+  export_interactive_roc(single.rocplot, 
+                        prefix = "a")
+  )
+```
+
+The same `ggroc` object that I called `myrocplot` can be used to generate an ROC plot suitable for use in print. It annotates the cutoff values and is completely in black and white. A simple example with the default options is shown below.
+
+```{r print, fig.width = 6, fig.height = 6, fig.cap = "Illustration of ROC curve plot generated by plotROC for use in print. "}
+plot_journal_roc(single.rocplot)
+```
+
+### Multiple ROC curves
+
+If you have multiple tests of different types measured on the same subjects, you can use the `calculate_multi_roc` function to compute the empirical ROC curve for each test. It returns a list of data frames with the estimates and cutoff values. Then the `multi_ggroc` function creates the appropriate type of `ggplot` object. Confidence regions are not supported for multiple curves at the time of writing. 
+
+```{r multistart}
+D.ex <- rbinom(100, 1, .5)
+
+paired.data <- data.frame(M1 = rnorm(100, mean = D.ex), 
+                       M2 = rnorm(100, mean = D.ex, sd = .4), 
+                       M3 = runif(100), D = D.ex)
+
+estimate.list <- calculate_multi_roc(paired.data, c("M1", "M2", "M3"), "D")
+```
+
+Labels can be added easily with the `label` option of `multi_ggroc`. The length of the label element should match the number of plotted curves. The `multi_ggroc` object can be passed to the `plot_journal_roc` and the `export_interactive_roc` functions, as desired. The resulting plot is shown next.
+
+```{r multi2, fig.width = 6, fig.height = 6, fig.cap = "Illustration of plot with multiple curves. "}
+multi.rocplot <- multi_ggroc(estimate.list, label = c("M1", "M2", "M3"))
+plot_journal_roc(multi.rocplot)
+```
+
+Both `plot_journal_roc` and `export_interactive_roc` support a number of options to customize the look of the plots. By default, multiple curves are distinguished by different line types and direct labels. For multiple ROC curves that are similar to one another, those defaults can make it difficult to interpret the plots. Therefore, we also support colors and legends. The x- and y-axis can be changed by passing options to `ggroc` or `multi_ggroc`. The next code block illustrates the available options. 
+
+```{r multi3, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+colorplot <- multi_ggroc(estimate.list, 
+                         xlabel = "1 - Specificity", 
+                         ylabel = "Sensitivity")
+cat(
+  export_interactive_roc(colorplot, lty = rep(1, 3), prefix = "multi3",
+                         color = c("black", "purple", "orange"), 
+                         legend = TRUE)
+  )
+```
 
 ## Advanced options
 
 ### Click to view confidence region
 
-For interactive plots, we use the `ci = TRUE` option in `calculcate_roc` and `ggroc` to create click events. On click, an exact confidence region for the TPF and FPF is overlaid. 
+I use the `ci = TRUE` option in `calculcate_roc` and `ggroc` to compute confidence regions for points on the ROC curve using the @clopper1934use exact method. Briefly, exact confidence intervals are calculated for the $FPF$ and $TPF$ separately, each at level $1 - \sqrt{1 - \alpha}$. Based on result 2.4 from @pepe2003statistical, the cross-product of these intervals yields a $100 * (1 - \alpha)$ percent rectangular confidence region for the pair. The significance level can be specified using the `alpha` option. 
 
-```{r test-a-ci, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
-
-rocdata <- calculate_roc(M.ex, D.ex, ci = TRUE)
-myrocplot <- ggroc(rocdata, label = "Example", ci = TRUE)
-cat(export_interactive_roc(myrocplot, font.size = "12px", prefix = "aci", color = "red", lwd = 1))
+```{r test-a-ci}
+roc.ci <- calculate_roc(paired.data$M1, paired.data$D, ci = TRUE, alpha = 0.05)
+ci.rocplot <- ggroc(roc.ci, label = "CI Example", ci = TRUE)
 ```
 
-For use in print, pass a small list of locations at which to display the confidence regions. 
+For interactive plots, the confidence regions are automatically detected. When the user clicks on the ROC curve, the confidence region for the TPF and FPF is overlaid using a grey rectangle. The label and region stick until the next click.
 
-```{r printci, fig.width = 6, fig.height = 6}
-plot_journal_roc(myrocplot, n.cuts = 10, ci.at = c(-.5, .5, 2.1))
+```{r int-nob, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+cat(
+  export_interactive_roc(ci.rocplot, 
+                         prefix = "aci")
+  )
 ```
 
-### Multiple ROC curves
+For use in print, I pass a small vector of cutoff locations at which to display the confidence regions. This is shown in below.
 
-If you have multiple measurements of different types on the same subjects, you can use the `calculate_multi_roc` function to compute the empirical ROC curve for each measurement.  Then the `multi_ggroc` function creates the appropriate type of ggplot object. Confidence regions are not supported for multiple curves. 
-
-```{r multistart}
-D.ex <- rbinom(100, 1, .5)
-
-fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex, sd = .4), M3 = runif(100), D = D.ex)
-datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
-rocplot <- multi_ggroc(datalist, label = c("M1", "M2", "M3"), plotmath = FALSE)
-```
-
-This multi ggroc object can be passed to the `plot_journal_roc` and the `export_interactive_roc` functions, as desired. 
-
-```{r multi, fig.width = 6, fig.height = 6}
-plot_journal_roc(rocplot, lty = rep(1, 3), color = c("blue", "green", "purple"), legend = TRUE)
-```
-
-```{r test-multi, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
-cat(export_interactive_roc(rocplot,  
-                           font.size = "12px", prefix = "bmulti", 
-                           color = c("red", "blue", "purple"), lty = rep(1, 3), legend = TRUE))
-```
-
-Labels can be added easily with the `label` option. 
-
-```{r multi2, fig.width = 6, fig.height = 6}
-rocplot <- multi_ggroc(datalist, label = c("M1", "M2", "M3"))
-plot_journal_roc(rocplot)
+```{r printci, fig.width = 6, fig.height = 6, fig.cap = "Illustration of plot with exact confidence regions."}
+plot_journal_roc(ci.rocplot, n.cuts = 10, 
+                 ci.at = c(-.5, .5, 2.1))
 ```
 
 ### Themes and annotations
 
-`plotROC` uses the `ggplot2` package to create ggplot objects. Therefore, themes and annotations can be added to `ggroc` objects in the usual way. 
+plotROC uses the `ggplot2` package to create the objects to be plotted. Therefore, themes and annotations can be added in the usual ggplot2 way. A `plot_journal_roc` figure with a new theme, title, axis label, and AUC annotation is shown below. 
 
-```{r test-b, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
-library(ggthemes)
-myplot2 <- myrocplot + theme_igray() + ggtitle("Click me")
-
-cat(export_interactive_roc(myplot2, font.size = "12px", prefix = "b"))
-```
-
-```{r print2, fig.width = 6, fig.height = 6}
-plot_journal_roc(myrocplot) + theme_igray() + ggtitle("My awesome new biomarker")
+```{r print2, warning = FALSE, message = FALSE, fig.width = 6, fig.height = 6, fig.cap = "Using ggplot2 themes and annotations with plotROC objects."}
+library(ggplot2)
+plot_journal_roc(ci.rocplot, n.cuts = 10, 
+                 ci.at = c(-.5, .5, 2.1)) + 
+  theme_grey() + 
+  geom_abline(intercept = 0, slope = 1, color = "white") + 
+  ggtitle("Themes and annotations") + 
+  annotate("text", x = .75, y = .25, 
+           label = "AUC = 0.80") +
+  scale_x_continuous("1 - Specificity", breaks = seq(0, 1, by = .1))
 ```
 
 ### Other estimation methods
 
-By default `calculate_roc` computes the empirical ROC curve. There are other estimation methods out there, see Pepe (2003) _The Statistical Evaluation of Medical Tests for Classification and Prediction_ for more information.
-
-Any estimation method can be used, as long as the cutoff, the TPF and the FPF are returned. Then you can simply pass those values in a data.frame to the `ggroc` function. For example, let's try the binormal method to create a smooth curve. 
+By default `calculate_roc` computes the empirical ROC curve. There are other estimation methods out there, as I have summarized in the introduction.  Any estimation method can be used, as long as the cutoff, the TPF and the FPF are returned. Then you can simply pass those values in a data frame to the `ggroc` function. For example, let us use the binormal method to create a smooth curve. This approach assumes that the test distribution is normal conditional on disease status. 
 
 ```{r binormalsetup}
 D.ex <- rbinom(100, 1, .5)
@@ -175,16 +221,22 @@ s1 <- sd(M.ex[D.ex == 1])
 s0 <- sd(M.ex[D.ex == 0])
 c.ex <- seq(min(M.ex), max(M.ex), length.out = 300)
 
-binorm_rocdata <- data.frame(c = c.ex, FPF = pnorm((mu0 - c.ex)/s0), TPF = pnorm((mu1 - c.ex)/s1))
+binorm.roc <- data.frame(c = c.ex, 
+                             FPF = pnorm((mu0 - c.ex)/s0), 
+                             TPF = pnorm((mu1 - c.ex)/s1)
+                             )
 ```
 
-Then we can pass this data.frame to the `ggroc` function as before. 
+Then I can pass this data.frame to the `ggroc` function as before. The example is shown in figure \ref{binorm}.
 
 ```{r binormal, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
-binorm_plot <- ggroc(binorm_rocdata, label = "Binormal")
-cat(export_interactive_roc(binorm_plot, font.size = "12px", prefix = "bin"))
+binorm.plot <- ggroc(binorm.roc, label = "Binormal")
+cat(
+  export_interactive_roc(binorm.plot, prefix = "binorm")
+  )
 ```
 
+Another potential use of this approach is for plotting time-dependent ROC curves for time-to-event outcomes estimated as desribed in Heagerty, Lumley, and Pepe (2000).
 
 # Acknowledgements
 
