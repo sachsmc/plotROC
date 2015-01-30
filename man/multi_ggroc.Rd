@@ -8,8 +8,8 @@ multi_ggroc(datalist, fpf_string = rep("FPF", length(datalist)),
   tpf_string = rep("TPF", length(datalist)), label = NULL,
   label.adj.x = rep(0, length(datalist)), label.adj.y = rep(0,
   length(datalist)), label.angle = rep(45, length(datalist)),
-  lty = 1:length(datalist), color = NULL, plotmath = TRUE,
-  legend = FALSE, ...)
+  plotmath = FALSE, xlabel = "False positive fraction",
+  ylabel = "True positive fraction")
 }
 \arguments{
 \item{datalist}{List of data frames each containing true and false positive
@@ -31,15 +31,11 @@ as \code{datalist}}
 \item{label.angle}{Adjustment for angle of label, same length as
 \code{datalist}}
 
-\item{lty}{Vector of positive integers denoting line types to distinguish curves}
-
-\item{color}{Optional vector of colors to distinguish curves. If NULL, all curves will be black.}
-
 \item{plotmath}{Logical. If TRUE, labels will be parsed as expressions. See \code{?plotmath} for details.}
 
-\item{legend}{Logical. If TRUE, legend with labels is plotted in lower right corner of plot.}
+\item{xlabel}{Defaults to "False positive fraction"}
 
-\item{...}{Other aethetics settings passed to \code{geom_path}, e.g. \code{lwd} or \code{size}.}
+\item{ylabel}{Defaults to "True positive fraction"}
 }
 \value{
 A ggplot object

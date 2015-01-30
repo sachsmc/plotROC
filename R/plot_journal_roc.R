@@ -146,7 +146,7 @@ plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20, ci.at
   
   if(legend){
     pout <- pout + ggplot2::theme(legend.justification=c(1,0), legend.position=c(1,0),# anchor bottom-right/bottom-right
-                                  legend.title = element_blank()) 
+                                  legend.title = ggplot2::element_blank()) 
   } else {
     pout <- pout + ggplot2::theme(legend.position = "none")
   }

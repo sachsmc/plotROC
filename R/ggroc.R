@@ -15,6 +15,11 @@
 #' @param label.adj.x Adjustment for the horizontal positioning of the label
 #' @param label.adj.y Adjustment for the vertical positioning of the label
 #' @param label.angle Adjustment for angle of label
+#'   @param plotmath Logical. If TRUE, labels will be parsed as expressions. See \code{?plotmath} for details. 
+#'   @param xlabel Defaults to "False positive fraction"
+#'   @param ylabel Defaults to "True positive fraction"
+
+#' 
 #'   
 #' @export
 #' 
@@ -22,7 +27,8 @@
 #'   
 
 ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
-                  label = NULL, label.adj.x = 0, label.adj.y = 0, label.angle = 45){
+                  label = NULL, label.adj.x = 0, label.adj.y = 0, label.angle = 45, plotmath = FALSE,
+                  xlabel = "False positive fraction", ylabel = "True positive fraction"){
   
   stopifnot(fpf_string %in% colnames(rocdata))
   stopifnot(tpf_string %in% colnames(rocdata))
@@ -32,8 +38,8 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
   
   p1 <- ggplot2::ggplot(rocdata, ggplot2::aes_string(x = fpf_string, y = tpf_string))  + ggplot2::geom_point(color = "red", alpha = 0) +
     ggplot2::geom_abline(intercept = 0, slope = 1, lty = 1, color = "white") + 
-    ggplot2::scale_x_continuous("False positive fraction", minor_breaks = min_br, breaks = br) + 
-    ggplot2::scale_y_continuous("True positive fraction", minor_breaks = min_br, breaks = br) + ggplot2::geom_path() 
+    ggplot2::scale_x_continuous(xlabel, minor_breaks = min_br, breaks = br) + 
+    ggplot2::scale_y_continuous(ylabel, minor_breaks = min_br, breaks = br) + ggplot2::geom_path() 
     
   if(!is.null(label)){
     
@@ -41,7 +47,7 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
     X <- xy[1] + label.adj.x + .05
     Y <- xy[2] - .05 + label.adj.y
     p1 <- p1 + ggplot2::geom_text(data = data.frame(FPF = X, TPF = Y, label = label), 
-                                  ggplot2::aes_string(x = "FPF", y  = "TPF", label = "label"), angle = label.angle)
+                                  ggplot2::aes_string(x = "FPF", y  = "TPF", label = "label"), angle = label.angle, parse = plotmath)
     
   }
   
@@ -67,8 +73,6 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
 #'   fractions and cutoffs
 #' @param fpf_string Column names identifying false positive fraction
 #' @param tpf_string Column names identifying true positive fraction
-#' @param lty Vector of positive integers denoting line types to distinguish curves
-#' @param color Optional vector of colors to distinguish curves. If NULL, all curves will be black. 
 #' @param label Optional vector of direct labels for the ROC curve, same length
 #'   as \code{datalist}
 #' @param label.adj.x Adjustment for the positioning of the label, same length
@@ -78,8 +82,8 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
 #' @param label.angle Adjustment for angle of label, same length as
 #'   \code{datalist}
 #'   @param plotmath Logical. If TRUE, labels will be parsed as expressions. See \code{?plotmath} for details. 
-#'   @param legend Logical. If TRUE, legend with labels is plotted in lower right corner of plot. 
-#'   @param ... Other aethetics settings passed to \code{geom_path}, e.g. \code{lwd} or \code{size}.
+#'   @param xlabel Defaults to "False positive fraction"
+#'   @param ylabel Defaults to "True positive fraction"
 #'   
 #' @export
 #' 
@@ -89,8 +93,7 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
 multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf_string = rep("TPF", length(datalist)), 
                         label = NULL, label.adj.x = rep(0, length(datalist)), 
                         label.adj.y = rep(0, length(datalist)), label.angle = rep(45, length(datalist)),
-                        lty = 1:length(datalist), color = NULL, 
-                        plotmath = TRUE, legend = FALSE, ...){
+                        plotmath = FALSE, xlabel = "False positive fraction", ylabel = "True positive fraction"){
   
   stopifnot(all(sapply(1:length(datalist), function(i) fpf_string[i] %in% colnames(datalist[[i]]))))
   stopifnot(all(sapply(1:length(datalist), function(i) tpf_string[i] %in% colnames(datalist[[i]]))))
@@ -119,13 +122,14 @@ multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf
   plotframe <- do.call(rbind, ldatalist)
   
   p1 <- ggplot2::ggplot(plotframe, ggplot2::aes_string(x = "FPF", y = "TPF", linetype = "Marker", color = "Marker", size = "Marker")) + 
-    ggplot2::geom_path(...) + 
+    ggplot2::geom_path() + 
     ggplot2::geom_point(color = "red", alpha = 0) +
     ggplot2::geom_abline(intercept = 0, slope = 1, lty = 1, color = "white") + 
-    ggplot2::scale_x_continuous("False positive fraction", minor_breaks = min_br, breaks = br) + 
-    ggplot2::scale_y_continuous("True positive fraction", minor_breaks = min_br, breaks = br) + 
-    ggplot2::scale_linetype_manual(values = lty) + 
-    ggplot2::scale_size_manual(values = rep(.5, length(datalist)))
+    ggplot2::scale_x_continuous(xlabel, minor_breaks = min_br, breaks = br) + 
+    ggplot2::scale_y_continuous(ylabel, minor_breaks = min_br, breaks = br) + 
+    ggplot2::scale_linetype_manual(values = seq(1, length(datalist))) + 
+    ggplot2::scale_size_manual(values = rep(.5, length(datalist))) + 
+    ggplot2::scale_color_manual(values = rep("black", length(datalist)))
     
    
   if(!is.null(label)){

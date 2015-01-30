@@ -4,14 +4,16 @@
 \alias{plot_interactive_roc}
 \title{Generate a standalone html document displaying an interactive ROC curve}
 \usage{
-plot_interactive_roc(rocdata, file = NULL, font.size = "12px")
+plot_interactive_roc(ggroc, cutoffs, file = NULL, ...)
 }
 \arguments{
-\item{rocdata}{An object as returned by \link{ggroc} or \link{multi_ggroc}. It can be modified with annotations, themes, etc.}
+\item{ggroc}{An object as returned by \link{ggroc} or \link{multi_ggroc}. It can be modified with annotations, themes, etc.}
+
+\item{cutoffs}{Vector of cutoff values}
 
 \item{file}{A path to save the result to. If NULL, will save to a temporary directory}
 
-\item{font.size}{Character string that determines font size of cutoff labels}
+\item{...}{arguments passed to \link{export_interactive_roc}}
 }
 \value{
 NULL opens an interactive document in Rstudio or the default web browser
