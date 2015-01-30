@@ -68,7 +68,7 @@ estimate.list <- calculate_multi_roc(paired.data, c("M1", "M2", "M3"), "D")
 multi.rocplot <- multi_ggroc(estimate.list, label = c("M1", "M2", "M3"))
 plot_journal_roc(multi.rocplot)
 
-## ----multi3, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6----
+## ----multi3, message = FALSE, warning = FALSE, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6----
 colorplot <- multi_ggroc(estimate.list, 
                          xlabel = "1 - Specificity", 
                          ylabel = "Sensitivity")
