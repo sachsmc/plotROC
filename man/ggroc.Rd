@@ -4,8 +4,10 @@
 \alias{ggroc}
 \title{Plot an ROC curve}
 \usage{
-ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF", ci = FALSE,
-  label = NULL, label.adj.x = 0, label.adj.y = 0, label.angle = 45)
+ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF", c_string = "c",
+  ci = FALSE, label = NULL, label.adj.x = 0, label.adj.y = 0,
+  label.angle = 45, plotmath = FALSE, xlabel = "False positive fraction",
+  ylabel = "True positive fraction")
 }
 \arguments{
 \item{rocdata}{Data frame containing true and false positive fractions, and
@@ -14,6 +16,8 @@ cutoff values}
 \item{fpf_string}{Column name identifying false positive fraction column}
 
 \item{tpf_string}{Column name identifying true positive fraction column}
+
+\item{c_string}{Column name identifying cutoff values}
 
 \item{ci}{Logical, if TRUE will create invisible confidence regions for use
 in the interactive plot}
@@ -25,6 +29,12 @@ in the interactive plot}
 \item{label.adj.y}{Adjustment for the vertical positioning of the label}
 
 \item{label.angle}{Adjustment for angle of label}
+
+\item{plotmath}{Logical. If TRUE, labels will be parsed as expressions. See \code{?plotmath} for details.}
+
+\item{xlabel}{Defaults to "False positive fraction"}
+
+\item{ylabel}{Defaults to "True positive fraction"}
 }
 \value{
 A ggplot object

@@ -13,22 +13,66 @@
 #'   
 #' @param ggroc_p An object as returned by \link{ggroc} or \link{multi_ggroc}.
 #'   It can be modified with annotations, themes, etc.
-#' @param cutoffs Vector of cutoff values
+#' @param cutoffs Optional vector or list of vectors to over-ride the default cutoff labels. Useful for rescaling or rounding. 
 #' @param font.size Character string that determines font size of cutoff labels
 #' @param prefix A string to assign to the objects within the svg. Enables 
 #'   unique idenfication by the javascript code
 #' @param width Width in inches of plot
 #' @param height Height in inches of plot
+#' @param lty Optional vector of integers defining line types to apply to curves
+#' @param color Optional vector of color names to apply to curves
+#' @param lwd Line widths for curves
+#' @param legend Logical. If true plots a legend in bottom right corner of plot
+
 #'   
 #' @export
 #' 
 #' @return A character object containing the html necessary to plot the ROC curve in a
 #'   web browser
 #'   
-export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix = "a", width = 6, height = 6){
+export_interactive_roc <- function(ggroc_p, cutoffs = NULL, font.size = "12px", prefix = "a", width = 6, height = 6, 
+                                   lty = NULL, color = NULL, lwd = NULL, legend = FALSE){
+  
+  if(is.null(cutoffs) & ggroc_p$roctype == "single"){ cutoffs <- ggroc_p$rocdata$c 
+  } else if(is.null(cutoffs) & ggroc_p$roctype == "multi") cutoffs <- lapply(ggroc_p$rocdata, function(df) df$c)
+  
+  if(any(!is.null(lty), !is.null(color), !is.null(lwd)) & ggroc_p$roctype == "single"){
+    
+    args <- list(linetype = lty, color = color, size = lwd)
+    args[sapply(args, is.null)] <- NULL
+    
+    ggroc_p <- ggroc_p + do.call(ggplot2::geom_path, args)
+    
+  } else {
+    
+    if(!is.null(lty)){
+      
+      ggroc_p <- ggroc_p + ggplot2::scale_linetype_manual(values = lty)
+      
+    }
+    if(!is.null(color)){
+      
+      ggroc_p <- ggroc_p + ggplot2::scale_color_manual(values = color)
+      
+    }
+    if(!is.null(lwd)){
+      
+      ggroc_p <- ggroc_p + ggplot2::scale_size_manual(values = lwd)
+      
+    }
+    
+  }
+  
+  if(legend){
+   ggroc_p <- ggroc_p + ggplot2::theme(#legend.justification=c(1,0), legend.position=c(1,0),# anchor bottom-right/bottom-right doesn't translate to svg
+                                  legend.title = ggplot2::element_blank()) 
+  } else {
+   ggroc_p <- ggroc_p + ggplot2::theme(legend.position = "none")
+  }
   
   tmpPlot <- tempfile(fileext= ".pdf")
   pdf(tmpPlot, width = width, height = height)
+  
   print(ggroc_p)
   grid::grid.force()
   
@@ -38,25 +82,10 @@ export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix 
   cis <- length(rects) > 0
   if(!cis) rects <- "qk2d4gb6q7ur"
   
-  if(is.list(cutoffs)){
-    
-    for(i in 1:length(cutoffs)){
-      
-      gridSVG::grid.garnish(path = ptns[i], cutoff = paste(cutoffs[[i]]), group = FALSE, global = TRUE)
-      
-    }
-    
-    pointns <- paste0("[id^=\'", paste0(prefix, ptns), ".1.\']")
-    
-    jsString <- modJs(selector= paste(pointns, collapse = ","), prefix = prefix)
-    
-  } else {
-  
-  gridSVG::grid.garnish(path = ptns, cutoff = paste(cutoffs), group = FALSE, global = TRUE)
+
+  gridSVG::grid.garnish(path = ptns, cutoff = paste(unlist(cutoffs)), group = FALSE, global = TRUE)
   jsString <- modJs(paste0("[id^=\'", prefix, ptns, ".1.\']"), prefix = prefix, rects)
-  
-  }
-  
+    
   cssString <- modCss(font.size)
   tmpFile <- tempfile()
   svgString <- gridSVG::grid.export(name = tmpFile, prefix = prefix)$svg
@@ -75,25 +104,17 @@ export_interactive_roc <- function(ggroc_p, cutoffs, font.size = "12px", prefix 
 
 #' Generate a standalone html document displaying an interactive ROC curve
 #' 
-#' @param rocdata An object as returned by \link{ggroc} or \link{multi_ggroc}. It can be modified with annotations, themes, etc. 
+#' @param ggroc An object as returned by \link{ggroc} or \link{multi_ggroc}. It can be modified with annotations, themes, etc. 
 #' @param file A path to save the result to. If NULL, will save to a temporary directory
-#' @param font.size Character string that determines font size of cutoff labels
+#' @param ... arguments passed to \link{export_interactive_roc}
 #' 
 #' @export
 #' 
 #' @return NULL opens an interactive document in Rstudio or the default web browser
 #'
 
-plot_interactive_roc <- function(rocdata, file = NULL, font.size = "12px"){
+plot_interactive_roc <- function(ggroc, file = NULL, ...){
   
-  if(!is.data.frame(rocdata)){
-    p1 <- multi_ggroc(rocdata)
-  } else {
-  
-    ci <- "TP.L" %in% colnames(rocdata)
-    p1 <- ggroc(rocdata, ci = ci) 
-  
-  }
   if(is.null(file)){
     
     tmpDir <- tempdir()
@@ -104,13 +125,8 @@ plot_interactive_roc <- function(rocdata, file = NULL, font.size = "12px"){
     tmpDir <- "."
   }
   
-  print(p1)
-  
-  if(!is.data.frame(rocdata)) {
-    body <- export_interactive_roc(p1, cutoffs = lapply(rocdata, function(d) d$c), font.size = font.size)
-  } else {
-    body <- export_interactive_roc(p1, cutoffs = rocdata$c, font.size = font.size)
-  }
+
+  body <- export_interactive_roc(ggroc, ...)
   
   cat("<!DOCTYPE html>
 <html xmlns=\"http://www.w3.org/1999/xhtml\">

@@ -1,3 +1,15 @@
+plotROC 1.3.2
+--------------
+Added support for new aesthetic options in plot_journal_roc and export_interactive_roc
+  + colors
+  + legends
+  + line type
+  + line width
+  + axis labels
+  + plotmath expressions in labels
+
+Remove need to specify cutoff labels to plot and export. Those functions now read the data directly from the ggroc object. Easier to use this way!
+
 plotROC 1.3.1
 -----------
   * fix multi plot with n.cuts = 0 bug

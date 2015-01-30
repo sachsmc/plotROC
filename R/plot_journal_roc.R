@@ -5,25 +5,32 @@
 #' 
 #' @param ggroc_p An object as returned by \link{ggroc} or \link{multi_ggroc}.
 #'   It can be modified with annotations, themes, etc.
-#' @param rocdata An object as returned by \link{calculate_roc}.
 #' @param font.size Integer that determines font size of cutoff labels
 #' @param n.cuts Number of cutoffs to display 
 #' @param ci.at Cutoff values at which to plot confidence regions, if non-NULL,
 #'   \code{rocdata} must contain limits for the confidence region, as returned
 #'   by \link{calculate_roc}
 #' @param opacity Opacity level for confidence region boxes. Defaults to 0.3. Must be between 0 and 1
+#' @param lty Optional vector of integers defining line types to apply to curves
+#' @param color Optional vector of color names to apply to curves
+#' @param lwd Line widths for curves
+#' @param legend Logical. If true plots a legend in bottom right corner of plot
+#' 
 #'   
 #'   
 #' @export
 #' 
 #' @return A ggplot object
-plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20, ci.at = NULL, opacity = .3){
+plot_journal_roc <- function(ggroc_p, font.size = 3, n.cuts = 20, ci.at = NULL, opacity = .3, 
+                             lty = NULL, color = NULL, lwd = NULL, legend = FALSE){
   
   stopifnot(opacity <= 1 & opacity >= 0)
   stopifnot(n.cuts >= 0)
   
-  if(is.data.frame(rocdata)){
-    
+  rocdata <- ggroc_p$rocdata
+  
+  if(is.data.frame(rocdata)){  ## single curve
+       
   if(nrow(rocdata) < n.cuts){ 
     dex <- 1:nrow(rocdata)
   } else {
@@ -60,21 +67,32 @@ plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20, ci.at
   strdat$TPF <- strdat$TPF + .01
   strdat$c <- paste(round(strdat$c, 1))
 
-  p1 <- ggroc_p + ggplot2::theme_bw() + ggplot2::geom_point(data = subdat, ggplot2::aes_string(x = "FPF", y = "TPF")) + 
-    ggplot2::geom_text(data = strdat, ggplot2::aes_string(x = "FPF", y = "TPF", label = "c"), hjust = 1, vjust = 0, size = font.size) + 
-    ggplot2::geom_abline(intercept = 0, slope = 1, lty = 1, lwd = .5, color = "grey90")
+  p1 <- ggroc_p + ggplot2::geom_point(data = subdat, ggplot2::aes_string(x = "FPF", y = "TPF")) + 
+    ggplot2::geom_text(data = strdat, ggplot2::aes_string(x = "FPF", y = "TPF", label = "c"), hjust = 1, vjust = 0, size = font.size) 
+  
+  if(any(!is.null(lty), !is.null(color), !is.null(lwd))){
+    
+    args <- list(linetype = lty, color = color, size = lwd)
+    args[sapply(args, is.null)] <- NULL
+    
+    p1 + aes(linetype = "A") + scale_linetype_manual(values = 2)
+    p1 + do.call(ggplot2::geom_path, args)
+    
+  } 
 
   if(!is.null(ci.at)){
     rocdata$op <- 0
     rocdata$op[ci_dex] <- opacity
     
-    p1 + ggplot2::geom_rect(data = rocdata, ggplot2::aes_string(xmin = "FP.L", xmax = "FP.U", ymin = "TP.L", ymax = "TP.U"), alpha = rocdata$op)
+    pout <- p1 + ggplot2::geom_rect(data = rocdata, ggplot2::aes_string(xmin = "FP.L", xmax = "FP.U", ymin = "TP.L", ymax = "TP.U"), alpha = rocdata$op)
     
-  } else p1
+  } else pout <- p1
   
   
-  } else if(is.list(rocdata)){
+  } else if(is.list(rocdata)){  ## multiple curves
     
+    
+    pout <- ggroc_p
     for(i in 1:length(rocdata)){
       
         if(nrow(rocdata[[i]]) < n.cuts){ 
@@ -98,15 +116,43 @@ plot_journal_roc <- function(ggroc_p, rocdata, font.size = 3, n.cuts = 20, ci.at
           strdat$TPF[nrow(strdat)] <- strdat$TPF[nrow(strdat)] + .03 * (i - 1)
         }
         
-        ggroc_p <- ggroc_p + ggplot2::theme_bw() + ggplot2::geom_point(data = subdat, ggplot2::aes_string(x = "FPF", y = "TPF")) + 
-          ggplot2::geom_text(data = strdat, ggplot2::aes_string(x = "FPF", y = "TPF", label = "c"), hjust = 1, vjust = 0, size = font.size)
+        pout <- pout + 
+          ggplot2::geom_point(data = subdat, ggplot2::aes_string(x = "FPF", y = "TPF", 
+                                                                 linetype = NULL, color = NULL, size = NULL), show_guide = FALSE) + 
+          ggplot2::geom_text(data = strdat, ggplot2::aes_string(x = "FPF", y = "TPF", label = "c", 
+                                                                linetype = NULL, color = NULL, size = NULL), 
+                             hjust = 1, vjust = 0, size = font.size, show_guide = FALSE)
         
       }
   
-  ggroc_p + ggplot2::geom_abline(intercept = 0, slope = 1, lty = 1, lwd = .5, color = "grey90")
+  if(!is.null(lty)){
+    
+    pout <- pout + ggplot2::scale_linetype_manual(values = lty)
+    
+  }
+  if(!is.null(color)){
+    
+    pout <- pout + ggplot2::scale_color_manual(values = color)
+    
+  }
+  if(!is.null(lwd)){
+    
+   pout <- pout + ggplot2::scale_size_manual(values = lwd)
+    
+  }
   
   }
   
+  pout <- pout  + ggplot2::theme_bw() + ggplot2::geom_abline(intercept = 0, slope = 1, lty = 1, lwd = .5, color = "grey90")
+  
+  if(legend){
+    pout <- pout + ggplot2::theme(legend.justification=c(1,0), legend.position=c(1,0),# anchor bottom-right/bottom-right
+                                  legend.title = ggplot2::element_blank()) 
+  } else {
+    pout <- pout + ggplot2::theme(legend.position = "none")
+  }
+  
+  pout
   
 }
 
