@@ -80,6 +80,7 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", c_string = "c
 #' @param c_string Column names identifying cutoff values
 #' @param label Optional vector of direct labels for the ROC curve, same length
 #'   as \code{datalist}
+#' @param legend If true, draws legend instead of labels
 #' @param label.adj.x Adjustment for the positioning of the label, same length
 #'   as \code{datalist}
 #' @param label.adj.y Adjustment for the positioning of the label, same length
@@ -97,7 +98,7 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", c_string = "c
 
 multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf_string = rep("TPF", length(datalist)), 
                         c_string = rep("c", length(datalist)),
-                        label = NULL, label.adj.x = rep(0, length(datalist)), 
+                        label = NULL, legend = FALSE, label.adj.x = rep(0, length(datalist)), 
                         label.adj.y = rep(0, length(datalist)), label.angle = rep(45, length(datalist)),
                         plotmath = FALSE, xlabel = "False positive fraction", ylabel = "True positive fraction"){
   
@@ -138,7 +139,7 @@ multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf
     ggplot2::scale_color_manual(values = rep("black", length(datalist)))
     
    
-  if(!is.null(label)){
+  if(!is.null(label) & !legend){
    
     for(i in 1:length(label)){
     
