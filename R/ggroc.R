@@ -138,7 +138,7 @@ multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf
     ggplot2::scale_color_manual(values = rep("black", length(datalist)))
     
    
-  if(!is.null(label)){
+  if(!is.null(label) & !legend){
    
     for(i in 1:length(label)){
     
