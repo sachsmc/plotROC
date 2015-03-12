@@ -209,12 +209,24 @@ plot_journal_roc(ci.rocplot, n.cuts = 10,
 
 ### Other estimation methods
 
-By default `calculate_roc` computes the empirical ROC curve. There are other estimation methods out there, as I have summarized in the introduction.  Any estimation method can be used, as long as the cutoff, the TPF and the FPF are returned. Then you can simply pass those values in a data frame to the `ggroc` function. For example, let us use the binormal method to create a smooth curve. This approach assumes that the test distribution is normal conditional on disease status. 
+By default `calculate_roc` computes the empirical ROC curve. There are other estimation methods out there, as I have summarized in the introduction.  Any estimation method can be used, as long as the cutoff, the TPF and the FPF are returned. Then you can simply pass those values in a data frame to the `ggroc` function. New in this latest verison is the ability to use the ROCR package directly. 
 
-```{r binormalsetup}
+```{r rocr, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
+library(ROCR)
 D.ex <- rbinom(100, 1, .5)
 M.ex <- rnorm(100, mean = D.ex, sd = .5)
 
+rocr.est <- performance(prediction(M.ex, D.ex), "tpr", "fpr")
+rocr.plot <- ggroc(rocr.est, label = "ROCR object")
+
+cat(
+  export_interactive_roc(rocr.plot, prefix = "rocr")
+  )
+```
+
+For another example, let us use the binormal method to create a smooth curve. This approach assumes that the test distribution is normal conditional on disease status. 
+
+```{r binormalsetup}
 mu1 <- mean(M.ex[D.ex == 1])
 mu0 <- mean(M.ex[D.ex == 0])
 s1 <- sd(M.ex[D.ex == 1])

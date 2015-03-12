@@ -1,8 +1,8 @@
 Package: plotROC
 Type: Package
 Title: Generate Useful ROC Curve Charts for Print and Interactive Use
-Version: 1.3.2
-Date: 2015-01-30
+Version: 1.3.3
+Date: 2015-03-12
 Author: Michael C Sachs
 Maintainer: Michael C Sachs <sachsmc@gmail.com>
 Description: Most ROC curve plots obscure the cutoff values and inhibit
@@ -24,5 +24,7 @@ Imports:
 Suggests:
     ggthemes,
     knitr,
-    testthat
+    testthat, 
+    stringr, 
+    ROCR
 VignetteBuilder: knitr
