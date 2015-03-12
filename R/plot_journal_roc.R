@@ -75,7 +75,7 @@ plot_journal_roc <- function(ggroc_p, font.size = 3, n.cuts = 20, ci.at = NULL, 
     args <- list(linetype = lty, color = color, size = lwd)
     args[sapply(args, is.null)] <- NULL
     
-    p1 + aes(linetype = "A") + scale_linetype_manual(values = 2)
+    p1 + ggplot2::aes(linetype = "A") + ggplot2::scale_linetype_manual(values = 2)
     p1 + do.call(ggplot2::geom_path, args)
     
   } 

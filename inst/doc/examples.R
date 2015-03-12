@@ -103,10 +103,19 @@ plot_journal_roc(ci.rocplot, n.cuts = 10,
            label = "AUC = 0.80") +
   scale_x_continuous("1 - Specificity", breaks = seq(0, 1, by = .1))
 
-## ----binormalsetup-------------------------------------------------------
+## ----rocr, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6----
+library(ROCR)
 D.ex <- rbinom(100, 1, .5)
 M.ex <- rnorm(100, mean = D.ex, sd = .5)
 
+rocr.est <- performance(prediction(M.ex, D.ex), "tpr", "fpr")
+rocr.plot <- ggroc(rocr.est, label = "ROCR object")
+
+cat(
+  export_interactive_roc(rocr.plot, prefix = "rocr")
+  )
+
+## ----binormalsetup-------------------------------------------------------
 mu1 <- mean(M.ex[D.ex == 1])
 mu0 <- mean(M.ex[D.ex == 0])
 s1 <- sd(M.ex[D.ex == 1])

@@ -31,6 +31,19 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", c_string = "c
                   label = NULL, label.adj.x = 0, label.adj.y = 0, label.angle = 45, plotmath = FALSE,
                   xlabel = "False positive fraction", ylabel = "True positive fraction"){
   
+  if(class(rocdata) == "performance"){
+    
+    x <- rocdata
+    lookup <- c("x.values", "y.values")
+    names(lookup) <- c(x@x.name, x@y.name)
+    
+    tp.fp <- lookup[c("True positive rate", "False positive rate")]
+    mydat <- data.frame(TPF = slot(x, tp.fp[1])[[1]], FPF = slot(x, tp.fp[2])[[1]], c = x@alpha.values[[1]])
+    rocdata <- subset(mydat, is.finite(c))
+    
+  }
+  
+  rocdata <- rocdata[order(rocdata[, c_string]), ]
   stopifnot(fpf_string %in% colnames(rocdata))
   stopifnot(tpf_string %in% colnames(rocdata))
   
@@ -44,7 +57,7 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", c_string = "c
     
   if(!is.null(label)){
     
-    xy <- rocdata[rocdata$TPF + rocdata$FPF < 1, c(fpf_string, tpf_string)][1,]
+    xy <- rocdata[rocdata[, tpf_string] + rocdata[, fpf_string] < 1, c(fpf_string, tpf_string)][1,]
     X <- xy[1] + label.adj.x + .05
     Y <- xy[2] - .05 + label.adj.y
     p1 <- p1 + ggplot2::geom_text(data = data.frame(FPF = X, TPF = Y, label = label), 
@@ -170,5 +183,7 @@ multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf
   p1
   
 }
+
+
 
 
