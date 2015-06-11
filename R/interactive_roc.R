@@ -23,6 +23,7 @@
 #' @param color Optional vector of color names to apply to curves
 #' @param lwd Line widths for curves
 #' @param legend Logical. If true plots a legend in bottom right corner of plot
+#' @param omit.d3 Logical. If true, omit inclusion of d3.js source in output. Useful for documents with multple interactive plots
 
 #'   
 #' @export
@@ -31,7 +32,7 @@
 #'   web browser
 #'   
 export_interactive_roc <- function(ggroc_p, cutoffs = NULL, font.size = "12px", prefix = "a", width = 6, height = 6, 
-                                   lty = NULL, color = NULL, lwd = NULL, legend = FALSE){
+                                   lty = NULL, color = NULL, lwd = NULL, legend = FALSE, omit.d3 = FALSE){
   
   if(is.null(cutoffs) & ggroc_p$roctype == "single"){ cutoffs <- ggroc_p$rocdata$c 
   } else if(is.null(cutoffs) & ggroc_p$roctype == "multi") cutoffs <- lapply(ggroc_p$rocdata, function(df) df$c)
@@ -93,11 +94,16 @@ export_interactive_roc <- function(ggroc_p, cutoffs = NULL, font.size = "12px", 
   dev.off()
   svgString <- paste(readLines(tmpFile, warn = FALSE), collapse = "\n")
   
-  d3String <- getD3()
-  
   unlink(tmpPlot)
   
-  paste(c(cssString, d3String, svgString, jsString), collapse = "\n\n")
+  if(omit.d3){
+    finstr <- c(cssString, svgString, jsString)
+  } else {
+    d3String <- getD3()
+    finstr <- c(cssString, d3String, svgString, jsString)
+  }
+  
+  paste(finstr, collapse = "\n\n")
   
 }
 
