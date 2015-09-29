@@ -7,7 +7,7 @@ StatRoc <- ggproto("StatRoc", Stat,
                    required_aes = c("m", "d"), ## biomarker, binary outcome
                    default_aes = aes(x = ..false_positive_fraction.., y = ..true_positive_fraction..),
                    
-                   compute_group = function(data, scales){
+                   compute_group = function(data, scales, ci = FALSE, alpha = 0.05){
                      
                      D <- verify_d(data$d)
                      T.order <- order(data$m, decreasing=TRUE)
@@ -24,6 +24,7 @@ StatRoc <- ggproto("StatRoc", Stat,
                      cutoffs <- c(Inf, TTT[!dups])
                      
                      data.frame(false_positive_fraction = fp, true_positive_fraction = tp, cutoffs = cutoffs)
+              
                      
                    })
 
@@ -47,8 +48,123 @@ stat_roc <- function(mapping = NULL, data = NULL, geom = "step",
 }
 
 
-GeomRoc <- ggproto("GeomRoc", GeomStep, 
-                   required_aes = c("x", "y"))
+GeomRoc <- ggproto("GeomRoc", Geom, 
+                   required_aes = c("x", "y"), 
+                   default_aes = aes(shape = 19, colour = "black", alpha = 1, size = 1, linetype = 1),
+                   non_missing_aes = c("size", "shape"),
+                   draw_group = function(data, panel_scales, coord, n.cuts = 10, arrow = NULL,
+                                         lineend = "butt", linejoin = "round", linemitre = 1, 
+                                         alpha.line = 1, alpha.point = 1,
+                                         size.point = .5, 
+                                         na.rm = FALSE){
+                     
+                     if(nrow(data) < n.cuts){ 
+                       dex <- 1:nrow(data)
+                     } else {
+                       dex <- as.integer(seq(1, nrow(data), length.out = n.cuts))
+                     }
+                     
+                     coords <- coord$transform(data, panel_scales)
+                     coordsp <- coord$transform(data[dex, ], panel_scales)
+                     
+                     pg <- pointsGrob(
+                       coordsp$x, coordsp$y,
+                       pch = coordsp$shape,
+                       size = unit(size.point, "char"),
+                       gp = gpar(
+                         col = coordsp$colour,
+                         fill = coordsp$fill,
+                         alpha = alpha.point
+                       )
+                     )
+                     
+                     keep <- function(x) {
+                       # from first non-missing to last non-missing
+                       first <- match(FALSE, x, nomatch = 1) - 1
+                       last <- length(x) - match(FALSE, rev(x), nomatch = 1) + 1
+                       c(
+                         rep(FALSE, first),
+                         rep(TRUE, last - first),
+                         rep(FALSE, length(x) - last))
+                     }
+                     # Drop missing values at the start or end of a line - can't drop in the
+                     # middle since you expect those to be shown by a break in the line
+                     missing <- !stats::complete.cases(data[c("x", "y", "size", "colour",
+                                                              "linetype")])
+                     kept <- stats::ave(missing, data$group, FUN = keep)
+                     data <- data[kept, ]
+                     # must be sorted on group
+                     data <- plyr::arrange(data, group)
+                     
+                     if (!all(kept) && !na.rm) {
+                       warning("Removed ", sum(!kept), " rows containing missing values",
+                               " (geom_path).", call. = FALSE)
+                     }
+                     
+                     munched <- coord_munch(coord, data, panel_scales)
+                     
+                     # Silently drop lines with less than two points, preserving order
+                     rows <- stats::ave(seq_len(nrow(munched)), munched$group, FUN = length)
+                     munched <- munched[rows >= 2, ]
+                     if (nrow(munched) < 2) return(zeroGrob())
+                     
+                     # Work out whether we should use lines or segments
+                     attr <- plyr::ddply(munched, "group", function(df) {
+                       data.frame(
+                         solid = identical(unique(df$linetype), 1),
+                         constant = nrow(unique(df[, c("alpha", "colour","size", "linetype")])) == 1
+                       )
+                     })
+                     solid_lines <- all(attr$solid)
+                     constant <- all(attr$constant)
+                     if (!solid_lines && !constant) {
+                       stop("geom_path: If you are using dotted or dashed lines",
+                            ", colour, size and linetype must be constant over the line",
+                            call. = FALSE)
+                     }
+                     
+                     # Work out grouping variables for grobs
+                     n <- nrow(munched)
+                     group_diff <- munched$group[-1] != munched$group[-n]
+                     start <- c(TRUE, group_diff)
+                     end <-   c(group_diff, TRUE)
+                     
+                     if (!constant) {
+                       lg <- segmentsGrob(
+                         munched$x[!end], munched$y[!end], munched$x[!start], munched$y[!start],
+                         default.units = "native", arrow = arrow,
+                         gp = gpar(
+                           col = alpha(munched$colour, alpha.line)[!end],
+                           fill = alpha(munched$colour, alpha.line)[!end],
+                           lwd = munched$size[!end] * .pt,
+                           lty = munched$linetype[!end],
+                           lineend = lineend,
+                           linejoin = linejoin,
+                           linemitre = linemitre
+                         )
+                       )
+                     } else {
+                       id <- match(munched$group, unique(munched$group))
+                       lg <- polylineGrob(
+                         munched$x, munched$y, id = id,
+                         default.units = "native", arrow = arrow,
+                         gp = gpar(
+                           col = alpha(munched$colour, alpha.line)[start],
+                           fill = alpha(munched$colour, alpha.line)[start],
+                           lwd = munched$size[start] * .pt,
+                           lty = munched$linetype[start],
+                           lineend = lineend,
+                           linejoin = linejoin,
+                           linemitre = linemitre
+                         )
+                       )
+                     }
+                     
+                     gList(pg, lg)
+                     
+                     
+                   }, 
+                   draw_key = draw_key_path)
 
 
 

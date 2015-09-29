@@ -5,5 +5,5 @@
 #' @name plotROC
 #' @docType package
 #' @author Michael Sachs (@@sachsmc)
-#' @import ggplot2
+#' @import grid ggplot2 
 NULL
