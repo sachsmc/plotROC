@@ -147,9 +147,9 @@ multi_ggroc <- function(datalist, fpf_string = rep("FPF", length(datalist)), tpf
     ggplot2::geom_abline(intercept = 0, slope = 1, lty = 1, color = "white") + 
     ggplot2::scale_x_continuous(xlabel, minor_breaks = min_br, breaks = br) + 
     ggplot2::scale_y_continuous(ylabel, minor_breaks = min_br, breaks = br) + 
-    ggplot2::scale_linetype_manual(values = seq(1, length(datalist))) + 
-    ggplot2::scale_size_manual(values = rep(.5, length(datalist))) + 
-    ggplot2::scale_color_manual(values = rep("black", length(datalist)))
+    ggplot2::scale_linetype_manual(values = seq(1, length(datalist)), breaks = inlabel) + 
+    ggplot2::scale_size_manual(values = rep(.5, length(datalist)), breaks = inlabel) + 
+    ggplot2::scale_color_manual(values = rep("black", length(datalist)), breaks = inlabel)
     
    
   if(!is.null(label) & !legend){
