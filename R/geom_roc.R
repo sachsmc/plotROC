@@ -7,7 +7,7 @@ StatRoc <- ggproto("StatRoc", Stat,
                    required_aes = c("m", "d"), ## biomarker, binary outcome
                    default_aes = aes(x = ..false_positive_fraction.., y = ..true_positive_fraction..),
                    
-                   compute_group = function(data, scales, ci = FALSE, alpha = 0.05){
+                   compute_group = function(data, scales){
                      
                      D <- verify_d(data$d)
                      T.order <- order(data$m, decreasing=TRUE)
@@ -67,16 +67,18 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                      coords <- coord$transform(data, panel_scales)
                      coordsp <- coord$transform(data[dex, ], panel_scales)
                      
-                     pg <- pointsGrob(
-                       coordsp$x, coordsp$y,
-                       pch = coordsp$shape,
-                       size = unit(size.point, "char"),
-                       gp = gpar(
-                         col = coordsp$colour,
-                         fill = coordsp$fill,
-                         alpha = alpha.point
+                     if(n.cuts > 0) { 
+                       pg <- pointsGrob(
+                         coordsp$x, coordsp$y,
+                         pch = coordsp$shape,
+                         size = unit(size.point, "char"),
+                         gp = gpar(
+                           col = coordsp$colour,
+                           fill = coordsp$fill,
+                           alpha = alpha.point
+                         )
                        )
-                     )
+                      } else pg <- nullGrob()
                      
                      keep <- function(x) {
                        # from first non-missing to last non-missing
@@ -177,4 +179,145 @@ geom_roc <- function(mapping = NULL, data = NULL, stat = "roc",
     params = list(...)
   )
 }
+
+
+
+#' Calculate confidence regions for the empirical ROC curve
+#' 
+#' Confidence intervals for TPF and FPF are calculated using the exact 
+#'   method of Clopper and Pearson (1934) each at the level \code{1 - sqrt(1 - 
+#'   alpha)}. Based on result 2.4 from Pepe (2003), the cross-product of these 
+#'   intervals yields a 1 - alpha % confidence region for (FPF, TPF).
+#' 
+#' @rdname geom_rocci
+#' @inheritParams ggplot2::stat_identity
+#' 
+StatRocci <- ggproto("StatRocci", Stat,
+                   required_aes = c("m", "d"), ## biomarker, binary outcome
+                   default_aes = aes(x = ..FPF.., y = ..TPF.., 
+                                     xmin = ..FPFL.., xmax = ..FPFU.., ymin = ..TPFL.., ymax = ..TPFU..),
+                   
+                   compute_group = function(data, scales, ci.at = NULL, alpha = .05){
+                     
+                     D <- verify_d(data$d)
+                     T.order <- order(data$m, decreasing=TRUE)
+                     TTT <- data$m[T.order]
+                     
+                     stopifnot(is.finite(alpha) && alpha < 1 && alpha > 0)
+                     
+                     if(is.null(ci.at)){ # choose some evenly spaced locations
+                       
+                       ci.dex <- as.integer(seq(1, nrow(data), length.out = 5))[-c(1, 5)]
+                       ci.loc <- unique(TTT)[ci.dex]
+                       
+                     } else ci.loc <- ci.at
+                     
+                     alpha.star <- 1 - sqrt(1 - alpha)
+                     n0 <- sum(D == 0)
+                     n1 <- sum(D == 1)
+                     M0 <- data$m[D == 0]
+                     M1 <- data$m[D == 1]
+                     
+                     ci_res <- sapply(ci.loc, function(x){ 
+                       
+                       
+                       FP.L <- qbeta(alpha.star, sum(M0 > x), n0 - sum(M0 > x) + 1)
+                       FP.U <- qbeta(1  - alpha.star, sum(M0 > x) + 1, n0 - sum(M0 > x))
+                       
+                       TP.L <- qbeta(alpha.star, sum(M1 > x), n1 - sum(M1 > x) + 1)
+                       TP.U <- qbeta(1  - alpha.star, sum(M1 > x) + 1, n1 - sum(M1 > x))
+                       
+                       FPF <- mean(M0 > x)
+                       TPF <- mean(M1 > x)
+                       
+                       c(FP.L, FP.U, TP.L, TP.U, FPF, TPF)
+                       
+                     })
+                     
+                     ci_res2 <- as.data.frame(t(ci_res))
+                     colnames(ci_res2) <- c("FPFL", "FPFU", "TPFL", "TPFU", "FPF", "TPF")
+                     ci_res2
+                     
+                     
+                   })
+
+#' @export
+#' @inheritParams ggplot2::stat_identity
+
+
+stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
+                     position = "identity", show.legend = NA, inherit.aes = TRUE, ...) {
+  layer(
+    stat = StatRocci,
+    data = data,
+    mapping = mapping,
+    geom = geom,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(...)
+  )
+  
+}
+
+
+
+
+GeomRocci <- ggproto("GeomRocci", Geom, 
+                   required_aes = c("x", "y", "xmin", "xmax", "ymin", "ymax"), 
+                   default_aes = aes(size = .5, shape = 19, fill = "black"),
+                   non_missing_aes = c("size", "shape", "fill"),
+                   draw_group = function(data, panel_scales, coord, alpha.box = .5){
+                     
+                       coords <- coord$transform(data, panel_scales)
+                        
+                       rg <- rectGrob(
+                         coords$xmin, coords$ymax,
+                         width = coords$xmax - coords$xmin,
+                         height = coords$ymax - coords$ymin,
+                         #default.units = "native",
+                         just = c("left", "top"),
+                         gp = gpar(
+                           col = coords$colour,
+                           fill = alpha(coords$fill, alpha.box),
+                           lwd = coords$size * .pt,
+                           lty = coords$linetype,
+                           lineend = "butt"
+                         )
+                       )
+                     
+                     if(length(coords$x) > 0) { 
+                       pg <- pointsGrob(
+                         coords$x, coords$y,
+                         pch = coords$shape,
+                         size = unit(coords$size, "char"),
+                         gp = gpar(
+                           col = coords$colour,
+                           fill = coords$fill
+                         )
+                       )
+                     } else pg <- nullGrob()
+                     
+              
+                     
+                     gList(pg, rg)
+                     
+                     
+                   }, 
+                   draw_key = draw_key_polygon)
+
+
+
+geom_rocci <- function(mapping = NULL, data = NULL, stat = "rocci",
+                     position = "identity", show.legend = NA, 
+                     inherit.aes = TRUE, ...) {
+  layer(
+    geom = GeomRocci, mapping = mapping, data = data, stat = stat, 
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(...)
+  )
+}
+
+
+
 
