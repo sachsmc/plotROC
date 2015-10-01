@@ -5,7 +5,7 @@
 #' 
 StatRoc <- ggproto("StatRoc", Stat,
                    required_aes = c("m", "d"), ## biomarker, binary outcome
-                   default_aes = aes(x = ..false_positive_fraction.., y = ..true_positive_fraction..),
+                   default_aes = aes(x = ..false_positive_fraction.., y = ..true_positive_fraction.., label = ..cutoffs..),
                    
                    compute_group = function(data, scales){
                      
@@ -32,7 +32,7 @@ StatRoc <- ggproto("StatRoc", Stat,
 #' @inheritParams ggplot2::stat_identity
 
 
-stat_roc <- function(mapping = NULL, data = NULL, geom = "step",
+stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
                          position = "identity", show.legend = NA, inherit.aes = TRUE, ...) {
   layer(
     stat = StatRoc,
@@ -49,13 +49,15 @@ stat_roc <- function(mapping = NULL, data = NULL, geom = "step",
 
 
 GeomRoc <- ggproto("GeomRoc", Geom, 
-                   required_aes = c("x", "y"), 
-                   default_aes = aes(shape = 19, colour = "black", alpha = 1, size = 1, linetype = 1),
+                   required_aes = c("x", "y", "label"), 
+                   default_aes = aes(shape = 19, colour = "black", alpha = 1, size = 1, linetype = 1,
+                                     angle = 0, hjust = 1,
+                                     vjust = 1, family = "", fontface = 1, lineheight = 1.2),
                    non_missing_aes = c("size", "shape"),
                    draw_group = function(data, panel_scales, coord, n.cuts = 10, arrow = NULL,
                                          lineend = "butt", linejoin = "round", linemitre = 1, 
                                          alpha.line = 1, alpha.point = 1,
-                                         size.point = .5, 
+                                         size.point = .5, labels = TRUE, labelsize = 3.88, labelround = 1,
                                          na.rm = FALSE){
                      
                      if(nrow(data) < n.cuts){ 
@@ -162,7 +164,33 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                        )
                      }
                      
-                     gList(pg, lg)
+                     if(labels & n.cuts > 0){
+                       lab <- round(coordsp$label, labelround)
+                       
+                       if (is.character(coordsp$vjust)) {
+                         coordsp$vjust <- compute_just(coordsp$vjust, coordsp$y)
+                       }
+                       if (is.character(coordsp$hjust)) {
+                         coordsp$hjust <- compute_just(coordsp$hjust, coordsp$x)
+                       }
+                       
+                       cg <- textGrob(
+                         lab,
+                         coordsp$x - .01, coordsp$y + .02, default.units = "native",
+                         hjust = coordsp$hjust, vjust = coordsp$vjust,
+                         rot = coordsp$angle,
+                         gp = gpar(
+                           col = alpha(coordsp$colour, coordsp$alpha),
+                           fontsize = labelsize * .pt,
+                           fontfamily = coordsp$family,
+                           fontface = coordsp$fontface,
+                           lineheight = coordsp$lineheight
+                         )
+                       )
+                       
+                     } else cg <- nullGrob()
+                     
+                     gList(pg, lg, cg)
                      
                      
                    }, 
@@ -195,7 +223,7 @@ geom_roc <- function(mapping = NULL, data = NULL, stat = "roc",
 StatRocci <- ggproto("StatRocci", Stat,
                    required_aes = c("m", "d"), ## biomarker, binary outcome
                    default_aes = aes(x = ..FPF.., y = ..TPF.., 
-                                     xmin = ..FPFL.., xmax = ..FPFU.., ymin = ..TPFL.., ymax = ..TPFU..),
+                                     xmin = ..FPFL.., xmax = ..FPFU.., ymin = ..TPFL.., ymax = ..TPFU.., label = ..cutoffs..),
                    
                    compute_group = function(data, scales, ci.at = NULL, alpha = .05){
                      
@@ -230,12 +258,12 @@ StatRocci <- ggproto("StatRocci", Stat,
                        FPF <- mean(M0 > x)
                        TPF <- mean(M1 > x)
                        
-                       c(FP.L, FP.U, TP.L, TP.U, FPF, TPF)
+                       c(FP.L, FP.U, TP.L, TP.U, FPF, TPF, x)
                        
                      })
                      
                      ci_res2 <- as.data.frame(t(ci_res))
-                     colnames(ci_res2) <- c("FPFL", "FPFU", "TPFL", "TPFU", "FPF", "TPF")
+                     colnames(ci_res2) <- c("FPFL", "FPFU", "TPFL", "TPFU", "FPF", "TPF", "cutoffs")
                      ci_res2
                      
                      
@@ -264,10 +292,13 @@ stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
 
 
 GeomRocci <- ggproto("GeomRocci", Geom, 
-                   required_aes = c("x", "y", "xmin", "xmax", "ymin", "ymax"), 
-                   default_aes = aes(size = .5, shape = 19, fill = "black"),
+                   required_aes = c("x", "y", "xmin", "xmax", "ymin", "ymax", "label"), 
+                   default_aes = aes(size = .5, shape = 19, fill = "black",
+                                     angle = 0, hjust = 1,
+                                     vjust = 1, family = "", fontface = 1, lineheight = 1.2),
                    non_missing_aes = c("size", "shape", "fill"),
-                   draw_group = function(data, panel_scales, coord, alpha.box = .5){
+                   draw_group = function(data, panel_scales, coord, alpha.box = .5,
+                                         labels = TRUE, labelsize = 3.88, labelround = 1){
                      
                        coords <- coord$transform(data, panel_scales)
                         
@@ -299,8 +330,33 @@ GeomRocci <- ggproto("GeomRocci", Geom,
                      } else pg <- nullGrob()
                      
               
+                       if(labels & length(coords$x) > 0){
+                         lab <- round(coords$label, labelround)
+                         
+                         if (is.character(coords$vjust)) {
+                           coords$vjust <- compute_just(coords$vjust, coords$y)
+                         }
+                         if (is.character(coords$hjust)) {
+                           coords$hjust <- compute_just(coords$hjust, coords$x)
+                         }
+                         
+                         cg <- textGrob(
+                           lab,
+                           coords$x - .01, coords$y + .02, default.units = "native",
+                           hjust = coords$hjust, vjust = coords$vjust,
+                           rot = coords$angle,
+                           gp = gpar(
+                             col = coords$colour,
+                             fontsize = labelsize * .pt,
+                             fontfamily = coords$family,
+                             fontface = coords$fontface,
+                             lineheight = coords$lineheight
+                           )
+                         )
+                         
+                       } else cg <- nullGrob()
                      
-                     gList(pg, rg)
+                     gList(pg, rg, cg)
                      
                      
                    }, 
