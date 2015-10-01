@@ -225,13 +225,13 @@ StatRocci <- ggproto("StatRocci", Stat,
                    default_aes = aes(x = ..FPF.., y = ..TPF.., 
                                      xmin = ..FPFL.., xmax = ..FPFU.., ymin = ..TPFL.., ymax = ..TPFU.., label = ..cutoffs..),
                    
-                   compute_group = function(data, scales, ci.at = NULL, alpha = .05){
+                   compute_group = function(data, scales, ci.at = NULL, sig.level = .05){
                      
                      D <- verify_d(data$d)
                      T.order <- order(data$m, decreasing=TRUE)
                      TTT <- data$m[T.order]
                      
-                     stopifnot(is.finite(alpha) && alpha < 1 && alpha > 0)
+                     stopifnot(is.finite(sig.level) && sig.level < 1 && sig.level > 0)
                      
                      if(is.null(ci.at)){ # choose some evenly spaced locations
                        
@@ -240,7 +240,7 @@ StatRocci <- ggproto("StatRocci", Stat,
                        
                      } else ci.loc <- ci.at
                      
-                     alpha.star <- 1 - sqrt(1 - alpha)
+                     alpha.star <- 1 - sqrt(1 - sig.level)
                      n0 <- sum(D == 0)
                      n1 <- sum(D == 1)
                      M0 <- data$m[D == 0]
@@ -274,7 +274,7 @@ StatRocci <- ggproto("StatRocci", Stat,
 
 
 stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
-                     position = "identity", show.legend = NA, inherit.aes = TRUE, ...) {
+                     position = "identity", show.legend = NA, inherit.aes = TRUE, ci.at = NULL, sig.level = .05, ...) {
   layer(
     stat = StatRocci,
     data = data,
@@ -283,7 +283,7 @@ stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(...)
+    params = list(ci.at = ci.at, sig.level = sig.level, ...)
   )
   
 }
@@ -294,10 +294,10 @@ stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
 GeomRocci <- ggproto("GeomRocci", Geom, 
                    required_aes = c("x", "y", "xmin", "xmax", "ymin", "ymax", "label"), 
                    default_aes = aes(size = .5, shape = 19, fill = "black",
-                                     angle = 0, hjust = 1,
+                                     angle = 0, hjust = 1, linetype = 0,
                                      vjust = 1, family = "", fontface = 1, lineheight = 1.2),
                    non_missing_aes = c("size", "shape", "fill"),
-                   draw_group = function(data, panel_scales, coord, alpha.box = .5,
+                   draw_group = function(data, panel_scales, coord, alpha.box = .4, 
                                          labels = TRUE, labelsize = 3.88, labelround = 1){
                      
                        coords <- coord$transform(data, panel_scales)
@@ -366,11 +366,11 @@ GeomRocci <- ggproto("GeomRocci", Geom,
 
 geom_rocci <- function(mapping = NULL, data = NULL, stat = "rocci",
                      position = "identity", show.legend = NA, 
-                     inherit.aes = TRUE, ...) {
+                     inherit.aes = TRUE, ci.at = NULL, sig.level = .05, ...) {
   layer(
     geom = GeomRocci, mapping = mapping, data = data, stat = stat, 
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(...)
+    params = list(ci.at = ci.at, sig.level = sig.level, ...)
   )
 }
 
