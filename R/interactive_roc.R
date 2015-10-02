@@ -38,10 +38,13 @@ export_interactive_roc <- function(ggroc_p, font.size = "12px", prefix = "a",
   grid::grid.force()
   
   objnames <- grid::grid.ls(print = FALSE)$name
+  
+  ## if confidence intervals are present
+  
   ptns <- grep("geom_roc.", objnames, value = TRUE, fixed = TRUE)
   rects <- grep("geom_rocci.", objnames, value = TRUE, fixed = TRUE)
 
-  jsString <- paste0("<script type='text/javascript'> clickForCis('", prefix, rects, ".1') </script>")
+  jsString <- paste0("<script type='text/javascript'> clickForCis('", prefix, rects[length(rects)], ".1') </script>")
     
   cssString <- '<style type = "text/css">
   
@@ -93,7 +96,7 @@ plot_interactive_roc <- function(ggroc, file = NULL, ...){
     
   } else {
     tmpPlot <- ifelse(length(grep(".html", file)) > 0, file, paste(file, "html", sep = "."))
-    tmpDir <- "."
+    tmpDir <- dirname(file)
   }
   
 
@@ -104,10 +107,6 @@ plot_interactive_roc <- function(ggroc, file = NULL, ...){
 \n", file = tmpPlot)
   cat(body, file = tmpPlot, append = TRUE)
   cat("\n</html>", file = tmpPlot, append = TRUE)
-  
-  ## copy d3 to directory
-  
-  file.copy(system.file("d3.v3.min.js", package = "plotROC"), tmpDir)
   
   ## open in browswer if possible
   

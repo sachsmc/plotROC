@@ -39,10 +39,16 @@ function clickForCis(idstr){
   
 		})
 
+    // extract prefix from string
+    
+    var prefix = idstr.substring(0, idstr.indexOf("geom"))
+		var svg = d3.select("g#" + prefix + "gridSVG");
+		var dims = d3.select("#" + prefix).node().getBBox();
+		
 		var voronoi = d3.geom.voronoi()
 		.x(function(d){ return d.x;})
 		.y(function(d){ return d.y;})
-		.clipExtent([[-2, -2], [720 + 2, 720 + 2]]);
+		.clipExtent([[25, 0], [dims.width - 50, dims.height - 10]]);
 
 		var tess = voronoi(rocdata)
 
@@ -57,10 +63,7 @@ function clickForCis(idstr){
 			}
 		} 
 
-    // extract prefix from string
     
-    var prefix = idstr.substring(0, idstr.indexOf("geom"))
-		var svg = d3.select("g#" + prefix + "gridSVG");
 		var cells = svg.append("g").attr("class", "vors").selectAll("g");		
 
 		cell = cells.data(rocdata2);
@@ -77,28 +80,31 @@ function clickForCis(idstr){
 
 		svg.selectAll(".vor").on("click", function(d, i){
 		  
+		  console.log(d.pid)
+		  
 			d3.selectAll("[id^=\'" + idstr + "\'] rect").attr("opacity", 0).attr("clicked", "false");
-			d3.selectAll("[id^=\'" + d.rid + "\']").transition().duration(100).attr("opacity", 1).attr("clicked", "true");
+			d3.selectAll("[id=\'" + d.rid + "\']").transition().duration(100).attr("opacity", 1).attr("clicked", "true");
 
 			d3.selectAll("[id^=\'" + idstr + "\'] use").attr("opacity", 0).attr("clicked", "false");
 			d3.selectAll("[id=\'" + d.pid + "\']").attr("opacity", 1).attr("clicked", "true");
 
-			d3.selectAll("[id^=\'" + idstr + "\'] text").attr("opacity", 0).attr("clicked", "false");
-			d3.selectAll("[id^=\'" + d.tid + "\']").attr("opacity", 1).attr("clicked", "true");
+			d3.selectAll("[id^=\'" + idstr + "\'] text *").attr("opacity", 0).attr("clicked", "false");
+			d3.selectAll("[id=\'" + d.tid + "\'] *").attr("opacity", 1).attr("clicked", "true");
 
 	})
 	
 	.on("mouseover", function(d, i){
 		  
+		  
 			d3.selectAll("[id^=\'" + idstr + "\'] use").selectAll("[clicked=\'false\']").attr("opacity", 0);
 			d3.selectAll("[id=\'" + d.pid + "\']").attr("opacity", 1);
 
-			d3.selectAll("[id^=\'" + idstr + "\'] text").selectAll("[clicked=\'false\']").attr("opacity", 0);
-			d3.selectAll("[id^=\'" + d.tid + "\']").attr("opacity", 1);
+			d3.selectAll("[id^=\'" + idstr + "\'] text *").selectAll("[clicked=\'false\']").attr("opacity", 0);
+			d3.selectAll("[id=\'" + d.tid + "\'] *").attr("opacity", 1);
 
 	})
 	.on("mouseout", function(d, i){
-	  d3.selectAll("[id^=\'" + d.pid + "\']").attr("opacity", function(){
+	  d3.selectAll("[id=\'" + d.pid + "\']").attr("opacity", function(){
 	    if(d3.select(this).attr("clicked") == "true"){ 
 	      return 1;
 	    } else {
@@ -106,7 +112,7 @@ function clickForCis(idstr){
 	    }
 	  })
 	  
-	  d3.selectAll("[id^=\'" + d.tid + "\']").attr("opacity", function(){
+	  d3.selectAll("[id=\'" + d.tid + "\'] *").attr("opacity", function(){
 	    if(d3.select(this).attr("clicked") == "true"){ 
 	      return 1;
 	    } else {
