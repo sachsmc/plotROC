@@ -5,5 +5,8 @@
 #' @name plotROC
 #' @docType package
 #' @author Michael Sachs (@@sachsmc)
-#' @import grid ggplot2 
+#' @import ggplot2 
+#' @importFrom grid grobName grobTree unit.c grobHeight grobWidth viewport
+#'                  grid.draw grobX grobY gTree gList rectGrob pointsGrob textGrob
+#'                  polylineGrob segmentsGrob nullGrob gpar
 NULL

@@ -2,6 +2,7 @@
 #' 
 #' @rdname geom_roc
 #' @inheritParams ggplot2::stat_identity
+#' @export
 #' 
 StatRoc <- ggproto("StatRoc", Stat,
                    required_aes = c("m", "d"), ## biomarker, binary outcome
@@ -196,7 +197,7 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                    }, 
                    draw_key = draw_key_path)
 
-
+#' @export
 
 geom_roc <- function(mapping = NULL, data = NULL, stat = "roc",
                                 position = "identity", show.legend = NA, 
@@ -219,6 +220,7 @@ geom_roc <- function(mapping = NULL, data = NULL, stat = "roc",
 #' 
 #' @rdname geom_rocci
 #' @inheritParams ggplot2::stat_identity
+#' @export
 #' 
 StatRocci <- ggproto("StatRocci", Stat,
                    required_aes = c("m", "d"), ## biomarker, binary outcome
@@ -297,7 +299,7 @@ GeomRocci <- ggproto("GeomRocci", Geom,
                                      angle = 0, hjust = 1, linetype = 0,
                                      vjust = 1, family = "", fontface = 1, lineheight = 1.2),
                    non_missing_aes = c("size", "shape", "fill"),
-                   draw_group = function(data, panel_scales, coord, alpha.box = .4, 
+                   draw_group = function(data, panel_scales, coord, alpha.box = .3, 
                                          labels = TRUE, labelsize = 3.88, labelround = 1){
                      
                        coords <- coord$transform(data, panel_scales)
@@ -362,7 +364,7 @@ GeomRocci <- ggproto("GeomRocci", Geom,
                    }, 
                    draw_key = draw_key_polygon)
 
-
+#' @export
 
 geom_rocci <- function(mapping = NULL, data = NULL, stat = "rocci",
                      position = "identity", show.legend = NA, 
