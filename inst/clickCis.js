@@ -48,7 +48,7 @@ function clickForCis(idstr){
 		var voronoi = d3.geom.voronoi()
 		.x(function(d){ return d.x;})
 		.y(function(d){ return d.y;})
-		.clipExtent([[25, 0], [dims.width - 50, dims.height - 10]]);
+		.clipExtent([[25, 0], [dims.width - 5, dims.height - 10]]);
 
 		var tess = voronoi(rocdata)
 
@@ -79,8 +79,6 @@ function clickForCis(idstr){
 
 
 		svg.selectAll(".vor").on("click", function(d, i){
-		  
-		  console.log(d.pid)
 		  
 			d3.selectAll("[id^=\'" + idstr + "\'] rect").attr("opacity", 0).attr("clicked", "false");
 			d3.selectAll("[id=\'" + d.rid + "\']").transition().duration(100).attr("opacity", 1).attr("clicked", "true");

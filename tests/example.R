@@ -13,11 +13,9 @@ paired.data <- data.frame(M1 = rnorm(100, mean = D.ex),
 data <- data.frame(D = c(D.ex, D.ex), M = c(paired.data$M1, paired.data$M2), B = c(rep("A", 100), rep("B", 100)))
 
 library(ggplot2)
-ggroc_p <- ggplot(data, aes(m = M, d = D, color = B)) + geom_roc(n.cuts = 0) + geom_rocci(ci.at = seq(-1, 3, length.out = 50)) 
+
+ggroc_p <- ggplot(data, aes(m = M, d = D, color = B)) + geom_roc(n.cuts = 0) + geom_rocci(ci.at = seq(-1, 3, length.out = 5)) +theme_bw()
 ggroc_p
-
-
-#plot_interactive_roc(ggroc_p+ geom_rocci(ci.at = unique(sort(ggroc_p$data$M))))
 
 svgString <- export_interactive_roc(ggroc_p)
 

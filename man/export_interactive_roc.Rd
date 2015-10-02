@@ -4,12 +4,27 @@
 \alias{export_interactive_roc}
 \title{Generate svg code for an ROC curve object}
 \usage{
-export_interactive_roc(ggroc_p, font.size = "12px", prefix = "a",
-  width = 6, height = 6, omit.js = FALSE, omit.d3 = omit.js, ...)
+export_interactive_roc(ggroc_p, add.cis = TRUE, guide = TRUE,
+  scales = TRUE, xlab = "False positive fraction",
+  ylab = "True positive fraction", font.size = "12px", prefix = "a",
+  width = 6, height = 6, omit.js = FALSE, ...)
 }
 \arguments{
-\item{ggroc_p}{An object as returned by \link{ggroc} or \link{multi_ggroc}.
-It can be modified with annotations, themes, etc.}
+\item{ggroc_p}{A ggplot object with a GeomRoc layer as returned by
+\link{ggroc} or \link{multi_ggroc}. It can be modified with annotations,
+themes, etc.}
+
+\item{add.cis}{Logical, if true, removes the current confidence interval
+layer (if present) and replaces it with a denser layer of confidence
+regions}
+
+\item{guide}{Logical, if true, add diagonal guideline matching current theme}
+
+\item{scales}{Logical, if true, replaces major and minor gridlines with defaults}
+
+\item{xlab}{Label for x-axis}
+
+\item{ylab}{Label for y-axis}
 
 \item{font.size}{Character string that determines font size of cutoff labels}
 
@@ -20,26 +35,26 @@ unique idenfication by the javascript code}
 
 \item{height}{Height in inches of plot}
 
-\item{omit.js}{Logical. If true, omit inclusion of javascript source in output. Useful for documents with multple interactive plots}
+\item{omit.js}{Logical. If true, omit inclusion of javascript source in
+output. Useful for documents with multple interactive plots}
 
-\item{omit.d3}{Logical, deprecated same as omit.js}
-
-\item{...}{Other arguments}
+\item{...}{Other arguments passed to \link{geom_rocci} when \code{add.cis =
+  TRUE}}
 }
 \value{
-A character object containing the html necessary to plot the ROC curve in a
-  web browser
+A character object containing the html necessary to plot the ROC
+  curve in a web browser
 }
 \description{
-Takes a ggplot object as returned by \link{ggroc} or \link{multi_ggroc} and
-returns a string that contains html suitable for creating a standalone
-interactive ROC curve plot.
+Takes a ggplot object that contains a GeomRoc layer and returns a string that
+contains html suitable for creating a standalone interactive ROC curve plot.
 }
 \details{
 If you intend to include more than one of these objects in a single
   page, use a different \code{prefix} string for each one. To use this
   function in knitr, use the chunk options \code{fig.keep='none'} and
   \code{results = 'asis'}, then \code{cat()} the resulting string to the
-  output. See the vignette for examples. Older browsers (< IE7) are not supported.
+  output. See the vignette for examples. Older browsers (< IE7) are not
+  supported.
 }
 
