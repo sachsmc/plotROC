@@ -4,15 +4,12 @@
 \alias{export_interactive_roc}
 \title{Generate svg code for an ROC curve object}
 \usage{
-export_interactive_roc(ggroc_p, cutoffs = NULL, font.size = "12px",
-  prefix = "a", width = 6, height = 6, lty = NULL, color = NULL,
-  lwd = NULL, legend = FALSE, omit.d3 = FALSE)
+export_interactive_roc(ggroc_p, font.size = "12px", prefix = "a",
+  width = 6, height = 6, omit.js = FALSE, omit.d3 = omit.js, ...)
 }
 \arguments{
 \item{ggroc_p}{An object as returned by \link{ggroc} or \link{multi_ggroc}.
 It can be modified with annotations, themes, etc.}
-
-\item{cutoffs}{Optional vector or list of vectors to over-ride the default cutoff labels. Useful for rescaling or rounding.}
 
 \item{font.size}{Character string that determines font size of cutoff labels}
 
@@ -23,15 +20,11 @@ unique idenfication by the javascript code}
 
 \item{height}{Height in inches of plot}
 
-\item{lty}{Optional vector of integers defining line types to apply to curves}
+\item{omit.js}{Logical. If true, omit inclusion of javascript source in output. Useful for documents with multple interactive plots}
 
-\item{color}{Optional vector of color names to apply to curves}
+\item{omit.d3}{Logical, deprecated same as omit.js}
 
-\item{lwd}{Line widths for curves}
-
-\item{legend}{Logical. If true plots a legend in bottom right corner of plot}
-
-\item{omit.d3}{Logical. If true, omit inclusion of d3.js source in output. Useful for documents with multple interactive plots}
+\item{...}{Other arguments}
 }
 \value{
 A character object containing the html necessary to plot the ROC curve in a
