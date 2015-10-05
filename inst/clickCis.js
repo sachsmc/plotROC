@@ -1,7 +1,7 @@
 function clickForCis(idstr){
-		d3.selectAll("[id^=\'" + idstr + "\'] rect").attr("opacity", 0).attr("click", "false")
-		d3.selectAll("[id^=\'" + idstr + "\'] use").attr("opacity", 0).attr("click", "false")
-		d3.selectAll("[id^=\'" + idstr + "\'] text").attr("opacity", 0).attr("click", "false")
+		d3.selectAll("[id^=\'" + idstr + "\'] rect").attr("opacity", 0).attr("clicked", "false")
+		d3.selectAll("[id^=\'" + idstr + "\'] use").attr("opacity", 0).attr("clicked", "false")
+		d3.selectAll("[id^=\'" + idstr + "\'] text").attr("opacity", 0).attr("clicked", "false")
 
     //lookup table for matched points, rect, and text
     
@@ -59,12 +59,16 @@ function clickForCis(idstr){
     
     var prefix = idstr.substring(0, idstr.indexOf("geom"))
 		var svg = d3.select("g#" + prefix + "gridSVG");
-		var dims = d3.select("#" + prefix).node().getBBox();
+		
+		// find dims from panel background
+		
+		var dims = d3.select("[id=\'" + idstr + "\']").select(function(){ return this.parentNode })
+		.select("[id^=\'" + prefix + "panel.background..rect\']").node().getBBox();
 		
 		var voronoi = d3.geom.voronoi()
 		.x(function(d){ return d.x;})
 		.y(function(d){ return d.y;})
-		.clipExtent([[25, 0], [dims.width - 5, dims.height - 10]]);
+		.clipExtent([[dims.x, dims.y], [dims.width + dims.x, dims.height + dims.y]]);
 
 		var tess = voronoi(rocdata)
 
@@ -85,7 +89,7 @@ function clickForCis(idstr){
 		cell = cells.data(rocdata2);
 		cell.exit().remove();
 
-		var cellEnter = cell.enter().append("g").attr("class", "vor");
+		var cellEnter = cell.enter().append("g").attr("class", "vor" + idstr.match(/[0-9]+/)[0]);
 
 		cellEnter.append("path")
 		.attr("class", "tess")
@@ -94,7 +98,7 @@ function clickForCis(idstr){
 		cell.select("path").attr("d", function(d) { return "M" + d.vtess.join("L") + "Z"; });   
 
 
-		svg.selectAll(".vor").on("click", function(d, i){
+		svg.selectAll(".vor" + idstr.match(/[0-9]+/)[0]).on("click", function(d, i){
 		  
 			d3.selectAll("[id^=\'" + idstr + "\'] rect").attr("opacity", 0).attr("clicked", "false");
 			d3.selectAll("[id=\'" + d.rid + "\']").transition().duration(100).attr("opacity", 1).attr("clicked", "true");

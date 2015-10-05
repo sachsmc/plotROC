@@ -5,7 +5,7 @@
 \title{Add direct labels to a ROC plot}
 \usage{
 direct_label(ggroc_p, labels = NULL, label.angle = 45, nudge_x = 0,
-  nudge_y = 0, ...)
+  nudge_y = 0, size = 6, ...)
 }
 \arguments{
 \item{label.angle}{angle of adjustment for the direct labels}
@@ -13,8 +13,7 @@ direct_label(ggroc_p, labels = NULL, label.angle = 45, nudge_x = 0,
 \item{nudge_x,}{nudge_y Horizontal and vertical adjustment to nudge labels
 by. These can be scalars or vectors the same length as the number of labels}
 
-\item{...}{Other arguments passed to geom_text, e.g. size, color, nudge_x,
-nudge_y}
+\item{...}{Other arguments passed to geom_text}
 
 \item{direct.labels,}{vector of labels to add directly to the plot next to
 the curves. If multiple curves, must be in the same order as the grouping

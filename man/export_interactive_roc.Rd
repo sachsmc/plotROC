@@ -5,9 +5,8 @@
 \title{Generate svg code for an ROC curve object}
 \usage{
 export_interactive_roc(ggroc_p, add.cis = TRUE, hide.points = FALSE,
-  guide = TRUE, scales = TRUE, xlab = "False positive fraction",
-  ylab = "True positive fraction", font.size = "12px", prefix = "a",
-  width = 6, height = 6, omit.js = FALSE, ...)
+  font.size = "12px", prefix = "a", width = 6, height = 6,
+  omit.js = FALSE, style = style_roc(theme = theme_grey()), ...)
 }
 \arguments{
 \item{ggroc_p}{A ggplot object with a GeomRoc layer and optionally a
@@ -21,17 +20,6 @@ regions}
 \item{hide.points}{Logical, if true, hides points layer so that points with cutoff values are
 only visible when hovering. Recommended for plots containing more than 3 curves.}
 
-\item{guide}{Logical, if true, add diagonal guideline matching current theme}
-
-\item{scales}{Logical, if true, replace major and minor gridlines with
-defaults}
-
-\item{xlab}{Label for x-axis}
-
-\item{ylab}{Label for y-axis}
-
-\item{font.size}{Character string that determines font size of cutoff labels}
-
 \item{prefix}{A string to assign to the objects within the svg. Enables
 unique idenfication by the javascript code}
 
@@ -41,6 +29,8 @@ unique idenfication by the javascript code}
 
 \item{omit.js}{Logical. If true, omit inclusion of javascript source in
 output. Useful for documents with multple interactive plots}
+
+\item{style}{A call to the function \link{style_roc}}
 
 \item{...}{Other arguments passed to \link{geom_rocci} when \code{add.cis =
   TRUE}}

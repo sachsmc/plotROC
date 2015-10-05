@@ -14,11 +14,13 @@ data <- data.frame(D = c(D.ex, D.ex), M = c(paired.data$M1, paired.data$M2), B =
 
 library(ggplot2)
 
-ggroc_p <- ggplot(data, aes(m = M, d = D, color = B)) + geom_roc(n.cuts = 20) 
-direct_label(ggroc_p + style_roc(theme = theme_bw),  labels = c("A", "B"))
+ggroc_p <- ggplot(data, aes(m = M, d = D)) + geom_roc(n.cuts = 20) + facet_wrap(~ B)
 
-svgString <- export_interactive_roc(ggroc_p, width = 7, height = 7, hide.points = FALSE, add.cis = TRUE, sig.level = .001)
+ggroc_p + style_roc() 
 
+svgString <- export_interactive_roc(ggroc_p, width = 10, height = 7, hide.points = TRUE, add.cis = FALSE, sig.level = .001)
+
+#plot_interactive_roc(ggroc_p)
 cat("<html>\n", svgString, "\n</html>",  file = "~/Desktop/svgdevel.html")
 
 

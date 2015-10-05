@@ -8,13 +8,13 @@
 #' @param xlab X-axis label
 #' @param ylab Y-axis label
 #' @param theme Theme function compatible with ggplot2
-#' @param ... Other parameters
+#' @export
 
 
 style_roc <- function(major.breaks = c(0, .1, .25, .5, .75, .9, 1), 
                       minor.breaks = c(seq(0, .1, by = .01), seq(.9, 1, by = .01)), 
                       guide = TRUE, xlab = "False positive fraction", 
-                      ylab = "True positive fraction", theme = theme_bw, ...){
+                      ylab = "True positive fraction", theme = theme_bw){
   
   
     res <- list(scale_x_continuous(xlab, breaks = major.breaks, minor_breaks = minor.breaks),
@@ -41,10 +41,10 @@ style_roc <- function(major.breaks = c(0, .1, .25, .5, .75, .9, 1),
 #' @param label.angle angle of adjustment for the direct labels
 #' @param nudge_x, nudge_y Horizontal and vertical adjustment to nudge labels
 #'   by. These can be scalars or vectors the same length as the number of labels
-#' @param ... Other arguments passed to geom_text, e.g. size, color, nudge_x,
-#'   nudge_y
+#' @param ... Other arguments passed to geom_text
+#' @export
 
-direct_label <- function(ggroc_p, labels = NULL, label.angle = 45, nudge_x = 0, nudge_y = 0, ...){
+direct_label <- function(ggroc_p, labels = NULL, label.angle = 45, nudge_x = 0, nudge_y = 0, size = 6, ...){
   
   pb <- ggplot_build(ggroc_p)
   pbdat <- pb$data[[1]]
@@ -67,6 +67,6 @@ direct_label <- function(ggroc_p, labels = NULL, label.angle = 45, nudge_x = 0, 
   }
   
   ggroc_p + annotate("text", x = lframe$x + .025 + nudge_x, y = lframe$y - .025 + nudge_y, label = lframe$label, colour = lframe$colour,
-                     angle = label.angle, ...)
+                     angle = label.angle, size = size, ...)
   
 }
