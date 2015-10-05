@@ -4,23 +4,27 @@
 \alias{export_interactive_roc}
 \title{Generate svg code for an ROC curve object}
 \usage{
-export_interactive_roc(ggroc_p, add.cis = TRUE, guide = TRUE,
-  scales = TRUE, xlab = "False positive fraction",
+export_interactive_roc(ggroc_p, add.cis = TRUE, hide.points = FALSE,
+  guide = TRUE, scales = TRUE, xlab = "False positive fraction",
   ylab = "True positive fraction", font.size = "12px", prefix = "a",
   width = 6, height = 6, omit.js = FALSE, ...)
 }
 \arguments{
-\item{ggroc_p}{A ggplot object with a GeomRoc layer as returned by
-\link{ggroc} or \link{multi_ggroc}. It can be modified with annotations,
-themes, etc.}
+\item{ggroc_p}{A ggplot object with a GeomRoc layer and optionally a
+GeomRocci layer as returned by \link{ggroc} or \link{multi_ggroc}. It can
+be modified with annotations, themes, etc.}
 
 \item{add.cis}{Logical, if true, removes the current confidence interval
 layer (if present) and replaces it with a denser layer of confidence
 regions}
 
+\item{hide.points}{Logical, if true, hides points layer so that points with cutoff values are
+only visible when hovering. Recommended for plots containing more than 3 curves.}
+
 \item{guide}{Logical, if true, add diagonal guideline matching current theme}
 
-\item{scales}{Logical, if true, replaces major and minor gridlines with defaults}
+\item{scales}{Logical, if true, replace major and minor gridlines with
+defaults}
 
 \item{xlab}{Label for x-axis}
 

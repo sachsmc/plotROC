@@ -8,35 +8,38 @@
 #'   page, use a different \code{prefix} string for each one. To use this 
 #'   function in knitr, use the chunk options \code{fig.keep='none'} and 
 #'   \code{results = 'asis'}, then \code{cat()} the resulting string to the 
-#'   output. See the vignette for examples. Older browsers (< IE7) are not
+#'   output. See the vignette for examples. Older browsers (< IE7) are not 
 #'   supported.
 #'   
-#' @param ggroc_p A ggplot object with a GeomRoc layer as returned by
-#'   \link{ggroc} or \link{multi_ggroc}. It can be modified with annotations,
-#'   themes, etc.
-#' @param add.cis Logical, if true, removes the current confidence interval
-#'   layer (if present) and replaces it with a denser layer of confidence
+#' @param ggroc_p A ggplot object with a GeomRoc layer and optionally a
+#'   GeomRocci layer as returned by \link{ggroc} or \link{multi_ggroc}. It can
+#'   be modified with annotations, themes, etc.
+#' @param add.cis Logical, if true, removes the current confidence interval 
+#'   layer (if present) and replaces it with a denser layer of confidence 
 #'   regions
-#'   @param guide Logical, if true, add diagonal guideline matching current theme
-#'   @param scales Logical, if true, replaces major and minor gridlines with defaults
-#'   @param xlab Label for x-axis
-#'   @param ylab Label for y-axis
+#' @param hide.points Logical, if true, hides points layer so that points with cutoff values are
+#'  only visible when hovering. Recommended for plots containing more than 3 curves.
+#' @param guide Logical, if true, add diagonal guideline matching current theme
+#' @param scales Logical, if true, replace major and minor gridlines with
+#'   defaults
+#' @param xlab Label for x-axis
+#' @param ylab Label for y-axis
 #' @param font.size Character string that determines font size of cutoff labels
 #' @param prefix A string to assign to the objects within the svg. Enables 
 #'   unique idenfication by the javascript code
 #' @param width Width in inches of plot
 #' @param height Height in inches of plot
-#' @param omit.js Logical. If true, omit inclusion of javascript source in
+#' @param omit.js Logical. If true, omit inclusion of javascript source in 
 #'   output. Useful for documents with multple interactive plots
-#' @param ... Other arguments passed to \link{geom_rocci} when \code{add.cis =
+#' @param ... Other arguments passed to \link{geom_rocci} when \code{add.cis = 
 #'   TRUE}
 #'   
 #' @export
 #' 
-#' @return A character object containing the html necessary to plot the ROC
+#' @return A character object containing the html necessary to plot the ROC 
 #'   curve in a web browser
 #'   
-export_interactive_roc <- function(ggroc_p, add.cis = TRUE, guide = TRUE, scales = TRUE, 
+export_interactive_roc <- function(ggroc_p, add.cis = TRUE, hide.points = FALSE, guide = TRUE, scales = TRUE, 
                                    xlab = "False positive fraction", 
                                    ylab = "True positive fraction", 
                                    font.size = "12px", prefix = "a", 
@@ -54,8 +57,9 @@ export_interactive_roc <- function(ggroc_p, add.cis = TRUE, guide = TRUE, scales
   
   if(add.cis){
 
-    
-    ggroc_p$layers[[which(lays == "GeomRocci")]] <- NULL
+    if("GeomRocci" %in% lays){
+      ggroc_p$layers[[which(lays == "GeomRocci")]] <- NULL
+    }
     
     args <- list(...)
     if("ci.at" %in% names(args)){
@@ -104,9 +108,15 @@ export_interactive_roc <- function(ggroc_p, add.cis = TRUE, guide = TRUE, scales
   ## if confidence intervals are present
   
   ptns <- grep("geom_roc.", objnames, value = TRUE, fixed = TRUE)
-  rects <- grep("geom_rocci.", objnames, value = TRUE, fixed = TRUE)
-
-  jsString <- paste0("<script type='text/javascript'> clickForCis('", prefix, rects[length(rects)], ".1') </script>")
+  
+  jsString <- NULL
+  if(add.cis || "GeomRocci" %in% lays){
+    rects <- grep("geom_rocci.", objnames, value = TRUE, fixed = TRUE)
+    jsString <- c(jsString, paste0("<script type='text/javascript'> clickForCis('", prefix, rects[length(rects)], ".1') </script>"))
+  } 
+  if(hide.points) {
+    jsString <- c(paste0("<script type='text/javascript'> hoverForPoints('", prefix, ptns[length(ptns)], ".1') </script>"), jsString)
+  }
     
   cssString <- '<style type = "text/css">
   

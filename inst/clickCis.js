@@ -13,7 +13,23 @@ function clickForCis(idstr){
       
       var ispoint = gids[i].match(/.*points.*/)
       if(ispoint !== null){
-        lookup[ispoint[0]] = {"rect": gids[i + 1], "text":gids[i + 2]}
+        //lookahead for rect and text
+        var rectdex = null;
+        var textdex = null;
+        
+        gids.slice(i + 1, i + 3).forEach(function(val){
+          tmp = val.match(/.*rect.*/)
+          if(tmp !== null){
+            rectdex = tmp[0]
+          }
+        });
+        gids.slice(i + 1, i + 3).forEach(function(val){
+          tmp2 = val.match(/.*text.*/)
+          if(tmp2 !== null){
+            textdex = tmp2[0]
+          }
+        });
+        lookup[ispoint[0]] = {"rect": rectdex, "text": textdex}
       }
       
     }
