@@ -1,0 +1,72 @@
+#' Add guides and annotations to a ROC plot
+#' 
+#' Adds a diagonal guideline, minor grid lines, and optionally direct labels to ggplot objects containing a geom_roc layer. 
+#' 
+#' @param major.breaks vector of breakpoints for the major gridlines and axes
+#' @param minor.breaks vector of breakpoints for the minor gridlines and axes
+#' @param guide logical, if TRUE draws diagonal guideline
+#' @param xlab X-axis label
+#' @param ylab Y-axis label
+#' @param theme Theme function compatible with ggplot2
+#' @param ... Other parameters
+
+
+style_roc <- function(major.breaks = c(0, .1, .25, .5, .75, .9, 1), 
+                      minor.breaks = c(seq(0, .1, by = .01), seq(.9, 1, by = .01)), 
+                      guide = TRUE, xlab = "False positive fraction", 
+                      ylab = "True positive fraction", theme = theme_bw, ...){
+  
+  
+    res <- list(scale_x_continuous(xlab, breaks = major.breaks, minor_breaks = minor.breaks),
+         scale_y_continuous(ylab, breaks = major.breaks, minor_breaks = minor.breaks), 
+         theme())
+    
+    if(guide){
+      
+      pcol <- theme()$panel.grid.major$colour
+      if(is.null(pcol)) pcol <- "white"
+      res <- append(res, geom_abline(slope = 1, intercept = 0, color = pcol))
+      
+    }
+    
+    res
+    
+  }
+  
+#' Add direct labels to a ROC plot
+#' 
+#' @param direct.labels, vector of labels to add directly to the plot next to
+#'   the curves. If multiple curves, must be in the same order as the grouping
+#'   factor
+#' @param label.angle angle of adjustment for the direct labels
+#' @param nudge_x, nudge_y Horizontal and vertical adjustment to nudge labels
+#'   by. These can be scalars or vectors the same length as the number of labels
+#' @param ... Other arguments passed to geom_text, e.g. size, color, nudge_x,
+#'   nudge_y
+
+direct_label <- function(ggroc_p, labels = NULL, label.angle = 45, nudge_x = 0, nudge_y = 0, ...){
+  
+  pb <- ggplot_build(ggroc_p)
+  pbdat <- pb$data[[1]]
+  if(is.null(labels)){
+    
+    pb2 <- pb$plot
+    labels <- as.character(sort(unique(pb2$data[, as.character(pb2$mapping$colour)])))
+    
+  }
+  
+  lframe <- NULL
+  for(i in 1:length(unique(pbdat$group))){
+    
+    s1 <- pbdat[pbdat[, "group"] == unique(pbdat$group)[i], ]
+    s2 <- s1[s1$y + s1$x < 1, c("x", "y", "colour")]
+    lframe <- rbind(lframe, data.frame(s2[nrow(s2), ], 
+                                       label = labels[i], 
+                                       stringsAsFactors = FALSE))
+    
+  }
+  
+  ggroc_p + annotate("text", x = lframe$x + .025 + nudge_x, y = lframe$y - .025 + nudge_y, label = lframe$label, colour = lframe$colour,
+                     angle = label.angle, ...)
+  
+}
