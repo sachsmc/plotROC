@@ -5,12 +5,12 @@
 \title{Generate svg code for an ROC curve object}
 \usage{
 export_interactive_roc(ggroc_p, add.cis = TRUE, hide.points = FALSE,
-  font.size = "12px", prefix = "a", width = 6, height = 6,
-  omit.js = FALSE, style = style_roc(theme = theme_grey()), ...)
+  prefix = "a", width = 6, height = 6, omit.js = FALSE,
+  style = style_roc(theme = theme_grey()), ...)
 }
 \arguments{
 \item{ggroc_p}{A ggplot object with a GeomRoc layer and optionally a
-GeomRocci layer as returned by \link{ggroc} or \link{multi_ggroc}. It can
+GeomRocci layer as returned by \link{geom_roc} and/or \link{geom_rocci}. It can
 be modified with annotations, themes, etc.}
 
 \item{add.cis}{Logical, if true, removes the current confidence interval
@@ -23,9 +23,7 @@ only visible when hovering. Recommended for plots containing more than 3 curves.
 \item{prefix}{A string to assign to the objects within the svg. Enables
 unique idenfication by the javascript code}
 
-\item{width}{Width in inches of plot}
-
-\item{height}{Height in inches of plot}
+\item{width,}{height Width and height in inches of plot}
 
 \item{omit.js}{Logical. If true, omit inclusion of javascript source in
 output. Useful for documents with multple interactive plots}

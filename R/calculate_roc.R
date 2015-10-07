@@ -169,5 +169,26 @@ verify_d <- function(D){
 #' @param m Vector of column names or indices identifying biomarkers
 #' @param names Optional vector of names to assign to the biomarkers. If NULL, names will be taken from the column names
 #' 
-
+#' @return A data frame in long format with three columns: D = binary disease status, M = biomarker value, and name = biomarker name
+#' 
+#' @export
+#' @examples 
+#' D.ex <- rbinom(250, 1, .5)
+#' widedata <- data.frame(D = D.ex, M1 = rnorm(250, mean = D.ex, sd = 1), M2 = rnorm(250, mean = D.ex, sd = .5))
+#' longdata <- melt_roc(widedata, "D", c("M1", "M2"))
+#' ggplot(longdata, aes(d = D, m = M, color = name)) + geom_roc()
+#' 
+melt_roc <- function(data, d, m, names = NULL){
+  
+  if(is.null(names)){
+    
+    names <- colnames(data[, m])
+    
+  }
+  
+  data.frame(D = rep(data[, d], length(m)), 
+             M = do.call(c, data[, m]), 
+             name = rep(names, each = nrow(data)), stringsAsFactors = FALSE)
+  
+}
 
