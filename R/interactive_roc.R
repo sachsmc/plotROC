@@ -12,7 +12,7 @@
 #'   supported.
 #'   
 #' @param ggroc_p A ggplot object with a GeomRoc layer and optionally a
-#'   GeomRocci layer as returned by \link{ggroc} or \link{multi_ggroc}. It can
+#'   GeomRocci layer as returned by \link{geom_roc} and/or \link{geom_rocci}. It can
 #'   be modified with annotations, themes, etc.
 #' @param add.cis Logical, if true, removes the current confidence interval 
 #'   layer (if present) and replaces it with a denser layer of confidence 
@@ -21,8 +21,7 @@
 #'  only visible when hovering. Recommended for plots containing more than 3 curves.
 #' @param prefix A string to assign to the objects within the svg. Enables 
 #'   unique idenfication by the javascript code
-#' @param width Width in inches of plot
-#' @param height Height in inches of plot
+#' @param width, height Width and height in inches of plot
 #' @param omit.js Logical. If true, omit inclusion of javascript source in 
 #'   output. Useful for documents with multple interactive plots
 #' @param style A call to the function \link{style_roc}
@@ -35,8 +34,9 @@
 #'   curve in a web browser
 #'   
 export_interactive_roc <- function(ggroc_p, add.cis = TRUE, hide.points = FALSE, 
-                                   font.size = "12px", prefix = "a", 
-                                   width = 6, height = 6, omit.js = FALSE, style = style_roc(theme = theme_grey()), ...){
+                                   prefix = "a", 
+                                   width = 6, height = 6, omit.js = FALSE, 
+                                   style = style_roc(theme = theme_grey()), ...){
   
 
   

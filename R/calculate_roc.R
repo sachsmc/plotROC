@@ -1,6 +1,6 @@
 #' Calculate the Empirical ROC curve
 #' 
-#' Calculate the empirical ROC curve estimate given labels and predictions
+#' Deprecated, use \link{geom_roc} instead
 #' 
 #' @param M continuous marker values or predictions of class labels
 #' @param D class labels, must be coded as 0 and 1. If not numeric with 0/1,
@@ -30,13 +30,22 @@ calculate_roc <- function(M, D, ci = FALSE, alpha = .05){
   
   if(sum(c(is.na(M), is.na(D))) > 0) stop("No missing data allowed")
   
-  D <- verify_d(D)
+  D <- verify_d(data$d)
+  T.order <- order(data$m, decreasing=TRUE)
+  TTT <- data$m[T.order]
+  TPF <- cumsum(D[T.order] == 1)
+  FPF <- cumsum(D[T.order] == 0)
   
-  c <- sort(M)
-  TPF <- sapply(c, function(x) mean(M[D == 1] > x))
-  FPF <- sapply(c, function(x) mean(M[D == 0] > x))
+  ## remove fp & tp for duplicated predictions
+  ## Highest cutoff (Infinity) corresponds to tp=0, fp=0
   
-  df <- data.frame(cbind(c, TPF, FPF))
+  dups <- rev(duplicated(rev(TTT)))
+  tp <- c(0, TPF[!dups])/sum(D == 1)
+  fp <- c(0, FPF[!dups])/sum(D == 0)
+  cutoffs <- c(Inf, TTT[!dups])
+  
+  df <- data.frame(FPF = fp, TPF = tp, c = cutoffs)
+  
   
   if(ci){
     
@@ -72,9 +81,7 @@ calculate_roc <- function(M, D, ci = FALSE, alpha = .05){
 
 #' Calculate the Empirical ROC curves for multiple biomarkers
 #' 
-#' Calculate empirical ROC curve estimates given labels and predictions. Designed to work with the
-#' \code{multi_ggroc} function, this takes a \code{data.frame} and computes the ROC
-#' curve for a given list of markers.
+#' Deprecated, use \link{geom_roc} instead
 #' 
 #' @param data data frame containing at least 1 marker and the common class
 #'   labels, coded as 0 and 1
@@ -105,11 +112,22 @@ calculate_multi_roc <- function(data, M_string, D_string){
 
       if(sum(c(is.na(M), is.na(D))) > 0) stop("No missing data allowed")
       
-      c <- sort(M)
-      TPF <- sapply(c, function(x) mean(M[D == 1] > x))
-      FPF <- sapply(c, function(x) mean(M[D == 0] > x))
+      T.order <- order(M, decreasing=TRUE)
+      TTT <- M[T.order]
+      TPF <- cumsum(D[T.order] == 1)
+      FPF <- cumsum(D[T.order] == 0)
       
-      df <- data.frame(cbind(c, TPF, FPF))
+      ## remove fp & tp for duplicated predictions
+      ## Highest cutoff (Infinity) corresponds to tp=0, fp=0
+      
+      dups <- rev(duplicated(rev(TTT)))
+      tp <- c(0, TPF[!dups])/sum(D == 1)
+      fp <- c(0, FPF[!dups])/sum(D == 0)
+      cutoffs <- c(Inf, TTT[!dups])
+      
+      df <- data.frame(FPF = fp, TPF = tp, c = cutoffs)
+      
+      
       out_list[[i]] <- df
   }
   
@@ -118,9 +136,9 @@ calculate_multi_roc <- function(data, M_string, D_string){
 }
 
 
-#' Check that D is OK for using as binary disease status
+#' Check that D is suitable for using as binary disease status
 #' 
-#' Checks for two classes and gives informative error messages
+#' Checks for two classes and gives a warning message indicating which level is assumed to be 0/1
 #' 
 #' @param D Vector that will be checked for 2-class labels
 #' 
@@ -141,4 +159,15 @@ verify_d <- function(D){
   zero1[D]
   
 }
+
+#' Transform biomarkers stored as wide to long
+#' 
+#' Multple biomarkers measured on the same subjects are often stored as multiple columns in a data frame. This is a convenience function that transforms the data into long format, suitable for use with ggplot and \link{geom_roc}
+#' 
+#' @param data Data frame containing disease status and biomarkers stored in columns
+#' @param d Column containing binary disease status. Can be a column name or index
+#' @param m Vector of column names or indices identifying biomarkers
+#' @param names Optional vector of names to assign to the biomarkers. If NULL, names will be taken from the column names
+#' 
+
 

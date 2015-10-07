@@ -19,9 +19,7 @@ List of data frames containing cutoffs, and estimated true and false
   positive fractions
 }
 \description{
-Calculate empirical ROC curve estimates given labels and predictions. Designed to work with the
-\code{multi_ggroc} function, this takes a \code{data.frame} and computes the ROC
-curve for a given list of markers.
+Deprecated, use \link{geom_roc} instead
 }
 \examples{
 D.ex <- rbinom(100, 1, .5)

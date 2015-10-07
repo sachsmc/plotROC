@@ -1,3 +1,5 @@
+#' Reads included JavaScript functions and returns them as a string for pasting into a webpage
+#' 
 #' @keywords Internal
 #' 
 getD3 <- function(){

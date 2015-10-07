@@ -1,9 +1,6 @@
-#' Calculate the empirical ROC curve
-#' 
-#' @rdname geom_roc
-#' @inheritParams ggplot2::stat_identity
 #' @export
-#' 
+#' @rdname stat_roc
+
 StatRoc <- ggproto("StatRoc", Stat,
                    required_aes = c("m", "d"), ## biomarker, binary outcome
                    default_aes = aes(x = ..false_positive_fraction.., y = ..true_positive_fraction.., label = ..cutoffs..),
@@ -29,9 +26,39 @@ StatRoc <- ggproto("StatRoc", Stat,
                      
                    })
 
-#' @export
+#' Calculate the empirical Receiver Operating Characteristic curve
+#' 
+#' Given a binary outcome d and continous measurement m, computes the empirical
+#' ROC curve for assessing the classification accuracy of m
+#' 
 #' @inheritParams ggplot2::stat_identity
-
+#' @section Aesthetics:
+#' \code{stat_roc} understands the following aesthetics (required aesthetics
+#' are in bold):
+#' \itemize{
+#'   \item \strong{\code{m}} The continuous biomarker/predictor
+#'   \item \strong{\code{d}} The binary outcome, if not coded as 0/1, the 
+#'   smallest level in sort order is assumed to be 0, with a warning
+#'   \item \code{alpha}
+#'   \item \code{color}
+#'   \item \code{linetype}
+#'   \item \code{size}
+#' }
+#' @section Computed variables:
+#' \describe{
+#'   \item{false_positive_fraction}{estimate of false positive fraction}
+#'   \item{true_positive_fraction}{estimate of true positive fraction}
+#'   \item{cutoffs}{values of m at which estimates are calculated}
+#' }
+#' @export
+#' @rdname stat_roc
+#' @examples
+#' D.ex <- rbinom(250, 1, .5)
+#' rocdata <- data.frame(D = c(D.ex, D.ex), 
+#'                    M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)), 
+#'                    Z = c(rep("A", 250), rep("B", 250)))
+#'
+#' ggplot(rocdata, aes(m = M, d = D)) + stat_roc()
 
 stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
                          position = "identity", show.legend = NA, inherit.aes = TRUE, ...) {
@@ -48,6 +75,37 @@ stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
   
 }
 
+#' @param n.cuts Number of cutpoints to display along each curve
+#' @param lineend Line end style (round, butt, square)
+#' @param linejoin Line join style (round, mitre, bevel)
+#' @param linemitre Line mitre limit (number greater than 1)
+#' @param arrow Arrow specification, as created by \code{\link[grid]{arrow}}
+#' @param alpha.line Alpha level for the lines
+#' @param alpha.point Alpha level for the cutoff points
+#' @param size.point Size of cutoff points
+#' @param labels Logical, display cutoff text labels
+#' @param labelsize Size of cutoff text labels
+#' @param labelround Integer, number of significant digits to round cutoff labels
+#' @param na.rm Remove missing values from curve
+#' @section Computed variables:
+#' \describe{
+#'   \item{false_positive_fraction}{estimate of false positive fraction}
+#'   \item{true_positive_fraction}{estimate of true positive fraction}
+#'   \item{cutoffs}{values of m at which estimates are calculated}
+#' }
+#' @export
+#' @rdname geom_roc
+#' @examples
+#' D.ex <- rbinom(250, 1, .5)
+#' rocdata <- data.frame(D = c(D.ex, D.ex), 
+#'                    M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)), 
+#'                    Z = c(rep("A", 250), rep("B", 250)))
+#'
+#' ggplot(rocdata, aes(m = M, d = D)) + geom_roc()
+#' ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc()
+#' ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + facet_wrap(~ Z)
+#' ggplot(rocdata, aes(m = M, d = D)) + geom_roc(n.cuts = 50)
+#' ggplot(rocdata, aes(m = M, d = D)) + geom_roc(labels = FALSE)
 
 GeomRoc <- ggproto("GeomRoc", Geom, 
                    required_aes = c("x", "y", "label"), 
@@ -197,7 +255,34 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                    }, 
                    draw_key = draw_key_path)
 
+#' Empirical Receiver Operating Characteristic Curve
+#' 
+#' Display the empirical ROC curve. Useful for characterizing the classification
+#' accuracy of continuous measurements for predicting binary states
+#' 
+#' @section Aesthetics:
+#' \code{geom_roc} understands the following aesthetics (required aesthetics
+#' are in bold):
+#' \itemize{
+#'   \item \strong{\code{x}} The FPF estimate. This is automatically mapped by \link{stat_roc}
+#'   \item \strong{\code{y}} The TPF estimate. This is automatically mapped by \link{stat_roc}
+#'   smallest level in sort order is assumed to be 0, with a warning
+#'   \item \code{alpha}
+#'   \item \code{color}
+#'   \item \code{fill}
+#'   \item \code{linetype}
+#'   \item \code{size}
+#' }
+#'
+#' @param geom,stat Use to override the default connection between
+#'   \code{geom_roc} and \code{stat_roc}.
+#' @seealso See \code{\link{geom_rocci}} for
+#'   displaying rectangular confidence regions for the empirical ROC curve, \code{\link{style_roc}} for 
+#'   adding guidelines and labels, and \code{\link{direct_label}} for adding direct labels to the 
+#'   curves. Also \link{export_interactive_roc} for creating interactive ROC curve plots for use in a web browser. 
+#' @inheritParams ggplot2::geom_point
 #' @export
+#' 
 
 geom_roc <- function(mapping = NULL, data = NULL, stat = "roc",
                                 position = "identity", show.legend = NA, 
@@ -218,9 +303,48 @@ geom_roc <- function(mapping = NULL, data = NULL, stat = "roc",
 #'   alpha)}. Based on result 2.4 from Pepe (2003), the cross-product of these 
 #'   intervals yields a 1 - alpha % confidence region for (FPF, TPF).
 #' 
-#' @rdname geom_rocci
+#' @rdname stat_rocci
+#' @section Aesthetics: 
+#' \code{stat_rocci} understands the following aesthetics (required aesthetics
+#' are in bold):
+#' \itemize{
+#'   \item \strong{\code{m}} The continuous biomarker/predictor
+#'   \item \strong{\code{d}} The binary outcome, if not coded as 0/1, the 
+#'   smallest level in sort order is assumed to be 0, with a warning
+#'   \item \code{alpha}
+#'   \item \code{color}
+#'   \item \code{fill}
+#'   \item \code{linetype}
+#'   \item \code{size}
+#' }
+#'
+#' @section Computed variables:
+#' \describe{
+#'   \item{FPF}{estimate of false positive fraction}
+#'   \item{TPF}{estimate of true positive fraction}
+#'   \item{cutoffs}{values of m at which estimates are calculated}
+#'   \item{FPFL}{lower bound of confidence region for FPF}
+#'   \item{FPFU}{upper bound of confidence region for FPF}
+#'   \item{TPFL}{lower bound of confidence region for TPF}
+#'   \item{TPFU}{upper bound of confidence region for TPF}
+#' }
+#' @export
+#' @rdname stat_roc
+#' @references \itemize{
+#' \item Clopper, C. J., and Egon S. Pearson. "The use of confidence or fiducial limits illustrated in the case of the binomial." Biometrika (1934): 404-413.
+#' \item Pepe, M.S. "The Statistical Evaluation of Medical Tests for Classification and Prediction." Oxford (2003). 
+#' }
 #' @inheritParams ggplot2::stat_identity
 #' @export
+#' @examples
+#' D.ex <- rbinom(250, 1, .5)
+#' rocdata <- data.frame(D = c(D.ex, D.ex), 
+#'                    M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)), 
+#'                    Z = c(rep("A", 250), rep("B", 250)))
+#'
+#' ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + stat_rocci()
+#' ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + 
+#' stat_rocci(ci.at = quantile(rocdata$M, c(.1, .3, .5, .7, .9)))
 #' 
 StatRocci <- ggproto("StatRocci", Stat,
                    required_aes = c("m", "d"), ## biomarker, binary outcome
@@ -272,7 +396,11 @@ StatRocci <- ggproto("StatRocci", Stat,
                    })
 
 #' @export
+#' @rdname stat_rocci
 #' @inheritParams ggplot2::stat_identity
+#' @param ci.at Vector of cutoffs at which to display confidence regions. If
+#'   NULL, will automatically choose 3 evenly spaced points to display the regions
+#'   @param sig.level Significance level for the confidence regions
 
 
 stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
@@ -290,7 +418,64 @@ stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
   
 }
 
+#' Confidence regions for the ROC curve
+#' 
+#' Display rectangular confidence regions for the empirical ROC curve. 
+#' 
+#' @section Aesthetics:
+#' \code{geom_rocci} understands the following aesthetics (required aesthetics
+#' are in bold). \code{stat_rocci} automatically maps the estimates to the required aesthetics:
+#' \itemize{
+#'   \item \strong{\code{x}} The FPF estimate
+#'   \item \strong{\code{y}} The TPF estimate
+#'   \item \strong{\code{xmin}} Lower confidence limit for the FPF
+#'   \item \strong{\code{xmax}} Upper confidence limit for the FPF
+#'   \item \strong{\code{ymin}} Lower confidence limit for the TPF
+#'   \item \strong{\code{ymax}} Upper confidence limit for the TPF
+#'   \item \code{alpha}
+#'   \item \code{color}
+#'   \item \code{fill}
+#'   \item \code{linetype}
+#'   \item \code{size}
+#' }
+#'
+#' @param geom,stat Use to override the default connection between
+#'   \code{geom_rocci} and \code{stat_rocci}.
+#' @seealso See \code{\link{geom_roc}} for the empirical ROC curve, \code{\link{style_roc}} for 
+#'   adding guidelines and labels, and \code{\link{direct_label}} for adding direct labels to the 
+#'   curves. Also \link{export_interactive_roc} for creating interactive ROC curve plots for use in a web browser. 
+#' @inheritParams ggplot2::geom_point
+#' @export
 
+geom_rocci <- function(mapping = NULL, data = NULL, stat = "rocci",
+                       position = "identity", show.legend = NA, 
+                       inherit.aes = TRUE, ci.at = NULL, sig.level = .05, ...) {
+  layer(
+    geom = GeomRocci, mapping = mapping, data = data, stat = stat, 
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(ci.at = ci.at, sig.level = sig.level, ...)
+  )
+}
+
+#' @param alpha.box Alpha level for the confidence regions
+#' @param labels If TRUE, adds text labels for the cutoffs where the confidence regions are displayed
+#' @param labelsize Size of cutoff text labels
+#' @param labelround Integer, number of significant digits to round cutoff labels
+#' @export
+#' @rdname geom_rocci
+#' @examples 
+#' 
+#' D.ex <- rbinom(250, 1, .5)
+#' rocdata <- data.frame(D = c(D.ex, D.ex), 
+#'                    M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)), 
+#'                    Z = c(rep("A", 250), rep("B", 250)))
+#'
+#' ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + geom_rocci()
+#' ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc() + geom_rocci()
+#' ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc() + geom_rocci(sig.level = .01)
+#' ggplot(rocdata, aes(m = M, d = D)) + geom_roc(n.cuts = 0) + 
+#' geom_rocci(ci.at = quantile(rocdata$M, c(.1, .25, .5, .75, .9)))
+#' ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc() + geom_rocci(linetype = 1)
 
 
 GeomRocci <- ggproto("GeomRocci", Geom, 
@@ -363,18 +548,6 @@ GeomRocci <- ggproto("GeomRocci", Geom,
                      
                    }, 
                    draw_key = draw_key_polygon)
-
-#' @export
-
-geom_rocci <- function(mapping = NULL, data = NULL, stat = "rocci",
-                     position = "identity", show.legend = NA, 
-                     inherit.aes = TRUE, ci.at = NULL, sig.level = .05, ...) {
-  layer(
-    geom = GeomRocci, mapping = mapping, data = data, stat = stat, 
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(ci.at = ci.at, sig.level = sig.level, ...)
-  )
-}
 
 
 

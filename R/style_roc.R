@@ -35,13 +35,15 @@ style_roc <- function(major.breaks = c(0, .1, .25, .5, .75, .9, 1),
   
 #' Add direct labels to a ROC plot
 #' 
-#' @param direct.labels, vector of labels to add directly to the plot next to
+#' @param ggroc_p A ggplot object that contains a \link{geom_roc} layer
+#' @param labels, vector of labels to add directly to the plot next to
 #'   the curves. If multiple curves, must be in the same order as the grouping
-#'   factor
+#'   factor. If NULL, attempts to determine labels from the ggroc_p object
 #' @param label.angle angle of adjustment for the direct labels
 #' @param nudge_x, nudge_y Horizontal and vertical adjustment to nudge labels
 #'   by. These can be scalars or vectors the same length as the number of labels
-#' @param ... Other arguments passed to geom_text
+#'   @param size Size of labels
+#' @param ... Other arguments passed to \link[ggplot2]{annotate}
 #' @export
 
 direct_label <- function(ggroc_p, labels = NULL, label.angle = 45, nudge_x = 0, nudge_y = 0, size = 6, ...){
@@ -66,7 +68,8 @@ direct_label <- function(ggroc_p, labels = NULL, label.angle = 45, nudge_x = 0, 
     
   }
   
-  ggroc_p + annotate("text", x = lframe$x + .025 + nudge_x, y = lframe$y - .025 + nudge_y, label = lframe$label, colour = lframe$colour,
+  ggroc_p + annotate("text", x = lframe$x + .025 + nudge_x, y = lframe$y - .025 + nudge_y, 
+                     label = lframe$label, colour = lframe$colour,
                      angle = label.angle, size = size, ...)
   
 }

@@ -23,7 +23,7 @@ A dataframe containing cutoffs, estimated true and false positive
   fractions, and confidence intervals if \code{ci = TRUE}.
 }
 \description{
-Calculate the empirical ROC curve estimate given labels and predictions
+Deprecated, use \link{geom_roc} instead
 }
 \details{
 Confidence intervals for TPF and FPF are calculated using the exact
