@@ -19,14 +19,11 @@ Depends:
     ggplot2
 Imports:
     grid,
-    ggplot2,
     gridSVG,
-    plyr,
     shiny
 Suggests:
-    ggthemes,
     knitr,
     testthat, 
     stringr, 
-    ROCR
+    survivalROC
 VignetteBuilder: knitr

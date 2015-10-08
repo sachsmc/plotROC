@@ -21,10 +21,4 @@ List of data frames containing cutoffs, and estimated true and false
 \description{
 Deprecated, use \link{geom_roc} instead
 }
-\examples{
-D.ex <- rbinom(100, 1, .5)
-fakedata <- data.frame(M1 = rnorm(100, mean = D.ex),
-   M2 = rnorm(100, mean = D.ex, sd = .4), D = D.ex)
-calculate_multi_roc(fakedata, c("M1", "M2"), "D")
-}
 

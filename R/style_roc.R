@@ -47,7 +47,7 @@ style_roc <- function(major.breaks = c(0, .1, .25, .5, .75, .9, 1),
 #'   the curves. If multiple curves, must be in the same order as the grouping
 #'   factor. If NULL, attempts to determine labels from the ggroc_p object
 #' @param label.angle angle of adjustment for the direct labels
-#' @param nudge_x, nudge_y Horizontal and vertical adjustment to nudge labels
+#' @param nudge_x,nudge_y Horizontal and vertical adjustment to nudge labels
 #'   by. These can be scalars or vectors the same length as the number of labels
 #'   @param size Size of labels
 #' @param ... Other arguments passed to \link[ggplot2]{annotate}

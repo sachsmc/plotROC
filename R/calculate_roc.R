@@ -20,11 +20,7 @@
 #'   
 #' @export
 #' 
-#' @examples
-#' 
-#' D.ex <- rbinom(100, 1, .5)
-#' calculate_roc(rnorm(100, mean = D.ex), D.ex)
-#' calculate_roc(rnorm(100, mean = D.ex), D.ex, ci = TRUE)
+
 
 calculate_roc <- function(M, D, ci = FALSE, alpha = .05){
   
@@ -93,12 +89,6 @@ calculate_roc <- function(M, D, ci = FALSE, alpha = .05){
 #'   
 #' @export
 #' 
-#' @examples
-#' 
-#' D.ex <- rbinom(100, 1, .5)
-#' fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), 
-#'    M2 = rnorm(100, mean = D.ex, sd = .4), D = D.ex)
-#' calculate_multi_roc(fakedata, c("M1", "M2"), "D")
 
 calculate_multi_roc <- function(data, M_string, D_string){
   
@@ -174,7 +164,8 @@ verify_d <- function(D){
 #' @export
 #' @examples 
 #' D.ex <- rbinom(250, 1, .5)
-#' widedata <- data.frame(D = D.ex, M1 = rnorm(250, mean = D.ex, sd = 1), M2 = rnorm(250, mean = D.ex, sd = .5))
+#' widedata <- data.frame(D = D.ex, M1 = rnorm(250, mean = D.ex, sd = 1), 
+#'    M2 = rnorm(250, mean = D.ex, sd = .5))
 #' longdata <- melt_roc(widedata, "D", c("M1", "M2"))
 #' ggplot(longdata, aes(d = D, m = M, color = name)) + geom_roc()
 #' 

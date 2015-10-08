@@ -21,7 +21,7 @@
 #'  only visible when hovering. Recommended for plots containing more than 3 curves.
 #' @param prefix A string to assign to the objects within the svg. Enables 
 #'   unique idenfication by the javascript code
-#' @param width, height Width and height in inches of plot
+#' @param width,height Width and height in inches of plot
 #' @param omit.js Logical. If true, omit inclusion of javascript source in 
 #'   output. Useful for documents with multple interactive plots
 #' @param style A call to the function \link{style_roc}

@@ -23,7 +23,8 @@ Multple biomarkers measured on the same subjects are often stored as multiple co
 }
 \examples{
 D.ex <- rbinom(250, 1, .5)
-widedata <- data.frame(D = D.ex, M1 = rnorm(250, mean = D.ex, sd = 1), M2 = rnorm(250, mean = D.ex, sd = .5))
+widedata <- data.frame(D = D.ex, M1 = rnorm(250, mean = D.ex, sd = 1),
+   M2 = rnorm(250, mean = D.ex, sd = .5))
 longdata <- melt_roc(widedata, "D", c("M1", "M2"))
 ggplot(longdata, aes(d = D, m = M, color = name)) + geom_roc()
 }

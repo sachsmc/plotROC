@@ -16,7 +16,7 @@ factor. If NULL, attempts to determine labels from the ggroc_p object}
 
 \item{label.angle}{angle of adjustment for the direct labels}
 
-\item{nudge_x,}{nudge_y Horizontal and vertical adjustment to nudge labels
+\item{nudge_x,nudge_y}{Horizontal and vertical adjustment to nudge labels
 by. These can be scalars or vectors the same length as the number of labels}
 
 \item{size}{Size of labels}

@@ -23,7 +23,7 @@ only visible when hovering. Recommended for plots containing more than 3 curves.
 \item{prefix}{A string to assign to the objects within the svg. Enables
 unique idenfication by the javascript code}
 
-\item{width,}{height Width and height in inches of plot}
+\item{width,height}{Width and height in inches of plot}
 
 \item{omit.js}{Logical. If true, omit inclusion of javascript source in
 output. Useful for documents with multple interactive plots}
