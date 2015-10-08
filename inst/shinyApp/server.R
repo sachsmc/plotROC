@@ -66,13 +66,19 @@ shinyServer(function(input, output, session){
         )
         
         
-        ggplot(rocdata(), aes_string(d = "D", m = "M", color = "name")) + geom_roc() + ggtitle(input$title)
+        p1 <- ggplot(rocdata(), aes_string(d = "D", m = "M", color = "name")) + 
+          geom_roc(show.legend = input$label == "" | is.null(input$label), n.cuts = input$n.cuts, labelround = input$round) + ggtitle(input$title)
         
     } else {
-    
-        ggplot(rocdata(), aes_string(d = input$D, m = input$M)) + geom_roc() + ggtitle(input$title)
+      
+        p1 <- ggplot(rocdata(), aes_string(d = input$D, m = input$M)) + 
+          geom_roc(show.legend = input$label == "" | is.null(input$label), n.cuts = input$n.cuts, labelround = input$round) + ggtitle(input$title)
         
     }
+    
+    
+    
+    p1
     
   })
   
@@ -84,13 +90,35 @@ shinyServer(function(input, output, session){
       ci.at <- as.numeric(sapply(strsplit(input$ci.at, ",")[[1]], trim))
       
     }
-    thisggroc() + style_roc()
+    
+    if(input$multi == TRUE & length(input$Ms) > 1){
+      p1 <- thisggroc() + style_roc() + aes(color = NULL, linetype = name) + 
+        geom_rocci(ci.at = ci.at, show.legend = input$label == "" | is.null(input$label))
+    } else {
+      p1 <- thisggroc() + style_roc() + 
+        geom_rocci(ci.at = ci.at, show.legend = input$label == "" | is.null(input$label))
+    }
+    
+    if(!is.null(input$label) & input$label != ""){
+      
+      labs <- sapply(strsplit(input$label, ",")[[1]], trim)
+      p1 <- direct_label(p1, labels = labs, label.angle = input$angle, nudge_x =input$adj.x, nudge_y = input$adj.y)
+      
+    }
+    p1
     
     })
   
   output$intPlot <- renderUI({
+    p1 <- thisggroc()
     
-    HTML(export_interactive_roc(thisggroc()))
+    if(!is.null(input$label) & input$label != ""){
+      
+      labs <- sapply(strsplit(input$label, ",")[[1]], trim)
+      p1 <- direct_label(p1, labels = labs, label.angle = input$angle, nudge_x =input$adj.x, nudge_y = input$adj.y)
+      
+    }
+    HTML(export_interactive_roc(p1, hide.points = input$n.cuts > 20))
     
   })
   
@@ -104,12 +132,27 @@ shinyServer(function(input, output, session){
          if(input$ci.at == "") ci.at <- NULL else {
            
            ci.at <- as.numeric(sapply(strsplit(input$ci.at, ",")[[1]], trim))
-           ci.at <- ci.at[!is.na(ci.at)]
            
          }
          
+         if(input$multi == TRUE & length(input$Ms) > 1){
+           p1 <- thisggroc() + style_roc() + aes(color = NULL, linetype = name) + 
+             geom_rocci(ci.at = ci.at, show.legend = input$label == "" | is.null(input$label))
+         } else {
+           p1 <- thisggroc() + style_roc() + 
+             geom_rocci(ci.at = ci.at, show.legend = input$label == "" | is.null(input$label))
+         }
+         
+         if(!is.null(input$label) & input$label != ""){
+           
+           labs <- sapply(strsplit(input$label, ",")[[1]], trim)
+           p1 <- direct_label(p1, labels = labs, label.angle = input$angle, nudge_x =input$adj.x, nudge_y = input$adj.y)
+           
+         }
+         
+         
          ggsave(filename = file, 
-                plot = thisggroc(),
+                plot = p1,
                 width = 7, height = 7, device = pdf)
          
          
@@ -121,11 +164,18 @@ shinyServer(function(input, output, session){
       paste('ROC-Interactive-Plot-', Sys.Date(), '.html', sep='')
     },
     content = function(file) {
+      p1 <- thisggroc()
       
+      if(!is.null(input$label) & input$label != ""){
+        
+        labs <- sapply(strsplit(input$label, ",")[[1]], trim)
+        p1 <- direct_label(p1, labels = labs, label.angle = input$angle, nudge_x =input$adj.x, nudge_y = input$adj.y)
+        
+      }
       cat("<!DOCTYPE html>
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 \n", file = file)
-      cat(export_interactive_roc(thisggroc(), font.size = paste0(input$font.size, "px")), file = file, append = TRUE)
+      cat(export_interactive_roc(p1, hide.points = input$n.cuts > 20), file = file, append = TRUE)
       cat("\n</html>", file = file, append = TRUE)
       
       

@@ -576,7 +576,7 @@ GeomRocci <- ggproto("GeomRocci", Geom,
                      
                      
                    }, 
-                   draw_key = draw_key_polygon)
+                   draw_key = draw_key_blank)
 
 
 

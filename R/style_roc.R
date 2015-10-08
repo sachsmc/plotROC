@@ -60,8 +60,15 @@ direct_label <- function(ggroc_p, labels = NULL, label.angle = 45, nudge_x = 0, 
   if(is.null(labels)){
     
     pb2 <- pb$plot
+    if(pbdat$group[1] == -1L){
+      
+      labels <- as.character(pb2$mapping$m)
+      
+    } else {
+    
     labels <- as.character(sort(unique(pb2$data[, as.character(pb2$mapping$colour)])))
     
+    }
   }
   
   lframe <- NULL

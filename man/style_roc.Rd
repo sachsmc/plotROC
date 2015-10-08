@@ -25,4 +25,12 @@ style_roc(major.breaks = c(0, 0.1, 0.25, 0.5, 0.75, 0.9, 1),
 \description{
 Adds a diagonal guideline, minor grid lines, and optionally direct labels to ggplot objects containing a geom_roc layer.
 }
+\examples{
+D.ex <- rbinom(100, 1, .5)
+fakedata <- data.frame(M1 = rnorm(100, mean = D.ex),
+   D = D.ex)
+ggplot(fakedata, aes(m = M1, d = D)) + geom_roc() + style_roc()
+ggplot(fakedata, aes(m = M1, d = D)) + geom_roc() + style_roc(xlab = "1 - Specificity")
+ggplot(fakedata, aes(m = M1, d = D)) + geom_roc() + style_roc(theme = theme_grey)
+}
 

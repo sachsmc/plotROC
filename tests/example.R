@@ -14,7 +14,7 @@ data <- data.frame(D = c("A", "B")[c(D.ex, D.ex) + 1], M = c(paired.data$M1, pai
 
 library(ggplot2)
 
-ggroc_p <- ggplot(data, aes(m = M, d = D, color = B)) + geom_roc(n.cuts = 10)
+ggroc_p <- ggplot(data, aes(m = M, d = D, color = B)) + geom_roc(n.cuts = 10, show.legend = FALSE) + geom_rocci()
 #ggroc_p <- ggplot(paired.data, aes(m = M3, d = D)) + geom_roc()
 ggroc_p <- ggroc_p + style_roc() + geom_rocci()
 

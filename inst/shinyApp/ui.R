@@ -29,13 +29,13 @@ shinyUI(navbarPage("ROC Plot",
                                                selectInput("D", "Outcome variable", choices = colnames(example), selected = colnames(example)[3]), 
                                                checkboxInput("multi", "Check to plot multiple curves"), 
                                                conditionalPanel("input.multi == false",
-                                                  selectInput("M", "Marker", choices = colnames(example), selected = colnames(example)[1]), 
-                                                  numericInput("alpha", "Confidence level", .05, min = .01, max = .99, step = .01), 
-                                                  textInput("ci.at", "Cutoffs for CIs (separate multiple by commas)", value = "")
+                                                  selectInput("M", "Marker", choices = colnames(example), selected = colnames(example)[1])
                                                ), 
                                                conditionalPanel("input.multi == true", 
                                                   selectInput("Ms", "Marker", choices = colnames(example), multiple = TRUE, selected = colnames(example)[1])              
-                                                                )), 
+                                                                ), 
+                                               numericInput("alpha", "Confidence level", .05, min = .01, max = .99, step = .01), 
+                                               textInput("ci.at", "Cutoffs for CIs (separate multiple by commas, leave blank to autoselect, NULL for no CIs)", value = "")), 
                                         column(4, 
                                                h4("Plot options"),
                                                textInput("title", "Plot Title", value = ""), 
@@ -45,7 +45,7 @@ shinyUI(navbarPage("ROC Plot",
                                                numericInput("adj.y", "label adjust Y", 0, min = -1, max = 1, step = .01),
                                                numericInput("angle", "label angle", 45, min = 0, max = 180, step = 1), 
                                                numericInput("n.cuts", "Number of cutoff values", 20, min = 0, max = 20), 
-                                               numericInput("font.size", "Cutoff font size", 12, min = 1, max = 32)
+                                               numericInput("round", "Number of significant digits", 1, min = 0, max = 4, step = 1)
                                                )
                                       )
                                       
