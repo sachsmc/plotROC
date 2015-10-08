@@ -20,7 +20,8 @@ Depends:
 Imports:
     grid,
     gridSVG,
-    shiny
+    shiny,
+    plyr
 Suggests:
     knitr,
     testthat, 

@@ -34,7 +34,7 @@ shinyUI(navbarPage("ROC Plot",
                                                conditionalPanel("input.multi == true", 
                                                   selectInput("Ms", "Marker", choices = colnames(example), multiple = TRUE, selected = colnames(example)[1])              
                                                                 ), 
-                                               numericInput("alpha", "Confidence level", .05, min = .01, max = .99, step = .01), 
+                                               numericInput("alpha", "Significance level", .05, min = .01, max = .99, step = .01), 
                                                textInput("ci.at", "Cutoffs for CIs (separate multiple by commas, leave blank to autoselect, NULL for no CIs)", value = "")), 
                                         column(4, 
                                                h4("Plot options"),

@@ -187,3 +187,42 @@ melt_roc <- function(data, d, m, names = NULL){
 is.discrete <- function(x) {
    is.factor(x) || is.character(x) || is.logical(x)
 }
+
+
+#' Calculate the Area under the ROC curve
+#' 
+#' Given a ggplot object with a GeomRoc layer, computes the area under the ROC curve for each group
+#' 
+#' @param ggroc A ggplot object that contains a GeomRoc layer
+#' 
+#' @export
+#' @examples 
+#' D.ex <- rbinom(250, 1, .5)
+#' rocdata <- data.frame(D = c(D.ex, D.ex),
+#'                      M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)),
+#'                      Z = c(rep("A", 250), rep("B", 250)))
+#'
+#' ggroc <- ggplot(rocdata, aes(m = M, d = D)) + geom_roc()
+#' calc_auc(ggroc)
+#' ggroc2 <- ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc()
+#' calc_auc(ggroc2)
+
+calc_auc <- function(ggroc){
+  
+  lays <- sapply(ggroc$layers, function(g) class(g$geom)[1])
+  stopifnot("GeomRoc" %in% lays)
+  
+  l1 <- ggplot_build(ggroc)$data[[1]]
+  
+  comp_auc <- function(df){
+    
+    auc <- 0
+    for (i in 2:length(df$x)) {
+      auc <- auc + 0.5 * (df$x[i] - df$x[i-1]) * (df$y[i] + df$y[i-1])
+    }
+    return(data.frame(AUC = auc))
+  }
+  
+  plyr::ddply(l1, ~ PANEL + group, comp_auc)
+  
+}

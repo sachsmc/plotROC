@@ -12,116 +12,16 @@ Most ROC curve plots obscure the cutoff values and inhibit
     
 ## Installation
 
-This package is on CRAN. It can be installed with
+This version of the package is not on CRAN. It also requires the development version of ggplot2. It can be installed with
 
 ```{r instcran, eval = FALSE}
-install.packages("plotROC")
-```
-
-To install the latest Github version, use `devtools`
-
-```{r install, eval = FALSE}
+devtools::install_github("hadley/ggplot2")
 devtools::install_github("sachsmc/plotROC")
-library(plotROC)
 ```
 
 ## Basic usage
 
 See examples live [here](http://sachsmc.github.io/plotROC)
-
-# Interactive SVG ROC Curves
-After installing, run the interactive Shiny app
-```{r shiny, eval = FALSE}
-shiny_plotROC()
-```
-
-
-## Hover over to view the cutoff values
-
-```{r test-a, fig.keep='none', results = 'asis', echo = -1, fig.width=6, fig.height=6}
-library(plotROC)
-D.ex <- rbinom(100, 1, .5)
-
-rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex)
-
-myrocplot <- ggroc(rocdata, label = "Example")
-
-cat(export_interactive_roc(myrocplot, font.size = "12px", prefix = "a"))
-```
-
-
-## Click to view confidence region
-
-```{r test-a-ci, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
-
-rocdata <- calculate_roc(rnorm(100, mean = D.ex), D.ex, CI = TRUE)
-
-myrocplot <- ggroc(rocdata, label = "Example", ci = TRUE)
-
-cat(export_interactive_roc(myrocplot, font.size = "12px", prefix = "aci"))
-```
-
-That is an svg element. Try zooming in!
-
-## Generate an interactive plot to view in Rstudio viewer or web browser
-
-```{r inter, eval = FALSE}
-plot_interactive_roc(rocdata)
-```
-
-
-# Themes and annotations
-
-```{r test-b, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
-library(ggthemes)
-myplot2 <- myrocplot + theme_igray()
-
-cat(export_interactive_roc(myplot2, font.size = "12px", prefix = "b"))
-```
-
-
-# For using in print
-
-```{r print, fig.width = 6, fig.height = 6}
-plot_journal_roc(myrocplot)
-```
-
-# Themes work in print too, but I don't recommend colors
-
-```{r print2, fig.width = 6, fig.height = 6}
-plot_journal_roc(myrocplot) + theme_igray() + ggtitle("My awesome new biomarker")
-```
-
-
-# Multiple ROC Curves
-
-```{r multi, fig.width = 6, fig.height = 6}
-D.ex <- rbinom(100, 1, .5)
-
-fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex, sd = .4), M3 = runif(100), D = D.ex)
-datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
-
-rocplot <- multi_ggroc(datalist)
-plot_journal_roc(rocplot)
-```
-
-```{r test-multi, fig.keep='none', results = 'asis', echo = TRUE, fig.width=6, fig.height=6}
-cat(export_interactive_roc(rocplot, font.size = "12px", prefix = "bmulti"))
-```
-
-## Labels
-```{r multi2, fig.width = 6, fig.height = 6}
-D.ex <- rbinom(100, 1, .5)
-
-fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), M2 = rnorm(100, mean = D.ex, sd = .4), M3 = runif(100), D = D.ex)
-datalist <- calculate_multi_roc(fakedata, c("M1", "M2", "M3"), "D")
-
-rocplot <- multi_ggroc(datalist, label = c("M1", "M2", "M3"))
-plot_journal_roc(rocplot)
-```
-
-
-
 
 # Acknowledgements
 
