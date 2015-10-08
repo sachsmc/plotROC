@@ -246,7 +246,7 @@ direct_label(bygend) + style_roc()
 
 ### Themes and annotations
 
-plotROC uses the `ggplot2` package to create the objects to be plotted. Therefore, themes and annotations can be added in the usual ggplot2 way, or with external libraries such as `ggthemes`. 
+plotROC uses the `ggplot2` package to create the objects to be plotted. Therefore, themes and annotations can be added in the usual ggplot2 way, or with external libraries such as `ggthemes`. The area under the ROC curve can be calculated by passing the ggplot object to the `calc_auc` function. 
 
 ```{r themes}
 basicplot + 
@@ -254,7 +254,7 @@ basicplot +
   theme(axis.text = element_text(colour = "blue")) +
   ggtitle("Themes and annotations") + 
   annotate("text", x = .75, y = .25, 
-           label = "AUC = X") +
+           label = paste("AUC =", round(calc_auc(basicplot)$AUC, 2))) +
   scale_x_continuous("1 - Specificity", breaks = seq(0, 1, by = .1))
 ```
 

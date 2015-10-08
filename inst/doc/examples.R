@@ -126,7 +126,7 @@ basicplot +
   theme(axis.text = element_text(colour = "blue")) +
   ggtitle("Themes and annotations") + 
   annotate("text", x = .75, y = .25, 
-           label = "AUC = X") +
+           label = paste("AUC =", round(calc_auc(basicplot)$AUC, 2))) +
   scale_x_continuous("1 - Specificity", breaks = seq(0, 1, by = .1))
 
 ## ----binorm--------------------------------------------------------------
