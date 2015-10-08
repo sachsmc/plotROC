@@ -3,9 +3,6 @@
 shinyServer(function(input, output, session){
   
   library(plotROC)
-  library(ggthemes)
-  library(ggplot2)
-  library(gridSVG)
   
   data <- reactive({ 
     tmp <- get(input$data)  ## remove missing values
@@ -17,11 +14,12 @@ shinyServer(function(input, output, session){
       
     if(input$multi == TRUE & length(input$Ms) > 1){
       
-      calculate_multi_roc(data(), input$Ms, input$D)
+      print(input$Ms)
+      melt_roc(data(), input$D, unlist(input$Ms))
       
     } else {
       
-      calculate_roc(data()[,input$M], data()[,input$D], ci = TRUE, alpha = input$alpha)
+      data()
       
     }
   })
@@ -67,16 +65,12 @@ shinyServer(function(input, output, session){
           need(input$Ms != '', 'Please choose a marker variable.')
         )
         
-        if(input$label == "") lab <- NULL else { 
-            lab <- sapply(strsplit(input$label, ",")[[1]], trim)
-            validate(need(length(lab) == length(rocdata()), "Separate labels with commas"))
-          } 
-        multi_ggroc(rocdata(), label = lab, label.adj.x = rep(input$adj.x, length(rocdata())), 
-                    label.adj.y = rep(input$adj.y, length(rocdata())), label.angle = rep(input$angle, length(rocdata()))) + ggtitle(input$title)
+        
+        ggplot(rocdata(), aes_string(d = "D", m = "M", color = "name")) + geom_roc() + ggtitle(input$title)
+        
     } else {
     
-      if(input$label == "") lab <- NULL else lab <- input$label 
-        ggroc(rocdata(), ci = TRUE, label = lab, label.adj.x = input$adj.x, label.adj.y = input$adj.y, label.angle = input$angle) + ggtitle(input$title)
+        ggplot(rocdata(), aes_string(d = input$D, m = input$M)) + geom_roc() + ggtitle(input$title)
         
     }
     
@@ -90,13 +84,13 @@ shinyServer(function(input, output, session){
       ci.at <- as.numeric(sapply(strsplit(input$ci.at, ",")[[1]], trim))
       
     }
-    plot_journal_roc(thisggroc(), font.size = input$font.size/4, n.cuts = input$n.cuts, ci.at = ci.at)
+    thisggroc() + style_roc()
     
     })
   
   output$intPlot <- renderUI({
     
-    HTML(export_interactive_roc(thisggroc(), font.size = paste0(input$font.size, "px")))
+    HTML(export_interactive_roc(thisggroc()))
     
   })
   
@@ -115,7 +109,7 @@ shinyServer(function(input, output, session){
          }
          
          ggsave(filename = file, 
-                plot = plot_journal_roc(thisggroc(), font.size = input$font.size/4, n.cuts = input$n.cuts, ci.at = ci.at), 
+                plot = thisggroc(),
                 width = 7, height = 7, device = pdf)
          
          

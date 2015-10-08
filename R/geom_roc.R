@@ -5,9 +5,23 @@ StatRoc <- ggproto("StatRoc", Stat,
                    required_aes = c("m", "d"), ## biomarker, binary outcome
                    default_aes = aes(x = ..false_positive_fraction.., y = ..true_positive_fraction.., label = ..cutoffs..),
                    
+                   setup_data = function(data, params){
+                     data$d <- verify_d(data$d)
+                     data$group <- NULL
+                     disc <- vapply(data, is.discrete, logical(1))
+                     disc[names(disc) %in% c("label", "PANEL")] <- FALSE
+                     
+                     if (any(disc)) {
+                       data$group <- plyr::id(data[disc], drop = TRUE)
+                     } else {
+                       data$group <- -1L
+                     } 
+                   data
+                   },
                    compute_group = function(data, scales){
                      
-                     D <- verify_d(data$d)
+                     D <- data$d
+                     
                      T.order <- order(data$m, decreasing=TRUE)
                      TTT <- data$m[T.order]
                      TPF <- cumsum(D[T.order] == 1)
@@ -19,6 +33,7 @@ StatRoc <- ggproto("StatRoc", Stat,
                      dups <- rev(duplicated(rev(TTT)))
                      tp <- c(0, TPF[!dups])/sum(D == 1)
                      fp <- c(0, FPF[!dups])/sum(D == 0)
+                
                      cutoffs <- c(Inf, TTT[!dups])
                      
                      data.frame(false_positive_fraction = fp, true_positive_fraction = tp, cutoffs = cutoffs)
@@ -350,6 +365,20 @@ StatRocci <- ggproto("StatRocci", Stat,
                    required_aes = c("m", "d"), ## biomarker, binary outcome
                    default_aes = aes(x = ..FPF.., y = ..TPF.., 
                                      xmin = ..FPFL.., xmax = ..FPFU.., ymin = ..TPFL.., ymax = ..TPFU.., label = ..cutoffs..),
+                   
+                   setup_data = function(data, params){
+                     data$d <- verify_d(data$d)
+                     data$group <- NULL
+                     disc <- vapply(data, is.discrete, logical(1))
+                     disc[names(disc) %in% c("label", "PANEL")] <- FALSE
+                     
+                     if (any(disc)) {
+                       data$group <- plyr::id(data[disc], drop = TRUE)
+                     } else {
+                       data$group <- -1L
+                     } 
+                     data
+                   },
                    
                    compute_group = function(data, scales, ci.at = NULL, sig.level = .05){
                      

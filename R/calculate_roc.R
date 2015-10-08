@@ -146,9 +146,9 @@ calculate_multi_roc <- function(data, M_string, D_string){
 #' 
 verify_d <- function(D){
 
-  if(length(unique(D)) != 2) stop("Only labels with 2 classes supported")
+  if(length(levels(as.factor(D))) > 2) stop("Only labels with 2 classes supported")
   
-  slev <- sort(unique(D))
+  slev <- sort(levels(as.factor(D)))
   if(slev[1] == 0 & slev[2] == 1) return(D)
   
   warning(paste0("D not labeled 0/1, assuming ", slev[1], " = 0 and ", slev[2], " = 1!"))
@@ -192,3 +192,7 @@ melt_roc <- function(data, d, m, names = NULL){
   
 }
 
+
+is.discrete <- function(x) {
+   is.factor(x) || is.character(x) || is.logical(x)
+}

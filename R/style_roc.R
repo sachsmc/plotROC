@@ -9,6 +9,13 @@
 #' @param ylab Y-axis label
 #' @param theme Theme function compatible with ggplot2
 #' @export
+#' @examples 
+#' D.ex <- rbinom(100, 1, .5)
+#' fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), 
+#'    D = D.ex)
+#' ggplot(fakedata, aes(m = M1, d = D)) + geom_roc() + style_roc()
+#' ggplot(fakedata, aes(m = M1, d = D)) + geom_roc() + style_roc(xlab = "1 - Specificity")
+#' ggplot(fakedata, aes(m = M1, d = D)) + geom_roc() + style_roc(theme = theme_grey)
 
 
 style_roc <- function(major.breaks = c(0, .1, .25, .5, .75, .9, 1), 
