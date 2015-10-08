@@ -1,6 +1,18 @@
+plotROC 2.0.0
+-------------
+Major changes to the API this release
+  - calculate_roc and ggroc are deprecated
+  - estimate and display roc curves using geom_roc
+  - estimate and display confidence regions using geom_rocci
+  - support for faceting and grouping
+  - better performance and improved interactivity. 
+  
 plotROC 1.3.3
 --------------
-Added ggroc method for object as returned by ROCR::performance
+  - Added support to ggroc method for objects as returned by ROCR::performance
+  - Bug fix in labeling
+  - Update d3
+  - option to omit inclusion of d3 code
 
 plotROC 1.3.2
 --------------
