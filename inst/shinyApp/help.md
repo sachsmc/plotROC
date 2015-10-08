@@ -109,6 +109,8 @@ negative</td>
 <td style="border:none;"></td>
 </tr>
 </table>
+This table was adapted from the ROC curve [Wikipedia page](https://en.wikipedia.org/wiki/Receiver_operating_characteristic)
+
 
 If the test is continuous, say $M$, then a *test positive* is defined as $M > c$. Now we consider measures of accuracy as functions of $c$, i.e.
 

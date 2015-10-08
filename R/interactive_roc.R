@@ -1,93 +1,114 @@
 
 #' Generate svg code for an ROC curve object
 #' 
-#' Takes a ggplot object as returned by \link{ggroc} or \link{multi_ggroc} and
-#' returns a string that contains html suitable for creating a standalone
-#' interactive ROC curve plot. 
+#' Takes a ggplot object that contains a GeomRoc layer and returns a string that
+#' contains html suitable for creating a standalone interactive ROC curve plot.
 #' 
-#' @details If you intend to include more than one of these objects in a single
-#'   page, use a different \code{prefix} string for each one. To use this
+#' @details If you intend to include more than one of these objects in a single 
+#'   page, use a different \code{prefix} string for each one. To use this 
 #'   function in knitr, use the chunk options \code{fig.keep='none'} and 
-#'   \code{results = 'asis'}, then \code{cat()} the resulting string to the
-#'   output. See the vignette for examples. Older browsers (< IE7) are not supported. 
+#'   \code{results = 'asis'}, then \code{cat()} the resulting string to the 
+#'   output. See the vignette for examples. Older browsers (< IE7) are not 
+#'   supported.
 #'   
-#' @param ggroc_p An object as returned by \link{ggroc} or \link{multi_ggroc}.
-#'   It can be modified with annotations, themes, etc.
-#' @param cutoffs Optional vector or list of vectors to over-ride the default cutoff labels. Useful for rescaling or rounding. 
-#' @param font.size Character string that determines font size of cutoff labels
+#' @param ggroc_p A ggplot object with a GeomRoc layer and optionally a
+#'   GeomRocci layer as returned by \link{geom_roc} and/or \link{geom_rocci}. It can
+#'   be modified with annotations, themes, etc.
+#' @param add.cis Logical, if true, removes the current confidence interval 
+#'   layer (if present) and replaces it with a denser layer of confidence 
+#'   regions
+#' @param hide.points Logical, if true, hides points layer so that points with cutoff values are
+#'  only visible when hovering. Recommended for plots containing more than 3 curves.
 #' @param prefix A string to assign to the objects within the svg. Enables 
 #'   unique idenfication by the javascript code
-#' @param width Width in inches of plot
-#' @param height Height in inches of plot
-#' @param lty Optional vector of integers defining line types to apply to curves
-#' @param color Optional vector of color names to apply to curves
-#' @param lwd Line widths for curves
-#' @param legend Logical. If true plots a legend in bottom right corner of plot
-#' @param omit.d3 Logical. If true, omit inclusion of d3.js source in output. Useful for documents with multple interactive plots
-
+#' @param width,height Width and height in inches of plot
+#' @param omit.js Logical. If true, omit inclusion of javascript source in 
+#'   output. Useful for documents with multple interactive plots
+#' @param style A call to the function \link{style_roc}
+#' @param ... Other arguments passed to \link{geom_rocci} when \code{add.cis = 
+#'   TRUE}
 #'   
 #' @export
 #' 
-#' @return A character object containing the html necessary to plot the ROC curve in a
-#'   web browser
+#' @return A character object containing the html necessary to plot the ROC 
+#'   curve in a web browser
 #'   
-export_interactive_roc <- function(ggroc_p, cutoffs = NULL, font.size = "12px", prefix = "a", width = 6, height = 6, 
-                                   lty = NULL, color = NULL, lwd = NULL, legend = FALSE, omit.d3 = FALSE){
+export_interactive_roc <- function(ggroc_p, add.cis = TRUE, hide.points = FALSE, 
+                                   prefix = "a", 
+                                   width = 6, height = 6, omit.js = FALSE, 
+                                   style = style_roc(theme = theme_grey()), ...){
   
-  if(is.null(cutoffs) & ggroc_p$roctype == "single"){ cutoffs <- ggroc_p$rocdata$c 
-  } else if(is.null(cutoffs) & ggroc_p$roctype == "multi") cutoffs <- lapply(ggroc_p$rocdata, function(df) df$c)
+
   
-  if(any(!is.null(lty), !is.null(color), !is.null(lwd)) & ggroc_p$roctype == "single"){
+  lays <- sapply(ggroc_p$layers, function(l){
     
-    args <- list(linetype = lty, color = color, size = lwd)
-    args[sapply(args, is.null)] <- NULL
+    class(l$geom)[1]
     
-    ggroc_p <- ggroc_p + do.call(ggplot2::geom_path, args)
-    
-  } else {
-    
-    if(!is.null(lty)){
-      
-      ggroc_p <- ggroc_p + ggplot2::scale_linetype_manual(values = lty)
-      
-    }
-    if(!is.null(color)){
-      
-      ggroc_p <- ggroc_p + ggplot2::scale_color_manual(values = color)
-      
-    }
-    if(!is.null(lwd)){
-      
-      ggroc_p <- ggroc_p + ggplot2::scale_size_manual(values = lwd)
-      
+  })  
+  
+  stopifnot("GeomRoc" %in% lays | "GeomRocci" %in% lays)
+  
+  if(add.cis){
+
+    if("GeomRocci" %in% lays){
+      ggroc_p$layers[[which(lays == "GeomRocci")]] <- NULL
     }
     
-  }
-  
-  if(legend){
-   ggroc_p <- ggroc_p + ggplot2::theme(#legend.justification=c(1,0), legend.position=c(1,0),# anchor bottom-right/bottom-right doesn't translate to svg
-                                  legend.title = ggplot2::element_blank()) 
-  } else {
-   ggroc_p <- ggroc_p + ggplot2::theme(legend.position = "none")
+    args <- list(...)
+    if("ci.at" %in% names(args)){
+      
+      ggroc_p <- ggroc_p + geom_rocci(...)
+      
+    } else {
+      
+      Mran <- ggroc_p$data[, paste(ggroc_p$mapping$m)]
+      if(length(Mran) > 100){
+        
+        thisciat <- sort(unique(sample(Mran, 100)))
+        
+      } else thisciat <- sort(unique(Mran))
+      
+      ggroc_p <- ggroc_p + geom_rocci(ci.at = thisciat, ...)
+      
+    }
+    
   }
   
   tmpPlot <- tempfile(fileext= ".pdf")
   pdf(tmpPlot, width = width, height = height)
   
+  if(!is.null(style)){
+    ggroc_p <- ggroc_p + style
+  }
+  
   print(ggroc_p)
   grid::grid.force()
   
   objnames <- grid::grid.ls(print = FALSE)$name
-  ptns <- grep("geom_point.points", objnames, value = TRUE)
-  rects <- grep("geom_rect.rect", objnames, value = TRUE)
-  cis <- length(rects) > 0
-  if(!cis) rects <- "qk2d4gb6q7ur"
   
-
-  gridSVG::grid.garnish(path = ptns, cutoff = paste(unlist(cutoffs)), group = FALSE, global = TRUE)
-  jsString <- modJs(paste0("[id^=\'", prefix, ptns, ".1.\']"), prefix = prefix, rects)
+  ## if confidence intervals are present
+  
+  ptns <- grep("geom_roc.", objnames, value = TRUE, fixed = TRUE)
+  
+  jsString <- NULL
+  if(add.cis || "GeomRocci" %in% lays){
+    rects <- grep("geom_rocci.", objnames, value = TRUE, fixed = TRUE)
+    jsString <- c(jsString, paste0("<script type='text/javascript'> clickForCis('", prefix, rects, ".1') </script>"))
+  } 
+  if(hide.points) {
+    jsString <- c(paste0("<script type='text/javascript'> hoverForPoints('", prefix, ptns, ".1') </script>"), jsString)
+  }
     
-  cssString <- modCss(font.size)
+  cssString <- '<style type = "text/css">
+  
+  .tess {
+  fill: blue;
+  stroke: blue;
+  stroke-width: 0px;
+  opacity: 0;
+  }
+  </style>'
+  
   tmpFile <- tempfile()
   svgString <- gridSVG::grid.export(name = tmpFile, prefix = prefix)$svg
   
@@ -96,7 +117,7 @@ export_interactive_roc <- function(ggroc_p, cutoffs = NULL, font.size = "12px", 
   
   unlink(tmpPlot)
   
-  if(omit.d3){
+  if(omit.js){
     finstr <- c(cssString, svgString, jsString)
   } else {
     d3String <- getD3()
@@ -128,7 +149,7 @@ plot_interactive_roc <- function(ggroc, file = NULL, ...){
     
   } else {
     tmpPlot <- ifelse(length(grep(".html", file)) > 0, file, paste(file, "html", sep = "."))
-    tmpDir <- "."
+    tmpDir <- dirname(file)
   }
   
 
@@ -139,10 +160,6 @@ plot_interactive_roc <- function(ggroc, file = NULL, ...){
 \n", file = tmpPlot)
   cat(body, file = tmpPlot, append = TRUE)
   cat("\n</html>", file = tmpPlot, append = TRUE)
-  
-  ## copy d3 to directory
-  
-  file.copy(system.file("d3.v3.min.js", package = "plotROC"), tmpDir)
   
   ## open in browswer if possible
   

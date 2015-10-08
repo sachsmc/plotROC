@@ -23,17 +23,12 @@ A dataframe containing cutoffs, estimated true and false positive
   fractions, and confidence intervals if \code{ci = TRUE}.
 }
 \description{
-Calculate the empirical ROC curve estimate given labels and predictions
+Deprecated, use \link{geom_roc} instead
 }
 \details{
 Confidence intervals for TPF and FPF are calculated using the exact
   method of Clopper and Pearson (1934) each at the level \code{1 - sqrt(1 -
   alpha)}. Based on result 2.4 from Pepe (2003), the cross-product of these
   intervals yields a 1 - alpha % confidence region for (FPF, TPF).
-}
-\examples{
-D.ex <- rbinom(100, 1, .5)
-calculate_roc(rnorm(100, mean = D.ex), D.ex)
-calculate_roc(rnorm(100, mean = D.ex), D.ex, ci = TRUE)
 }
 

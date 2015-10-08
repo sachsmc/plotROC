@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculate_roc.R
 \name{verify_d}
 \alias{verify_d}
-\title{Check that D is OK for using as binary disease status}
+\title{Check that D is suitable for using as binary disease status}
 \usage{
 verify_d(D)
 }
@@ -10,7 +10,7 @@ verify_d(D)
 \item{D}{Vector that will be checked for 2-class labels}
 }
 \description{
-Checks for two classes and gives informative error messages
+Checks for two classes and gives a warning message indicating which level is assumed to be 0/1
 }
 \keyword{Internal}
 
