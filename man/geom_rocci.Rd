@@ -12,6 +12,8 @@
     draw_key: function
     draw_layer: function
     draw_panel: function
+    extra_params: na.rm
+    handle_na: function
     non_missing_aes: size shape fill
     parameters: function
     required_aes: x y xmin xmax ymin ymax label
@@ -22,7 +24,7 @@
 \usage{
 geom_rocci(mapping = NULL, data = NULL, stat = "rocci",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
-  ci.at = NULL, sig.level = 0.05, ...)
+  ci.at = NULL, sig.level = 0.05, na.rm = TRUE, ...)
 
 GeomRocci
 }
@@ -47,6 +49,9 @@ a call to a position adjustment function.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
+
+\item{na.rm}{If \code{FALSE} (the default), removes missing values with
+a warning.  If \code{TRUE} silently removes missing values.}
 
 \item{...}{other arguments passed on to \code{\link{layer}}. There are
   three types of arguments you can use here:

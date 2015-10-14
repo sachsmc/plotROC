@@ -18,7 +18,11 @@ StatRoc <- ggproto("StatRoc", Stat,
                      } 
                    data
                    },
-                   compute_group = function(data, scales){
+                   compute_group = function(data, scales, na.rm = TRUE){
+                     
+                     if(na.rm){
+                       data <- subset(data, !is.na(d) & !is.na(m))
+                     }
                      
                      D <- data$d
                      
@@ -76,7 +80,7 @@ StatRoc <- ggproto("StatRoc", Stat,
 #' ggplot(rocdata, aes(m = M, d = D)) + stat_roc()
 
 stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
-                         position = "identity", show.legend = NA, inherit.aes = TRUE, ...) {
+                         position = "identity", show.legend = NA, inherit.aes = TRUE, na.rm = TRUE, ...) {
   layer(
     stat = StatRoc,
     data = data,
@@ -85,7 +89,7 @@ stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(...)
+    params = list(na.rm = na.rm, ...)
   )
   
 }
@@ -132,7 +136,7 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                                          lineend = "butt", linejoin = "round", linemitre = 1, 
                                          alpha.line = 1, alpha.point = 1,
                                          size.point = .5, labels = TRUE, labelsize = 3.88, labelround = 1,
-                                         na.rm = FALSE){
+                                         na.rm = TRUE){
                      
                      if(nrow(data) < n.cuts){ 
                        dex <- 1:nrow(data)
@@ -301,11 +305,11 @@ GeomRoc <- ggproto("GeomRoc", Geom,
 
 geom_roc <- function(mapping = NULL, data = NULL, stat = "roc",
                                 position = "identity", show.legend = NA, 
-                                inherit.aes = TRUE, ...) {
+                                inherit.aes = TRUE, na.rm = TRUE, ...) {
   layer(
     geom = GeomRoc, mapping = mapping, data = data, stat = stat, 
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(...)
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes, 
+    params = list(na.rm = na.rm, ...)
   )
 }
 
@@ -380,8 +384,11 @@ StatRocci <- ggproto("StatRocci", Stat,
                      data
                    },
                    
-                   compute_group = function(data, scales, ci.at = NULL, sig.level = .05){
+                   compute_group = function(data, scales, ci.at = NULL, sig.level = .05, na.rm = TRUE){
                      
+                     if(na.rm){
+                       data <- subset(data, !is.na(d) & !is.na(m))
+                     }
                      D <- verify_d(data$d)
                      T.order <- order(data$m, decreasing=TRUE)
                      TTT <- data$m[T.order]
@@ -433,7 +440,7 @@ StatRocci <- ggproto("StatRocci", Stat,
 
 
 stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
-                     position = "identity", show.legend = NA, inherit.aes = TRUE, ci.at = NULL, sig.level = .05, ...) {
+                     position = "identity", show.legend = NA, inherit.aes = TRUE, ci.at = NULL, sig.level = .05, na.rm = TRUE, ...) {
   layer(
     stat = StatRocci,
     data = data,
@@ -442,7 +449,7 @@ stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(ci.at = ci.at, sig.level = sig.level, ...)
+    params = list(ci.at = ci.at, sig.level = sig.level, na.rm = na.rm, ...)
   )
   
 }
@@ -478,11 +485,11 @@ stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
 
 geom_rocci <- function(mapping = NULL, data = NULL, stat = "rocci",
                        position = "identity", show.legend = NA, 
-                       inherit.aes = TRUE, ci.at = NULL, sig.level = .05, ...) {
+                       inherit.aes = TRUE, ci.at = NULL, sig.level = .05, na.rm = TRUE, ...) {
   layer(
     geom = GeomRocci, mapping = mapping, data = data, stat = stat, 
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(ci.at = ci.at, sig.level = sig.level, ...)
+    params = list(ci.at = ci.at, sig.level = sig.level, na.rm = na.rm, ...)
   )
 }
 
@@ -509,7 +516,7 @@ geom_rocci <- function(mapping = NULL, data = NULL, stat = "rocci",
 
 GeomRocci <- ggproto("GeomRocci", Geom, 
                    required_aes = c("x", "y", "xmin", "xmax", "ymin", "ymax", "label"), 
-                   default_aes = aes(size = .5, shape = 19, fill = "black",
+                   default_aes = aes(size = 1, shape = 4, fill = "black",
                                      angle = 0, hjust = 1, linetype = 0,
                                      vjust = 1, family = "", fontface = 1, lineheight = 1.2),
                    non_missing_aes = c("size", "shape", "fill"),

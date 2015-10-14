@@ -12,6 +12,8 @@
     draw_key: function
     draw_layer: function
     draw_panel: function
+    extra_params: na.rm
+    handle_na: function
     non_missing_aes: size shape
     parameters: function
     required_aes: x y label
@@ -23,7 +25,8 @@
 GeomRoc
 
 geom_roc(mapping = NULL, data = NULL, stat = "roc",
-  position = "identity", show.legend = NA, inherit.aes = TRUE, ...)
+  position = "identity", show.legend = NA, inherit.aes = TRUE,
+  na.rm = TRUE, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link{aes}} or
@@ -46,6 +49,8 @@ a call to a position adjustment function.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
+
+\item{na.rm}{Remove missing values from curve}
 
 \item{...}{other arguments passed on to \code{\link{layer}}. There are
   three types of arguments you can use here:
@@ -79,8 +84,6 @@ the default plot specification, e.g. \code{\link{borders}}.}
 \item{labelsize}{Size of cutoff text labels}
 
 \item{labelround}{Integer, number of significant digits to round cutoff labels}
-
-\item{na.rm}{Remove missing values from curve}
 
 \item{geom,stat}{Use to override the default connection between
 \code{geom_roc} and \code{stat_roc}.}
