@@ -20,10 +20,11 @@ shinyUI(navbarPage("ROC Plot",
                                       
                                       fluidRow(
                                         column(4, 
-                                               h4("Select and upload data"), 
-                                               selectInput("data", "Data set to analyze", choices = c("example"), selected = "example"),
-                                               fileInput("upload", "Upload Data", accept = c('text/csv', 'text/comma-separated-values,text/plain'), multiple = TRUE), 
-                                               helpText("Files must be comma-delimited, with header containing column names. At least one column must contain the binary (0/1) outcome, and one must contain the continuous marker or predictor.")), 
+                                               h4("Upload and select data"), 
+                                               fileInput("upload", strong("Upload Data"), accept = c('text/csv', 'text/comma-separated-values,text/plain'), multiple = TRUE), 
+                                               helpText("Files must be comma-delimited, with header containing column names. At least one column must contain the binary (0/1) outcome, and one must contain the continuous marker or predictor."),
+                                               selectInput("data", strong("Select dataset to analyze"), choices = c("example"), selected = "example"))
+                                               , 
                                         column(4, 
                                                h4("Specify Variables"),
                                                selectInput("D", "Outcome variable", choices = colnames(example), selected = colnames(example)[3]), 
