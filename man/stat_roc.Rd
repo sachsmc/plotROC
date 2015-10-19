@@ -10,6 +10,7 @@
     compute_layer: function
     compute_panel: function
     default_aes: uneval
+    extra_params: na.rm
     non_missing_aes: 
     parameters: function
     required_aes: m d
@@ -22,7 +23,8 @@
 StatRoc
 
 stat_roc(mapping = NULL, data = NULL, geom = "roc",
-  position = "identity", show.legend = NA, inherit.aes = TRUE, ...)
+  position = "identity", show.legend = NA, inherit.aes = TRUE,
+  na.rm = TRUE, ...)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -45,6 +47,9 @@ on this layer}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
+
+\item{na.rm}{If \code{FALSE} (the default), removes missing values with
+a warning.  If \code{TRUE} silently removes missing values.}
 
 \item{...}{other arguments passed on to \code{\link{layer}}. This can
 include aesthetics whose values you want to set, not map. See

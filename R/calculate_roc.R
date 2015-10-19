@@ -26,9 +26,9 @@ calculate_roc <- function(M, D, ci = FALSE, alpha = .05){
   
   if(sum(c(is.na(M), is.na(D))) > 0) stop("No missing data allowed")
   
-  D <- verify_d(data$d)
-  T.order <- order(data$m, decreasing=TRUE)
-  TTT <- data$m[T.order]
+  D <- verify_d(D)
+  T.order <- order(M, decreasing=TRUE)
+  TTT <- M[T.order]
   TPF <- cumsum(D[T.order] == 1)
   FPF <- cumsum(D[T.order] == 0)
   

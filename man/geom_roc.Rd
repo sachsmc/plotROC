@@ -12,6 +12,8 @@
     draw_key: function
     draw_layer: function
     draw_panel: function
+    extra_params: na.rm
+    handle_na: function
     non_missing_aes: size shape
     parameters: function
     required_aes: x y label
@@ -22,8 +24,11 @@
 \usage{
 GeomRoc
 
-geom_roc(mapping = NULL, data = NULL, stat = "roc",
-  position = "identity", show.legend = NA, inherit.aes = TRUE, ...)
+geom_roc(mapping = NULL, data = NULL, stat = "roc", n.cuts = 10,
+  arrow = NULL, lineend = "butt", linejoin = "round", linemitre = 1,
+  alpha.line = 1, alpha.point = 1, size.point = 0.5, labels = TRUE,
+  labelsize = 3.88, labelround = 1, na.rm = TRUE, position = "identity",
+  show.legend = NA, inherit.aes = TRUE, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link{aes}} or
@@ -34,6 +39,33 @@ defined for the plot.}
 
 \item{data}{A data frame. If specified, overrides the default data frame
 defined at the top level of the plot.}
+
+\item{stat}{Use to override the default connection between
+\code{geom_roc} and \code{stat_roc}.}
+
+\item{n.cuts}{Number of cutpoints to display along each curve}
+
+\item{arrow}{Arrow specification, as created by \code{\link[grid]{arrow}}}
+
+\item{lineend}{Line end style (round, butt, square)}
+
+\item{linejoin}{Line join style (round, mitre, bevel)}
+
+\item{linemitre}{Line mitre limit (number greater than 1)}
+
+\item{alpha.line}{Alpha level for the lines}
+
+\item{alpha.point}{Alpha level for the cutoff points}
+
+\item{size.point}{Size of cutoff points}
+
+\item{labels}{Logical, display cutoff text labels}
+
+\item{labelsize}{Size of cutoff text labels}
+
+\item{labelround}{Integer, number of significant digits to round cutoff labels}
+
+\item{na.rm}{Remove missing values from curve}
 
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
@@ -57,33 +89,6 @@ the default plot specification, e.g. \code{\link{borders}}.}
     default \code{stat} associated with the layer.
   \item Other arguments passed on to the stat.
   }}
-
-\item{n.cuts}{Number of cutpoints to display along each curve}
-
-\item{lineend}{Line end style (round, butt, square)}
-
-\item{linejoin}{Line join style (round, mitre, bevel)}
-
-\item{linemitre}{Line mitre limit (number greater than 1)}
-
-\item{arrow}{Arrow specification, as created by \code{\link[grid]{arrow}}}
-
-\item{alpha.line}{Alpha level for the lines}
-
-\item{alpha.point}{Alpha level for the cutoff points}
-
-\item{size.point}{Size of cutoff points}
-
-\item{labels}{Logical, display cutoff text labels}
-
-\item{labelsize}{Size of cutoff text labels}
-
-\item{labelround}{Integer, number of significant digits to round cutoff labels}
-
-\item{na.rm}{Remove missing values from curve}
-
-\item{geom,stat}{Use to override the default connection between
-\code{geom_roc} and \code{stat_roc}.}
 }
 \description{
 Display the empirical ROC curve. Useful for characterizing the classification
