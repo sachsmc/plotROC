@@ -16,7 +16,7 @@ URL: http://sachsmc.github.io/plotROC
 BugReports: http://github.com/sachsmc/plotROC/issues
 Depends:
     R (>= 3.0.0),
-    ggplot2
+    ggplot2 (>= 2.0.0)
 Imports:
     grid,
     gridSVG,
