@@ -51,6 +51,7 @@ StatRoc <- ggproto("StatRoc", Stat,
 #' ROC curve for assessing the classification accuracy of m
 #' 
 #' @inheritParams ggplot2::stat_identity
+#' @param na.rm Remove missing observations
 #' @section Aesthetics:
 #' \code{stat_roc} understands the following aesthetics (required aesthetics
 #' are in bold):

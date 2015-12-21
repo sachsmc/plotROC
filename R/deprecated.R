@@ -12,9 +12,9 @@
 #' @param label.adj.x Not supported
 #' @param label.adj.y Not supported
 #' @param label.angle Not supported
-#'   @param plotmath Not supported
-#'   @param xlabel Defaults to "False positive fraction"
-#'   @param ylabel Defaults to "True positive fraction"
+#' @param plotmath Not supported
+#' @param xlabel Defaults to "False positive fraction"
+#' @param ylabel Defaults to "True positive fraction"
 
 #' 
 #'   
@@ -70,9 +70,9 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", c_string = "c
 #' @param label.adj.x Not supported. 
 #' @param label.adj.y Not supported. 
 #' @param label.angle Not supported. 
-#'   @param plotmath Logical. Not supported. 
-#'   @param xlabel Defaults to "False positive fraction"
-#'   @param ylabel Defaults to "True positive fraction"
+#' @param plotmath Logical. Not supported. 
+#' @param xlabel Defaults to "False positive fraction"
+#' @param ylabel Defaults to "True positive fraction"
 #'   
 #' @export
 #' 
