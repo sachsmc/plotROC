@@ -75,7 +75,7 @@ export_interactive_roc <- function(ggroc_p, add.cis = TRUE, hide.points = FALSE,
   }
   
   tmpPlot <- tempfile(fileext= ".pdf")
-  pdf(tmpPlot, width = width, height = height)
+  grDevices::pdf(tmpPlot, width = width, height = height)
   
   if(!is.null(style)){
     ggroc_p <- ggroc_p + style
@@ -112,7 +112,7 @@ export_interactive_roc <- function(ggroc_p, add.cis = TRUE, hide.points = FALSE,
   tmpFile <- tempfile()
   svgString <- gridSVG::grid.export(name = tmpFile, prefix = prefix)$svg
   
-  dev.off()
+  grDevices::dev.off()
   svgString <- paste(readLines(tmpFile, warn = FALSE), collapse = "\n")
   
   unlink(tmpPlot)

@@ -56,11 +56,11 @@ calculate_roc <- function(M, D, ci = FALSE, alpha = .05){
     ci_res <- sapply(c, function(x){ 
       
       
-      FP.L <- qbeta(alpha.star, sum(M0 > x), n0 - sum(M0 > x) + 1)
-      FP.U <- qbeta(1  - alpha.star, sum(M0 > x) + 1, n0 - sum(M0 > x))
+      FP.L <- stats::qbeta(alpha.star, sum(M0 > x), n0 - sum(M0 > x) + 1)
+      FP.U <- stats::qbeta(1  - alpha.star, sum(M0 > x) + 1, n0 - sum(M0 > x))
       
-      TP.L <- qbeta(alpha.star, sum(M1 > x), n1 - sum(M1 > x) + 1)
-      TP.U <- qbeta(1  - alpha.star, sum(M1 > x) + 1, n1 - sum(M1 > x))
+      TP.L <- stats::qbeta(alpha.star, sum(M1 > x), n1 - sum(M1 > x) + 1)
+      TP.U <- stats::qbeta(1  - alpha.star, sum(M1 > x) + 1, n1 - sum(M1 > x))
       
       c(FP.L, FP.U, TP.L, TP.U)
       

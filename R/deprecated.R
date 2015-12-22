@@ -15,7 +15,9 @@
 #' @param plotmath Not supported
 #' @param xlabel Defaults to "False positive fraction"
 #' @param ylabel Defaults to "True positive fraction"
-
+#' @importFrom grDevices pdf dev.off
+#' @importFrom methods slot
+#' @importFrom stats qbeta
 #' 
 #'   
 #' @export
@@ -36,7 +38,7 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", c_string = "c
     names(lookup) <- c(x@x.name, x@y.name)
     
     tp.fp <- lookup[c("True positive rate", "False positive rate")]
-    mydat <- data.frame(TPF = slot(x, tp.fp[1])[[1]], FPF = slot(x, tp.fp[2])[[1]], c = x@alpha.values[[1]])
+    mydat <- data.frame(TPF = methods::slot(x, tp.fp[1])[[1]], FPF = methods::slot(x, tp.fp[2])[[1]], c = x@alpha.values[[1]])
     rocdata <- subset(mydat, is.finite(c))
     
   }
