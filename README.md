@@ -1,6 +1,7 @@
 
 [![Build Status](https://travis-ci.org/sachsmc/plotROC.png?branch=master)](https://travis-ci.org/sachsmc/plotROC)
 [![DOI](https://zenodo.org/badge/9473/sachsmc/plotROC.svg)](http://dx.doi.org/10.5281/zenodo.14678)
+[![](http://cranlogs.r-pkg.org/badges/plotROC)](http://cran.rstudio.com/web/packages/plotROC/index.html)
 
 # Generate interactive ROC plots from R using ggplot
 

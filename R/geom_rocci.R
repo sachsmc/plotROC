@@ -121,7 +121,8 @@ StatRocci <- ggproto("StatRocci", Stat,
 #' @inheritParams ggplot2::stat_identity
 #' @param ci.at Vector of cutoffs at which to display confidence regions. If
 #'   NULL, will automatically choose 3 evenly spaced points to display the regions
-#'   @param sig.level Significance level for the confidence regions
+#' @param sig.level Significance level for the confidence regions
+#' @param na.rm Remove missing observations
 
 
 stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
@@ -174,7 +175,9 @@ geom_rocci <- function(mapping = NULL, data = NULL, stat = "rocci", ci.at = NULL
   layer(
     geom = GeomRocci, mapping = mapping, data = data, stat = stat, 
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(ci.at = ci.at, sig.level = sig.level, na.rm = na.rm, ...)
+    params = list(ci.at = ci.at, sig.level = sig.level, na.rm = na.rm, 
+                  alpha.box = alpha.box, labels = labels, labelsize = labelsize, 
+                  labelround = labelround, ...)
   )
 }
 
