@@ -175,7 +175,9 @@ geom_rocci <- function(mapping = NULL, data = NULL, stat = "rocci", ci.at = NULL
   layer(
     geom = GeomRocci, mapping = mapping, data = data, stat = stat, 
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(ci.at = ci.at, sig.level = sig.level, na.rm = na.rm, ...)
+    params = list(ci.at = ci.at, sig.level = sig.level, na.rm = na.rm, 
+                  alpha.box = alpha.box, labels = labels, labelsize = labelsize, 
+                  labelround = labelround, ...)
   )
 }
 
