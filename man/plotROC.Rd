@@ -28,6 +28,7 @@ rocdata <- data.frame(D = c(D.ex, D.ex),
                    Z = c(rep("A", 250), rep("B", 250)))
 
 ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + geom_rocci()
+\donttest{
 ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + style_roc()
 ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc() + geom_rocci()
 ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc() + geom_rocci(sig.level = .01)
@@ -40,6 +41,7 @@ rocplot <- ggplot(rocdata, aes(m = M, d = D)) + geom_roc()
 plot_interactive_roc(rocplot)
 plot_interactive_roc(rocplot + aes(color = Z))
 plot_interactive_roc(rocplot + facet_wrap( ~ Z))
+}
 
 }
 \author{

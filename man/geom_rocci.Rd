@@ -17,12 +17,22 @@ GeomRocci
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link{aes}} or
 \code{\link{aes_}}. If specified and \code{inherit.aes = TRUE} (the
-default), is combined with the default mapping at the top level of the
-plot. You only need to supply \code{mapping} if there isn't a mapping
-defined for the plot.}
+default), it is combined with the default mapping at the top level of the
+plot. You must supply \code{mapping} if there is no plot mapping.}
 
-\item{data}{A data frame. If specified, overrides the default data frame
-defined at the top level of the plot.}
+\item{data}{The data to be displayed in this layer. There are three
+   options:
+
+   If \code{NULL}, the default, the data is inherited from the plot
+   data as specified in the call to \code{\link{ggplot}}.
+
+   A \code{data.frame}, or other object, will override the plot
+   data. All objects will be fortified to produce a data frame. See
+   \code{\link{fortify}} for which variables will be created.
+
+   A \code{function} will be called with a single argument,
+   the plot data. The return value must be a \code{data.frame.}, and
+   will be used as the layer data.}
 
 \item{stat}{Use to override the default connection between
 \code{geom_rocci} and \code{stat_rocci}.}
@@ -54,16 +64,10 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
 
-\item{...}{other arguments passed on to \code{\link{layer}}. There are
-  three types of arguments you can use here:
-
-  \itemize{
-  \item Aesthetics: to set an aesthetic to a fixed value, like
-     \code{color = "red"} or \code{size = 3}.
-  \item Other arguments to the layer, for example you override the
-    default \code{stat} associated with the layer.
-  \item Other arguments passed on to the stat.
-  }}
+\item{...}{other arguments passed on to \code{\link{layer}}. These are
+often aesthetics, used to set an aesthetic to a fixed value, like
+\code{color = "red"} or \code{size = 3}. They may also be parameters
+to the paired geom/stat.}
 }
 \description{
 Display rectangular confidence regions for the empirical ROC curve.
@@ -88,10 +92,10 @@ are in bold). \code{stat_rocci} automatically maps the estimates to the required
 }
 \examples{
 
-D.ex <- rbinom(250, 1, .5)
+D.ex <- rbinom(50, 1, .5)
 rocdata <- data.frame(D = c(D.ex, D.ex), 
-                   M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)), 
-                   Z = c(rep("A", 250), rep("B", 250)))
+                   M = c(rnorm(50, mean = D.ex, sd = .4), rnorm(50, mean = D.ex, sd = 1)), 
+                   Z = c(rep("A", 50), rep("B", 50)))
 
 ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + geom_rocci()
 ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc() + geom_rocci()

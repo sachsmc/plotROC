@@ -163,9 +163,9 @@ verify_d <- function(D){
 #' 
 #' @export
 #' @examples 
-#' D.ex <- rbinom(250, 1, .5)
-#' widedata <- data.frame(D = D.ex, M1 = rnorm(250, mean = D.ex, sd = 1), 
-#'    M2 = rnorm(250, mean = D.ex, sd = .5))
+#' D.ex <- rbinom(50, 1, .5)
+#' widedata <- data.frame(D = D.ex, M1 = rnorm(50, mean = D.ex, sd = 1), 
+#'    M2 = rnorm(50, mean = D.ex, sd = .5))
 #' longdata <- melt_roc(widedata, "D", c("M1", "M2"))
 #' ggplot(longdata, aes(d = D, m = M, color = name)) + geom_roc()
 #' 
@@ -197,10 +197,10 @@ is.discrete <- function(x) {
 #' 
 #' @export
 #' @examples 
-#' D.ex <- rbinom(250, 1, .5)
+#' D.ex <- rbinom(50, 1, .5)
 #' rocdata <- data.frame(D = c(D.ex, D.ex),
-#'                      M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)),
-#'                      Z = c(rep("A", 250), rep("B", 250)))
+#'                      M = c(rnorm(50, mean = D.ex, sd = .4), rnorm(50, mean = D.ex, sd = 1)),
+#'                      Z = c(rep("A", 50), rep("B", 50)))
 #'
 #' ggroc <- ggplot(rocdata, aes(m = M, d = D)) + geom_roc()
 #' calc_auc(ggroc)

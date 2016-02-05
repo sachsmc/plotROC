@@ -10,8 +10,8 @@
 #' @param theme Theme function compatible with ggplot2
 #' @export
 #' @examples 
-#' D.ex <- rbinom(100, 1, .5)
-#' fakedata <- data.frame(M1 = rnorm(100, mean = D.ex), 
+#' D.ex <- rbinom(50, 1, .5)
+#' fakedata <- data.frame(M1 = rnorm(50, mean = D.ex), 
 #'    D = D.ex)
 #' ggplot(fakedata, aes(m = M1, d = D)) + geom_roc() + style_roc()
 #' ggplot(fakedata, aes(m = M1, d = D)) + geom_roc() + style_roc(xlab = "1 - Specificity")

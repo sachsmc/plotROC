@@ -22,9 +22,9 @@ A data frame in long format with three columns: D = binary disease status, M = b
 Multple biomarkers measured on the same subjects are often stored as multiple columns in a data frame. This is a convenience function that transforms the data into long format, suitable for use with ggplot and \link{geom_roc}
 }
 \examples{
-D.ex <- rbinom(250, 1, .5)
-widedata <- data.frame(D = D.ex, M1 = rnorm(250, mean = D.ex, sd = 1), 
-   M2 = rnorm(250, mean = D.ex, sd = .5))
+D.ex <- rbinom(50, 1, .5)
+widedata <- data.frame(D = D.ex, M1 = rnorm(50, mean = D.ex, sd = 1), 
+   M2 = rnorm(50, mean = D.ex, sd = .5))
 longdata <- melt_roc(widedata, "D", c("M1", "M2"))
 ggplot(longdata, aes(d = D, m = M, color = name)) + geom_roc()
 
