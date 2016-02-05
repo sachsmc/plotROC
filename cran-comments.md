@@ -1,4 +1,4 @@
-This is a update to fix a small bug, and reduce the runtime of some examples.
+This is a update to fix a bug, and reduce the runtime of the examples.
 
 ## Test environments
 * local OS X install, R 3.2.3
