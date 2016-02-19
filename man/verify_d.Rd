@@ -9,8 +9,20 @@ verify_d(D)
 \arguments{
 \item{D}{Vector that will be checked for 2-class labels}
 }
-\description{
-Checks for two classes and gives a warning message indicating which level is assumed to be 0/1
+\value{
+A vector the same length as D that takes values 0, indicating no disease or 1 indicating disease.
 }
-\keyword{Internal}
+\description{
+Checks for two classes and gives a warning message indicating which level is assumed to be 0/1. Throws an error if more than two levels appear in D.
+}
+\examples{
+
+verify_d(c(1, 0, 1))
+\dontrun{
+verify_d(c(TRUE, FALSE, TRUE)) #warning
+verify_d(c("Dead", "Alive", "Dead")) #warning
+verify_d(c("Disease", "Healthy", "Missing")) #error
+}
+
+}
 
