@@ -27,6 +27,7 @@ Suggests:
     knitr,
     testthat,
     stringr,
-    survivalROC
-VignetteBuilder: knitr
+    survivalROC,
+    rmarkdown
+VignetteBuilder: rmarkdown
 RoxygenNote: 5.0.1
