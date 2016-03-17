@@ -1,3 +1,9 @@
+plotROC 2.0.2
+-------------
+Fixes:
+  - Export verify_d function
+  - Bug fix for logical vectors passed to verify_d
+
 plotROC 2.0.1
 -------------
 Bug fixes:
