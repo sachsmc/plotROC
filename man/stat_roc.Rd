@@ -66,10 +66,10 @@ are in bold):
   \item \strong{\code{m}} The continuous biomarker/predictor
   \item \strong{\code{d}} The binary outcome, if not coded as 0/1, the 
   smallest level in sort order is assumed to be 0, with a warning
-  \item \code{alpha}
+  \item \code{alpha} Controls the label alpha, see also \code{linealpha} and \code{pointalpha}
   \item \code{color}
-  \item \code{linetype}
-  \item \code{size}
+  \item \code{linetype} 
+  \item \code{size} Controls the line weight, see also \code{pointsize} and \code{labelsize}
 }
 }
 
