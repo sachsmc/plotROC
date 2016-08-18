@@ -11,7 +11,7 @@ GeomRoc
 
 geom_roc(mapping = NULL, data = NULL, stat = "roc", n.cuts = 10,
   arrow = NULL, lineend = "butt", linejoin = "round", linemitre = 1,
-  alpha.line = 1, alpha.point = 1, size.point = 0.5, labels = TRUE,
+  linealpha = 1, pointalpha = 1, pointsize = 0.5, labels = TRUE,
   labelsize = 3.88, labelround = 1, na.rm = TRUE, position = "identity",
   show.legend = NA, inherit.aes = TRUE, ...)
 }
@@ -48,11 +48,11 @@ plot. You must supply \code{mapping} if there is no plot mapping.}
 
 \item{linemitre}{Line mitre limit (number greater than 1)}
 
-\item{alpha.line}{Alpha level for the lines}
+\item{linealpha}{Alpha level for the lines, alpha.line is deprecated}
 
-\item{alpha.point}{Alpha level for the cutoff points}
+\item{pointalpha}{Alpha level for the cutoff points, alpha.point is deprecated}
 
-\item{size.point}{Size of cutoff points}
+\item{pointsize}{Size of cutoff points, size.point is deprecated}
 
 \item{labels}{Logical, display cutoff text labels}
 
@@ -119,6 +119,7 @@ ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc()
 ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + facet_wrap(~ Z)
 ggplot(rocdata, aes(m = M, d = D)) + geom_roc(n.cuts = 20)
 ggplot(rocdata, aes(m = M, d = D)) + geom_roc(labels = FALSE)
+ggplot(rocdata, aes(m = M, d = D)) + geom_roc(size = 1.25)
 }
 }
 \seealso{
