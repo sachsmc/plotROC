@@ -14,17 +14,29 @@ stat_rocci(mapping = NULL, data = NULL, geom = "rocci",
   ci.at = NULL, sig.level = 0.05, na.rm = TRUE, ...)
 }
 \arguments{
-\item{mapping}{The aesthetic mapping, usually constructed with
-\code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set
-at the layer level if you are overriding the plot defaults.}
+\item{mapping}{Set of aesthetic mappings created by \code{\link{aes}} or
+\code{\link{aes_}}. If specified and \code{inherit.aes = TRUE} (the
+default), it is combined with the default mapping at the top level of the
+plot. You must supply \code{mapping} if there is no plot mapping.}
 
-\item{data}{A layer specific dataset - only needed if you want to override
-the plot defaults.}
+\item{data}{The data to be displayed in this layer. There are three
+   options:
+
+   If \code{NULL}, the default, the data is inherited from the plot
+   data as specified in the call to \code{\link{ggplot}}.
+
+   A \code{data.frame}, or other object, will override the plot
+   data. All objects will be fortified to produce a data frame. See
+   \code{\link{fortify}} for which variables will be created.
+
+   A \code{function} will be called with a single argument,
+   the plot data. The return value must be a \code{data.frame.}, and
+   will be used as the layer data.}
 
 \item{geom}{The geometric object to use display the data}
 
-\item{position}{The position adjustment to use for overlapping points
-on this layer}
+\item{position}{Position adjustment, either as a string, or the result of
+a call to a position adjustment function.}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.
@@ -42,9 +54,10 @@ NULL, will automatically choose 3 evenly spaced points to display the regions}
 
 \item{na.rm}{Remove missing observations}
 
-\item{...}{other arguments passed on to \code{\link{layer}}. This can
-include aesthetics whose values you want to set, not map. See
-\code{\link{layer}} for more details.}
+\item{...}{other arguments passed on to \code{\link{layer}}. These are
+often aesthetics, used to set an aesthetic to a fixed value, like
+\code{color = "red"} or \code{size = 3}. They may also be parameters
+to the paired geom/stat.}
 }
 \description{
 Confidence intervals for TPF and FPF are calculated using the exact 
@@ -81,10 +94,10 @@ are in bold):
 }
 }
 \examples{
-D.ex <- rbinom(250, 1, .5)
+D.ex <- rbinom(50, 1, .5)
 rocdata <- data.frame(D = c(D.ex, D.ex), 
-                   M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)), 
-                   Z = c(rep("A", 250), rep("B", 250)))
+                   M = c(rnorm(50, mean = D.ex, sd = .4), rnorm(50, mean = D.ex, sd = 1)), 
+                   Z = c(rep("A", 50), rep("B", 50)))
 
 ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + stat_rocci()
 ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + 

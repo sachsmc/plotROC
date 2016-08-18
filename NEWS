@@ -1,3 +1,22 @@
+plotROC 2.0.3
+-------------
+Bug fixes:
+  - Conflict between alpha.line, alpha.point, size.point and the aesthetics alpha and size
+
+plotROC 2.0.2
+-------------
+Fixes:
+  - Export verify_d function
+  - Bug fix for logical vectors passed to verify_d
+
+plotROC 2.0.1
+-------------
+Bug fixes:
+  - Style and format of labels/lines fixed, now passed correctly to ggplot functions
+  - Reduce run time of examples
+  - Tested with dev version of ggplot2
+
+
 plotROC 2.0.0
 -------------
 Major changes to the API this release

@@ -41,10 +41,10 @@
 #' @inheritParams ggplot2::stat_identity
 #' @export
 #' @examples
-#' D.ex <- rbinom(250, 1, .5)
+#' D.ex <- rbinom(50, 1, .5)
 #' rocdata <- data.frame(D = c(D.ex, D.ex), 
-#'                    M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)), 
-#'                    Z = c(rep("A", 250), rep("B", 250)))
+#'                    M = c(rnorm(50, mean = D.ex, sd = .4), rnorm(50, mean = D.ex, sd = 1)), 
+#'                    Z = c(rep("A", 50), rep("B", 50)))
 #'
 #' ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + stat_rocci()
 #' ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + 
@@ -192,10 +192,10 @@ geom_rocci <- function(mapping = NULL, data = NULL, stat = "rocci", ci.at = NULL
 #' @rdname geom_rocci
 #' @examples 
 #' 
-#' D.ex <- rbinom(250, 1, .5)
+#' D.ex <- rbinom(50, 1, .5)
 #' rocdata <- data.frame(D = c(D.ex, D.ex), 
-#'                    M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)), 
-#'                    Z = c(rep("A", 250), rep("B", 250)))
+#'                    M = c(rnorm(50, mean = D.ex, sd = .4), rnorm(50, mean = D.ex, sd = 1)), 
+#'                    Z = c(rep("A", 50), rep("B", 50)))
 #'
 #' ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + geom_rocci()
 #' ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc() + geom_rocci()

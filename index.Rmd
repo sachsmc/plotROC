@@ -62,7 +62,7 @@ I created a [shiny application](http://shiny.rstudio.com) in order to make the f
 
 ## Installation and loading
 
-**plotROC** can currently only be installed from github. It also requires the development version of **ggplot2**.
+**plotROC** can currently only be installed from github. It also requires a recent version of **ggplot2**.
 
 ```{r load, eval = FALSE}
 devtools::install_github("hadley/ggplot2")

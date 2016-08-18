@@ -59,10 +59,10 @@ StatRoc <- ggproto("StatRoc", Stat,
 #'   \item \strong{\code{m}} The continuous biomarker/predictor
 #'   \item \strong{\code{d}} The binary outcome, if not coded as 0/1, the 
 #'   smallest level in sort order is assumed to be 0, with a warning
-#'   \item \code{alpha}
+#'   \item \code{alpha} Controls the label alpha, see also \code{linealpha} and \code{pointalpha}
 #'   \item \code{color}
-#'   \item \code{linetype}
-#'   \item \code{size}
+#'   \item \code{linetype} 
+#'   \item \code{size} Controls the line weight, see also \code{pointsize} and \code{labelsize}
 #' }
 #' @section Computed variables:
 #' \describe{
@@ -73,10 +73,10 @@ StatRoc <- ggproto("StatRoc", Stat,
 #' @export
 #' @rdname stat_roc
 #' @examples
-#' D.ex <- rbinom(250, 1, .5)
+#' D.ex <- rbinom(50, 1, .5)
 #' rocdata <- data.frame(D = c(D.ex, D.ex), 
-#'                    M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)), 
-#'                    Z = c(rep("A", 250), rep("B", 250)))
+#'                    M = c(rnorm(50, mean = D.ex, sd = .4), rnorm(50, mean = D.ex, sd = 1)), 
+#'                    Z = c(rep("A", 50), rep("B", 50)))
 #'
 #' ggplot(rocdata, aes(m = M, d = D)) + stat_roc()
 
@@ -100,9 +100,9 @@ stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
 #' @param linejoin Line join style (round, mitre, bevel)
 #' @param linemitre Line mitre limit (number greater than 1)
 #' @param arrow Arrow specification, as created by \code{\link[grid]{arrow}}
-#' @param alpha.line Alpha level for the lines
-#' @param alpha.point Alpha level for the cutoff points
-#' @param size.point Size of cutoff points
+#' @param linealpha Alpha level for the lines, alpha.line is deprecated
+#' @param pointalpha Alpha level for the cutoff points, alpha.point is deprecated
+#' @param pointsize Size of cutoff points, size.point is deprecated
 #' @param labels Logical, display cutoff text labels
 #' @param labelsize Size of cutoff text labels
 #' @param labelround Integer, number of significant digits to round cutoff labels
@@ -116,16 +116,19 @@ stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
 #' @export
 #' @rdname geom_roc
 #' @examples
-#' D.ex <- rbinom(250, 1, .5)
+#' D.ex <- rbinom(50, 1, .5)
 #' rocdata <- data.frame(D = c(D.ex, D.ex), 
-#'                    M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)), 
-#'                    Z = c(rep("A", 250), rep("B", 250)))
+#'                    M = c(rnorm(50, mean = D.ex, sd = .4), rnorm(50, mean = D.ex, sd = 1)), 
+#'                    Z = c(rep("A", 50), rep("B", 50)))
 #'
 #' ggplot(rocdata, aes(m = M, d = D)) + geom_roc()
+#' \donttest{
 #' ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc()
 #' ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + facet_wrap(~ Z)
-#' ggplot(rocdata, aes(m = M, d = D)) + geom_roc(n.cuts = 50)
+#' ggplot(rocdata, aes(m = M, d = D)) + geom_roc(n.cuts = 20)
 #' ggplot(rocdata, aes(m = M, d = D)) + geom_roc(labels = FALSE)
+#' ggplot(rocdata, aes(m = M, d = D)) + geom_roc(size = 1.25)
+#' }
 
 GeomRoc <- ggproto("GeomRoc", Geom, 
                    required_aes = c("x", "y", "label"), 
@@ -135,9 +138,13 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                    non_missing_aes = c("size", "shape"),
                    draw_group = function(data, panel_scales, coord, n.cuts = 10, arrow = NULL,
                                          lineend = "butt", linejoin = "round", linemitre = 1, 
-                                         alpha.line = 1, alpha.point = 1,
-                                         size.point = .5, labels = TRUE, labelsize = 3.88, labelround = 1,
-                                         na.rm = TRUE){
+                                         linealpha = 1, pointalpha = 1, size.point, alpha.point, alpha.line, 
+                                         pointsize = .5, labels = TRUE, labelsize = 3.88, labelround = 1,
+                                         na.rm = TRUE, ...){
+                     
+                     if(!missing(alpha.line)) linealpha <- alpha.line
+                     if(!missing(alpha.point)) pointalpha <- alpha.point
+                     if(!missing(size.point)) pointsize <- size.point
                      
                      if(nrow(data) < n.cuts){ 
                        dex <- 1:nrow(data)
@@ -152,11 +159,11 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                        pg <- pointsGrob(
                          coordsp$x, coordsp$y,
                          pch = coordsp$shape,
-                         size = unit(size.point, "char"),
+                         size = unit(pointsize, "char"),
                          gp = gpar(
                            col = coordsp$colour,
                            fill = coordsp$fill,
-                           alpha = alpha.point
+                           alpha = pointalpha
                          )
                        )
                       } else pg <- nullGrob()
@@ -217,8 +224,8 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                          munched$x[!end], munched$y[!end], munched$x[!start], munched$y[!start],
                          default.units = "native", arrow = arrow,
                          gp = gpar(
-                           col = alpha(munched$colour, alpha.line)[!end],
-                           fill = alpha(munched$colour, alpha.line)[!end],
+                           col = alpha(munched$colour, linealpha)[!end],
+                           fill = alpha(munched$colour, linealpha)[!end],
                            lwd = munched$size[!end] * .pt,
                            lty = munched$linetype[!end],
                            lineend = lineend,
@@ -232,8 +239,8 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                          munched$x, munched$y, id = id,
                          default.units = "native", arrow = arrow,
                          gp = gpar(
-                           col = alpha(munched$colour, alpha.line)[start],
-                           fill = alpha(munched$colour, alpha.line)[start],
+                           col = alpha(munched$colour, linealpha)[start],
+                           fill = alpha(munched$colour, linealpha)[start],
                            lwd = munched$size[start] * .pt,
                            lty = munched$linetype[start],
                            lineend = lineend,
@@ -306,17 +313,18 @@ GeomRoc <- ggproto("GeomRoc", Geom,
 
 geom_roc <- function(mapping = NULL, data = NULL, stat = "roc", n.cuts = 10, arrow = NULL,
                      lineend = "butt", linejoin = "round", linemitre = 1, 
-                     alpha.line = 1, alpha.point = 1,
-                     size.point = .5, labels = TRUE, labelsize = 3.88, labelround = 1,
+                     linealpha = 1, pointalpha = 1, 
+                     pointsize = .5, labels = TRUE, labelsize = 3.88, labelround = 1,
                      na.rm = TRUE, position = "identity", show.legend = NA, inherit.aes = TRUE, ...) {
+  
+  
   layer(
     geom = GeomRoc, mapping = mapping, data = data, stat = stat, 
     position = position, show.legend = show.legend, inherit.aes = inherit.aes, 
     params = list(na.rm = na.rm, n.cuts = n.cuts, arrow = arrow,
                      lineend = lineend, linejoin = linejoin, linemitre = linemitre, 
-                     alpha.line = alpha.line, alpha.point = alpha.point,
-                     size.point = size.point, labels = labels, labelsize = labelsize, labelround = labelround,
-                    ...)
+                     linealpha = linealpha, pointalpha = pointalpha,
+                     pointsize = pointsize, labels = labels, labelsize = labelsize, labelround = labelround, ...)
   )
 }
 

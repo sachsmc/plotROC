@@ -13,10 +13,10 @@ calc_auc(ggroc)
 Given a ggplot object with a GeomRoc layer, computes the area under the ROC curve for each group
 }
 \examples{
-D.ex <- rbinom(250, 1, .5)
+D.ex <- rbinom(50, 1, .5)
 rocdata <- data.frame(D = c(D.ex, D.ex),
-                     M = c(rnorm(250, mean = D.ex, sd = .4), rnorm(250, mean = D.ex, sd = 1)),
-                     Z = c(rep("A", 250), rep("B", 250)))
+                     M = c(rnorm(50, mean = D.ex, sd = .4), rnorm(50, mean = D.ex, sd = 1)),
+                     Z = c(rep("A", 50), rep("B", 50)))
 
 ggroc <- ggplot(rocdata, aes(m = M, d = D)) + geom_roc()
 calc_auc(ggroc)
