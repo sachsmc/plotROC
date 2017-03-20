@@ -16,9 +16,9 @@ StatRoc <- ggproto("StatRoc", Stat,
                      } else {
                        data$group <- -1L
                      } 
-                   data
+                     data
                    },
-                   compute_group = function(data, scales, na.rm = TRUE){
+                   compute_group = function(data, scales, max_num_points = 1e3, na.rm = TRUE){
                      
                      if(na.rm){
                        data <- subset(data, !is.na(d) & !is.na(m))
@@ -35,13 +35,23 @@ StatRoc <- ggproto("StatRoc", Stat,
                      ## Highest cutoff (Infinity) corresponds to tp=0, fp=0
                      
                      dups <- rev(duplicated(rev(TTT)))
-                     tp <- c(0, TPF[!dups])/sum(D == 1)
-                     fp <- c(0, FPF[!dups])/sum(D == 0)
-                
-                     cutoffs <- c(Inf, TTT[!dups])
+                     TPF <- TPF[!dups]
+                     FPF <- FPF[!dups]
+                     TTT <- TTT[!dups]
+                     
+                     if (!is.null(max_num_points)) {
+                       TPF <- TPF[seq(from = 1, to = length(TPF), length.out = max_num_points)]
+                       FPF <- FPF[seq(from = 1, to = length(FPF), length.out = max_num_points)]
+                       TTT <- TTT[seq(from = 1, to = length(TTT), length.out = max_num_points)]
+                     }
+                     
+                     tp <- c(0, TPF)/sum(D == 1)
+                     fp <- c(0, FPF)/sum(D == 0)
+                     
+                     cutoffs <- c(Inf, TTT)
                      
                      data.frame(false_positive_fraction = fp, true_positive_fraction = tp, cutoffs = cutoffs)
-              
+                     
                      
                    })
 
@@ -81,7 +91,7 @@ StatRoc <- ggproto("StatRoc", Stat,
 #' ggplot(rocdata, aes(m = M, d = D)) + stat_roc()
 
 stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
-                         position = "identity", show.legend = NA, inherit.aes = TRUE, na.rm = TRUE, ...) {
+                     position = "identity", show.legend = NA, inherit.aes = TRUE, na.rm = TRUE, max_num_points = 1e3, ...) {
   layer(
     stat = StatRoc,
     data = data,
@@ -90,7 +100,7 @@ stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, ...)
+    params = list(na.rm = na.rm, max_num_points = max_num_points, ...)
   )
   
 }
@@ -166,7 +176,7 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                            alpha = pointalpha
                          )
                        )
-                      } else pg <- nullGrob()
+                     } else pg <- nullGrob()
                      
                      keep <- function(x) {
                        # from first non-missing to last non-missing
@@ -322,9 +332,9 @@ geom_roc <- function(mapping = NULL, data = NULL, stat = "roc", n.cuts = 10, arr
     geom = GeomRoc, mapping = mapping, data = data, stat = stat, 
     position = position, show.legend = show.legend, inherit.aes = inherit.aes, 
     params = list(na.rm = na.rm, n.cuts = n.cuts, arrow = arrow,
-                     lineend = lineend, linejoin = linejoin, linemitre = linemitre, 
-                     linealpha = linealpha, pointalpha = pointalpha,
-                     pointsize = pointsize, labels = labels, labelsize = labelsize, labelround = labelround, ...)
+                  lineend = lineend, linejoin = linejoin, linemitre = linemitre, 
+                  linealpha = linealpha, pointalpha = pointalpha,
+                  pointsize = pointsize, labels = labels, labelsize = labelsize, labelround = labelround, ...)
   )
 }
 
