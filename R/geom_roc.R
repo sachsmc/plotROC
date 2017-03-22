@@ -62,6 +62,7 @@ StatRoc <- ggproto("StatRoc", Stat,
 #' 
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm Remove missing observations
+#' @param max_num_points maximum number of points to plot
 #' @section Aesthetics:
 #' \code{stat_roc} understands the following aesthetics (required aesthetics
 #' are in bold):
