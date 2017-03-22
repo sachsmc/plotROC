@@ -107,6 +107,7 @@ are in bold):
   \item \code{size}
 }
 }
+
 \examples{
 D.ex <- rbinom(50, 1, .5)
 rocdata <- data.frame(D = c(D.ex, D.ex), 
@@ -129,4 +130,3 @@ See \code{\link{geom_rocci}} for
   curves. Also \link{export_interactive_roc} for creating interactive ROC curve plots for use in a web browser.
 }
 \keyword{datasets}
-

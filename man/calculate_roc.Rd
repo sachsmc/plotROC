@@ -31,4 +31,3 @@ Confidence intervals for TPF and FPF are calculated using the exact
   alpha)}. Based on result 2.4 from Pepe (2003), the cross-product of these 
   intervals yields a 1 - alpha % confidence region for (FPF, TPF).
 }
-

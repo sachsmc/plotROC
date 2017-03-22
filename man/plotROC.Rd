@@ -47,4 +47,3 @@ plot_interactive_roc(rocplot + facet_wrap( ~ Z))
 \author{
 Michael Sachs (@sachsmc)
 }
-

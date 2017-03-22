@@ -41,4 +41,3 @@ A ggplot object
 \description{
 Deprecated, use \link{geom_roc} instead
 }
-

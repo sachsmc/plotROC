@@ -25,4 +25,3 @@ verify_d(c("Disease", "Healthy", "Missing")) #error
 }
 
 }
-

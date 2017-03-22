@@ -23,4 +23,3 @@ calc_auc(ggroc)
 ggroc2 <- ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc()
 calc_auc(ggroc2)
 }
-

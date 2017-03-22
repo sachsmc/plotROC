@@ -33,4 +33,3 @@ A ggplot object
 \description{
 Deprecated, use \link{style_roc} instead
 }
-
