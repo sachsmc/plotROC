@@ -18,7 +18,7 @@ StatRoc <- ggproto("StatRoc", Stat,
                      } 
                      data
                    },
-                   compute_group = function(data, scales, max_num_points = 1e3, na.rm = TRUE){
+                   compute_group = function(data, scales, max.num.points = 1e3, na.rm = TRUE){
                      
                      if(na.rm){
                        data <- subset(data, !is.na(d) & !is.na(m))
@@ -39,10 +39,10 @@ StatRoc <- ggproto("StatRoc", Stat,
                      FPF <- FPF[!dups]
                      TTT <- TTT[!dups]
                      
-                     if (!is.null(max_num_points)) {
-                       TPF <- TPF[seq(from = 1, to = length(TPF), length.out = max_num_points)]
-                       FPF <- FPF[seq(from = 1, to = length(FPF), length.out = max_num_points)]
-                       TTT <- TTT[seq(from = 1, to = length(TTT), length.out = max_num_points)]
+                     if (!is.null(max.num.points)) {
+                       TPF <- TPF[seq(from = 1, to = length(TPF), length.out = max.num.points)]
+                       FPF <- FPF[seq(from = 1, to = length(FPF), length.out = max.num.points)]
+                       TTT <- TTT[seq(from = 1, to = length(TTT), length.out = max.num.points)]
                      }
                      
                      tp <- c(0, TPF)/sum(D == 1)
@@ -62,7 +62,7 @@ StatRoc <- ggproto("StatRoc", Stat,
 #' 
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm Remove missing observations
-#' @param max_num_points maximum number of points to plot
+#' @param max.num.points maximum number of points to plot
 #' @section Aesthetics:
 #' \code{stat_roc} understands the following aesthetics (required aesthetics
 #' are in bold):
@@ -92,7 +92,7 @@ StatRoc <- ggproto("StatRoc", Stat,
 #' ggplot(rocdata, aes(m = M, d = D)) + stat_roc()
 
 stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
-                     position = "identity", show.legend = NA, inherit.aes = TRUE, na.rm = TRUE, max_num_points = 1e3, ...) {
+                     position = "identity", show.legend = NA, inherit.aes = TRUE, na.rm = TRUE, max.num.points = 1e3, ...) {
   layer(
     stat = StatRoc,
     data = data,
@@ -101,7 +101,7 @@ stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, max_num_points = max_num_points, ...)
+    params = list(na.rm = na.rm, max.num.points = max.num.points, ...)
   )
   
 }
