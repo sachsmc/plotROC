@@ -18,7 +18,7 @@ StatRoc <- ggproto("StatRoc", Stat,
                      } 
                      data
                    },
-                   compute_group = function(data, scales, max.num.points = 1e3, na.rm = TRUE){
+                   compute_group = function(data, scales, na.rm = TRUE, max.num.points = 1e3){
                      
                      if(na.rm){
                        data <- subset(data, !is.na(d) & !is.na(m))
