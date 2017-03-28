@@ -205,6 +205,7 @@ is.discrete <- function(x) {
 #' 
 #' @param ggroc A ggplot object that contains a GeomRoc layer
 #' 
+#' @importFrom magrittr %>%
 #' @export
 #' @examples 
 #' D.ex <- rbinom(50, 1, .5)
@@ -224,15 +225,8 @@ calc_auc <- function(ggroc){
   
   l1 <- ggplot_build(ggroc)$data[[1]]
   
-  comp_auc <- function(df){
-    
-    auc <- 0
-    for (i in 2:length(df$x)) {
-      auc <- auc + 0.5 * (df$x[i] - df$x[i-1]) * (df$y[i] + df$y[i-1])
-    }
-    return(data.frame(AUC = auc))
-  }
-  
-  plyr::ddply(l1, ~ PANEL + group, comp_auc)
+  l1 %>% 
+    dplyr::group_by(PANEL, group) %>% 
+    dplyr::summarise(auc = sum((y + dplyr::lead(y, default = max(y)))*(dplyr::lead(x, default = max(x)) - x)/2, na.rm = TRUE))
   
 }
