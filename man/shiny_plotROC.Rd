@@ -9,4 +9,3 @@ shiny_plotROC()
 \description{
 A convenience function to easily start the shiny application. It will open in Rstudio, or in the default web browser.
 }
-

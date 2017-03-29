@@ -49,4 +49,3 @@ If you intend to include more than one of these objects in a single
   output. See the vignette for examples. Older browsers (< IE7) are not 
   supported.
 }
-

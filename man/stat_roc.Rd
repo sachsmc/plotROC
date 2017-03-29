@@ -11,7 +11,7 @@ StatRoc
 
 stat_roc(mapping = NULL, data = NULL, geom = "roc",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
-  na.rm = TRUE, ...)
+  na.rm = TRUE, max.num.points = 1000, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link{aes}} or
@@ -49,6 +49,8 @@ the default plot specification, e.g. \code{\link{borders}}.}
 
 \item{na.rm}{Remove missing observations}
 
+\item{max.num.points}{maximum number of points to plot}
+
 \item{...}{other arguments passed on to \code{\link{layer}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
 \code{color = "red"} or \code{size = 3}. They may also be parameters
@@ -81,6 +83,7 @@ are in bold):
   \item{cutoffs}{values of m at which estimates are calculated}
 }
 }
+
 \examples{
 D.ex <- rbinom(50, 1, .5)
 rocdata <- data.frame(D = c(D.ex, D.ex), 
@@ -90,4 +93,3 @@ rocdata <- data.frame(D = c(D.ex, D.ex),
 ggplot(rocdata, aes(m = M, d = D)) + stat_roc()
 }
 \keyword{datasets}
-

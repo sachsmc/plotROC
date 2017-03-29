@@ -1,12 +1,15 @@
 context("Calculate ROC")
 
 set.seed(420)
-D.ex <- rbinom(100, 1, .5)
-T.ex <- rnorm(100, mean = D.ex, sd = .5)
+
+num_obs <- 1e3
+
+D.ex <- rbinom(n = num_obs, 1, .5)
+T.ex <- rnorm(n = num_obs, mean = D.ex, sd = .5)
 D.str <- c("Healthy", "Ill")[D.ex + 1]
 
 
-testdata <- data.frame(T1 = T.ex, T2 = T.ex + rnorm(100), D = D.ex, D.str = D.str)
+testdata <- data.frame(T1 = T.ex, T2 = T.ex + rnorm(n = num_obs), D = D.ex, D.str = D.str)
 testroc <- ggplot_build(ggplot(testdata, aes(m = T1, d = D)) + geom_roc())$data[[1]]
 ggroc_p <- ggplot(testdata, aes(m = T1, d = D)) + geom_roc() + geom_rocci()
 
@@ -34,7 +37,22 @@ test_that("ggroc returns a ggplot object", {
 
 test_that("Non 0/1 labels work, with warning", {
   
-
   expect_warning(print(ggplot(testdata, aes(m = T1, d = D.str)) + stat_roc()))
   
 })
+
+
+test_that(desc = "plotROC can be thinned when there is too much data",
+          code = {
+            
+            g <- ggplot(data = testdata, mapping = aes(m = T1, d = D)) + stat_roc(max.num.points = 20)
+            
+            expect_is(object = g,
+                      class = 'ggplot')
+            
+            whole_plot_data <- ggplot_build(ggplot(testdata, aes(m = T1, d = D)) + stat_roc())$data[[1]]
+            thinned_plot_data <- ggplot_build(ggplot(testdata, aes(m = T1, d = D)) + stat_roc(max.num.points = 20))$data[[1]]
+            
+            expect_equal(object = nrow(whole_plot_data), expected = num_obs + 1)
+            expect_equal(object = nrow(thinned_plot_data), expected = 21)
+          })

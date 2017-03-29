@@ -21,4 +21,3 @@ List of data frames containing cutoffs, and estimated true and false
 \description{
 Deprecated, use \link{geom_roc} instead
 }
-

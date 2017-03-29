@@ -19,4 +19,3 @@ NULL opens an interactive document in Rstudio or the default web browser
 \description{
 Generate a standalone html document displaying an interactive ROC curve
 }
-

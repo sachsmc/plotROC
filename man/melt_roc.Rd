@@ -29,4 +29,3 @@ longdata <- melt_roc(widedata, "D", c("M1", "M2"))
 ggplot(longdata, aes(d = D, m = M, color = name)) + geom_roc()
 
 }
-

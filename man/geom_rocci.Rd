@@ -2,8 +2,8 @@
 % Please edit documentation in R/geom_rocci.R
 \docType{data}
 \name{geom_rocci}
-\alias{GeomRocci}
 \alias{geom_rocci}
+\alias{GeomRocci}
 \title{Confidence regions for the ROC curve}
 \format{An object of class \code{GeomRocci} (inherits from \code{Geom}, \code{ggproto}) of length 6.}
 \usage{
@@ -41,8 +41,8 @@ plot. You must supply \code{mapping} if there is no plot mapping.}
 
 \item{sig.level}{Significance level for the confidence regions}
 
-\item{na.rm}{If \code{FALSE} (the default), removes missing values with
-a warning.  If \code{TRUE} silently removes missing values.}
+\item{na.rm}{If \code{FALSE}, the default, missing values are removed with
+a warning. If \code{TRUE}, missing values are silently removed.}
 
 \item{alpha.box}{Alpha level for the confidence regions}
 
@@ -90,6 +90,7 @@ are in bold). \code{stat_rocci} automatically maps the estimates to the required
   \item \code{size}
 }
 }
+
 \examples{
 
 D.ex <- rbinom(50, 1, .5)
@@ -110,4 +111,3 @@ See \code{\link{geom_roc}} for the empirical ROC curve, \code{\link{style_roc}} 
   curves. Also \link{export_interactive_roc} for creating interactive ROC curve plots for use in a web browser.
 }
 \keyword{datasets}
-

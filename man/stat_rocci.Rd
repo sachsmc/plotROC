@@ -93,6 +93,7 @@ are in bold):
   \item{TPFU}{upper bound of confidence region for TPF}
 }
 }
+
 \examples{
 D.ex <- rbinom(50, 1, .5)
 rocdata <- data.frame(D = c(D.ex, D.ex), 
@@ -111,4 +112,3 @@ stat_rocci(ci.at = quantile(rocdata$M, c(.1, .3, .5, .7, .9)))
 }
 }
 \keyword{datasets}
-
