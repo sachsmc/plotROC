@@ -225,6 +225,8 @@ calc_auc <- function(ggroc){
   
   l1 <- ggplot_build(ggroc)$data[[1]]
   
+  PANEL <- group <- x <- y <- "fake global because CRAN can't handle non-standard evaluation"
+  
   l1 %>% 
     dplyr::group_by(PANEL, group) %>% 
     dplyr::summarise(auc = sum((y + dplyr::lead(y, default = max(y)))*(dplyr::lead(x, default = max(x)) - x)/2, na.rm = TRUE))

@@ -26,7 +26,8 @@ Imports:
     gridSVG,
     shiny,
     plyr,
-    dplyr
+    dplyr,
+    magrittr
 Suggests:
     knitr,
     testthat,
