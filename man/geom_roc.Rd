@@ -12,8 +12,8 @@ GeomRoc
 geom_roc(mapping = NULL, data = NULL, stat = "roc", n.cuts = 10,
   arrow = NULL, lineend = "butt", linejoin = "round", linemitre = 1,
   linealpha = 1, pointalpha = 1, pointsize = 0.5, labels = TRUE,
-  labelsize = 3.88, labelround = 1, na.rm = TRUE, position = "identity",
-  show.legend = NA, inherit.aes = TRUE, ...)
+  labelsize = 3.88, labelround = 1, na.rm = TRUE, cutoffs.at = NULL,
+  position = "identity", show.legend = NA, inherit.aes = TRUE, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link{aes}} or
@@ -61,6 +61,9 @@ plot. You must supply \code{mapping} if there is no plot mapping.}
 \item{labelround}{Integer, number of significant digits to round cutoff labels}
 
 \item{na.rm}{Remove missing values from curve}
+
+\item{cutoffs.at}{Vector of user supplied cutoffs to plot as points. If non-NULL, 
+it will override the values of n.cuts and plot the observed cutoffs closest to the user-supplied ones.}
 
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
@@ -119,6 +122,7 @@ ggplot(rocdata, aes(m = M, d = D)) + geom_roc()
 ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc()
 ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + facet_wrap(~ Z)
 ggplot(rocdata, aes(m = M, d = D)) + geom_roc(n.cuts = 20)
+ggplot(rocdata, aes(m = M, d = D)) + geom_roc(cutoffs.at = c(1.5, 1, .5, 0, -.5))
 ggplot(rocdata, aes(m = M, d = D)) + geom_roc(labels = FALSE)
 ggplot(rocdata, aes(m = M, d = D)) + geom_roc(size = 1.25)
 }
