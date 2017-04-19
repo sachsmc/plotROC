@@ -1,9 +1,14 @@
 plotROC 2.1.0
 -------------
 New feature:
+  - cutoffs.at argument to geom_roc overrides n.cuts and plots points/labels at user-supplied cutoffs. 
+
+plotROC 2.1.0
+-------------
+New feature:
   - max.num.points argument to stat_roc (can also pass it to geom_roc()) limits the number of points that get plotted.
     Note this downsamples the curve at the end of the computation, so the benefit of having a lot of data (very 
-    precise curve) is still realized.
+    precise curve) is still realized. Thanks @rcorty
 
 
 plotROC 2.0.3
