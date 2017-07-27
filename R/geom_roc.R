@@ -118,6 +118,8 @@ stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
 #' @param labelsize Size of cutoff text labels
 #' @param labelround Integer, number of significant digits to round cutoff labels
 #' @param na.rm Remove missing values from curve
+#' @param cutoffs.at Vector of user supplied cutoffs to plot as points. If non-NULL, 
+#' it will override the values of n.cuts and plot the observed cutoffs closest to the user-supplied ones.
 #' @section Computed variables:
 #' \describe{
 #'   \item{false_positive_fraction}{estimate of false positive fraction}
@@ -137,6 +139,7 @@ stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
 #' ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc()
 #' ggplot(rocdata, aes(m = M, d = D)) + geom_roc() + facet_wrap(~ Z)
 #' ggplot(rocdata, aes(m = M, d = D)) + geom_roc(n.cuts = 20)
+#' ggplot(rocdata, aes(m = M, d = D)) + geom_roc(cutoffs.at = c(1.5, 1, .5, 0, -.5))
 #' ggplot(rocdata, aes(m = M, d = D)) + geom_roc(labels = FALSE)
 #' ggplot(rocdata, aes(m = M, d = D)) + geom_roc(size = 1.25)
 #' }
@@ -151,16 +154,27 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                                          lineend = "butt", linejoin = "round", linemitre = 1, 
                                          linealpha = 1, pointalpha = 1, size.point, alpha.point, alpha.line, 
                                          pointsize = .5, labels = TRUE, labelsize = 3.88, labelround = 1,
-                                         na.rm = TRUE, ...){
+                                         na.rm = TRUE, cutoffs.at = NULL, ...){
                      
                      if(!missing(alpha.line)) linealpha <- alpha.line
                      if(!missing(alpha.point)) pointalpha <- alpha.point
                      if(!missing(size.point)) pointsize <- size.point
                      
-                     if(nrow(data) < n.cuts){ 
-                       dex <- 1:nrow(data)
+                     
+                     if(!is.null(cutoffs.at)) {
+                       ## find the index of the points closest to the supplied cutoffs
+                       dex <- sapply(cutoffs.at, function(x){ 
+                         in.dx <- abs(data$cutoffs - x)
+                         which.min(in.dx)
+                       })
+                       
+                       
                      } else {
-                       dex <- as.integer(seq(1, nrow(data), length.out = n.cuts))
+                       if(nrow(data) < n.cuts){ 
+                         dex <- 1:nrow(data)
+                       } else {
+                         dex <- as.integer(seq(1, nrow(data), length.out = n.cuts))
+                       }
                      }
                      
                      coords <- coord$transform(data, panel_scales)
@@ -261,7 +275,7 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                        )
                      }
                      
-                     if(labels & n.cuts > 0){
+                     if(labels & (n.cuts > 0 | !is.null(cutoffs.at))){
                        lab <- round(coordsp$label, labelround)
                        
                        if (is.character(coordsp$vjust)) {
@@ -326,7 +340,7 @@ geom_roc <- function(mapping = NULL, data = NULL, stat = "roc", n.cuts = 10, arr
                      lineend = "butt", linejoin = "round", linemitre = 1, 
                      linealpha = 1, pointalpha = 1, 
                      pointsize = .5, labels = TRUE, labelsize = 3.88, labelround = 1,
-                     na.rm = TRUE, position = "identity", show.legend = NA, inherit.aes = TRUE, ...) {
+                     na.rm = TRUE, cutoffs.at = NULL, position = "identity", show.legend = NA, inherit.aes = TRUE, ...) {
   
   
   layer(
@@ -335,7 +349,8 @@ geom_roc <- function(mapping = NULL, data = NULL, stat = "roc", n.cuts = 10, arr
     params = list(na.rm = na.rm, n.cuts = n.cuts, arrow = arrow,
                   lineend = lineend, linejoin = linejoin, linemitre = linemitre, 
                   linealpha = linealpha, pointalpha = pointalpha,
-                  pointsize = pointsize, labels = labels, labelsize = labelsize, labelround = labelround, ...)
+                  pointsize = pointsize, labels = labels, labelsize = labelsize, labelround = labelround, 
+                  cutoffs.at = cutoffs.at, ...)
   )
 }
 
