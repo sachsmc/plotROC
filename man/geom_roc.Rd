@@ -13,7 +13,8 @@ geom_roc(mapping = NULL, data = NULL, stat = "roc", n.cuts = 10,
   arrow = NULL, lineend = "butt", linejoin = "round", linemitre = 1,
   linealpha = 1, pointalpha = 1, pointsize = 0.5, labels = TRUE,
   labelsize = 3.88, labelround = 1, na.rm = TRUE, cutoffs.at = NULL,
-  position = "identity", show.legend = NA, inherit.aes = TRUE, ...)
+  cutoff.labels = NULL, position = "identity", show.legend = NA,
+  inherit.aes = TRUE, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link{aes}} or
@@ -64,6 +65,9 @@ plot. You must supply \code{mapping} if there is no plot mapping.}
 
 \item{cutoffs.at}{Vector of user supplied cutoffs to plot as points. If non-NULL, 
 it will override the values of n.cuts and plot the observed cutoffs closest to the user-supplied ones.}
+
+\item{cutoff.labels}{vector of user-supplied labels for the cutoffs.  Must be a character vector of
+the same length as cutoffs.at.}
 
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
