@@ -120,6 +120,8 @@ stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
 #' @param na.rm Remove missing values from curve
 #' @param cutoffs.at Vector of user supplied cutoffs to plot as points. If non-NULL, 
 #' it will override the values of n.cuts and plot the observed cutoffs closest to the user-supplied ones.
+#' @param cutoff.labels vector of user-supplied labels for the cutoffs.  Must be a character vector of
+#' the same length as cutoffs.at.
 #' @section Computed variables:
 #' \describe{
 #'   \item{false_positive_fraction}{estimate of false positive fraction}
@@ -154,7 +156,7 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                                          lineend = "butt", linejoin = "round", linemitre = 1, 
                                          linealpha = 1, pointalpha = 1, size.point, alpha.point, alpha.line, 
                                          pointsize = .5, labels = TRUE, labelsize = 3.88, labelround = 1,
-                                         na.rm = TRUE, cutoffs.at = NULL, ...){
+                                         na.rm = TRUE, cutoffs.at = NULL, cutoff.labels = NULL, ...){
                      
                      if(!missing(alpha.line)) linealpha <- alpha.line
                      if(!missing(alpha.point)) pointalpha <- alpha.point
@@ -275,8 +277,14 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                        )
                      }
                      
-                     if(labels & (n.cuts > 0 | !is.null(cutoffs.at))){
-                       lab <- round(coordsp$label, labelround)
+                     if (labels & (n.cuts > 0 | !is.null(cutoffs.at))) {
+                       
+                       if (is.null(cutoff.labels)) {
+                         lab <- round(coordsp$label, labelround)
+                       } else {
+                         lab <- cutoff.labels
+                       }
+                       
                        
                        if (is.character(coordsp$vjust)) {
                          coordsp$vjust <- compute_just(coordsp$vjust, coordsp$y)
@@ -340,7 +348,7 @@ geom_roc <- function(mapping = NULL, data = NULL, stat = "roc", n.cuts = 10, arr
                      lineend = "butt", linejoin = "round", linemitre = 1, 
                      linealpha = 1, pointalpha = 1, 
                      pointsize = .5, labels = TRUE, labelsize = 3.88, labelround = 1,
-                     na.rm = TRUE, cutoffs.at = NULL, position = "identity", show.legend = NA, inherit.aes = TRUE, ...) {
+                     na.rm = TRUE, cutoffs.at = NULL, cutoff.labels = NULL, position = "identity", show.legend = NA, inherit.aes = TRUE, ...) {
   
   
   layer(
@@ -350,7 +358,7 @@ geom_roc <- function(mapping = NULL, data = NULL, stat = "roc", n.cuts = 10, arr
                   lineend = lineend, linejoin = linejoin, linemitre = linemitre, 
                   linealpha = linealpha, pointalpha = pointalpha,
                   pointsize = pointsize, labels = labels, labelsize = labelsize, labelround = labelround, 
-                  cutoffs.at = cutoffs.at, ...)
+                  cutoffs.at = cutoffs.at, cutoff.labels = cutoff.labels, ...)
   )
 }
 
