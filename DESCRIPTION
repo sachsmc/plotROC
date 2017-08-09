@@ -7,7 +7,7 @@ Authors@R: c(person("Michael C.", "Sachs", role = c("aut", "cre"),
                      email = "sachsmc@gmail.com"),
               person("Robert W.", "Corty", role = "ctb",
                      email = "rcorty@gmail.com"))
-Maintainer: Michael C Sachs <sachsmc@gmail.com>
+Maintainer: Michael C. Sachs <sachsmc@gmail.com>
 Description: Most ROC curve plots obscure the cutoff values and inhibit
     interpretation and comparison of multiple curves. This attempts to address
     those shortcomings by providing plotting and interactive tools. Functions
