@@ -1,5 +1,5 @@
 ---
-title: "Generate Useful ROC Curve Charts for Print and Interactive Use"
+title: "Generate ROC Curve Charts for Print and Interactive Use"
 author: "Michael C Sachs"
 date: "`r Sys.Date()`"
 output: 
@@ -62,7 +62,7 @@ I created a [shiny application](http://shiny.rstudio.com) in order to make the f
 
 ## Installation and loading
 
-**plotROC** can currently only be installed from github. It also requires a recent version of **ggplot2** (>2.0.0).
+**plotROC** can be installed from github or CRAN. It requires a recent version of **ggplot2** (>2.0.0).
 
 ```{r load, eval = FALSE}
 devtools::install_github("hadley/ggplot2")

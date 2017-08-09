@@ -1,3 +1,32 @@
+
+#' Key for ROC geom
+#' 
+#' @keywords Internal
+#' @param data Data created by stat
+#' @param params parameters
+#' @param size Size
+#' 
+roc_key <- function(data, params, size) {
+  
+  grobTree(
+      draw_key_path(data, params, size), 
+      pointsGrob(0.5, 0.5,
+                 pch = data$shape,
+                 size = unit(data$size * .pt * 2, "pt"),
+                 gp = gpar(
+                   col = alpha(data$colour, data$alpha),
+                   fontsize = data$size * .pt * 4,
+                   lwd = data$stroke 
+                 )
+      )
+    )
+  
+  
+}
+
+
+
+
 #' @export
 #' @rdname stat_roc
 
@@ -193,7 +222,12 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                            alpha = pointalpha
                          )
                        )
-                     } else pg <- nullGrob()
+                       
+                      
+                     } else{ 
+                       pg <- nullGrob()
+                      
+                     }
                      
                      keep <- function(x) {
                        # from first non-missing to last non-missing
@@ -313,7 +347,8 @@ GeomRoc <- ggproto("GeomRoc", Geom,
                      
                      
                    }, 
-                   draw_key = draw_key_path)
+                   draw_key = roc_key 
+                   )
 
 #' Empirical Receiver Operating Characteristic Curve
 #' 
@@ -361,4 +396,5 @@ geom_roc <- function(mapping = NULL, data = NULL, stat = "roc", n.cuts = 10, arr
                   cutoffs.at = cutoffs.at, cutoff.labels = cutoff.labels, ...)
   )
 }
+
 
