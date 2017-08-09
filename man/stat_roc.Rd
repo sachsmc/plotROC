@@ -11,7 +11,7 @@ StatRoc
 
 stat_roc(mapping = NULL, data = NULL, geom = "roc",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
-  na.rm = TRUE, max.num.points = 1000, ...)
+  na.rm = TRUE, max.num.points = 1000, increasing = TRUE, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link{aes}} or
@@ -50,6 +50,8 @@ the default plot specification, e.g. \code{\link{borders}}.}
 \item{na.rm}{Remove missing observations}
 
 \item{max.num.points}{maximum number of points to plot}
+
+\item{increasing}{TRUE (default) if M is positively associated with Pr(D = 1), if FALSE, assumes M is negatively associated with Pr(D = 1)}
 
 \item{...}{other arguments passed on to \code{\link{layer}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like

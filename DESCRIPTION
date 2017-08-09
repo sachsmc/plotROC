@@ -1,7 +1,7 @@
 Package: plotROC
 Type: Package
 Title: Generate Useful ROC Curve Charts for Print and Interactive Use
-Version: 2.3.0
+Version: 2.2.0
 Date: 2017-08-09
 Authors@R: c(person("Michael C.", "Sachs", role = c("aut", "cre"),
                      email = "sachsmc@gmail.com"),

@@ -120,6 +120,14 @@ test.cov <- data.frame(D = D.cov, gender = gender, M = M.diff)
 bygend <- ggplot(test.cov, aes(d = D, m = M, color = gender)) + geom_roc(show.legend = FALSE)
 direct_label(bygend) + style_roc()
 
+## ----cuslab--------------------------------------------------------------
+ggplot(test, aes(d = D, m = M1)) + geom_roc(cutoffs.at = c(2, 1, .5, 0, -.5, -1))
+ggplot(test, aes(d = D, m = M1)) + geom_roc(cutoffs.at = c(2, 1, .5, 0, -.5, -1), cutoff.labels = letters[1:6])
+
+## ----increasing----------------------------------------------------------
+ggplot(test, aes(d = D, m = M1)) + geom_roc(increasing = FALSE)
+ggplot(test, aes(d = D, m = -M1)) + geom_roc(increasing = FALSE)
+
 ## ----themes--------------------------------------------------------------
 basicplot + 
   style_roc(theme = theme_grey) +

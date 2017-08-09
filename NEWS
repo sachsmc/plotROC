@@ -1,3 +1,13 @@
+plotROC 2.2.0
+-------------
+New features:
+  - new cutoff.labels parameter to allow user-supplied labels for the cutoffs (thanks @rcorty)
+  - new increasing parameter with default value TRUE. This determines whether the probability 
+  of a D = 1 increases with increasing M, if FALSE, assumes that the probability increases with 
+  decreasing M (for example if M is the p-value from a regression model) 
+Bug fixes: 
+  - Now shows shape aesthetic in legend if mapped. 
+
 plotROC 2.1.0
 -------------
 New feature:

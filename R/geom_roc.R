@@ -47,7 +47,7 @@ StatRoc <- ggproto("StatRoc", Stat,
                      } 
                      data
                    },
-                   compute_group = function(data, scales, na.rm = TRUE, max.num.points = 1e3){
+                   compute_group = function(data, scales, na.rm = TRUE, max.num.points = 1e3, increasing = TRUE){
                      
                      if(na.rm){
                        data <- subset(data, !is.na(d) & !is.na(m))
@@ -55,7 +55,7 @@ StatRoc <- ggproto("StatRoc", Stat,
                      
                      D <- data$d
                      
-                     T.order <- order(data$m, decreasing=TRUE)
+                     T.order <- order(data$m, decreasing=increasing) ## this is confusing but think about it for a sec
                      TTT <- data$m[T.order]
                      TPF <- cumsum(D[T.order] == 1)
                      FPF <- cumsum(D[T.order] == 0)
@@ -77,7 +77,8 @@ StatRoc <- ggproto("StatRoc", Stat,
                      tp <- c(0, TPF)/sum(D == 1)
                      fp <- c(0, FPF)/sum(D == 0)
                      
-                     cutoffs <- c(Inf, TTT)
+                     if(increasing) Lowest <- Inf else Lowest <- -Inf
+                     cutoffs <- c(Lowest, TTT)
                      
                      data.frame(false_positive_fraction = fp, true_positive_fraction = tp, cutoffs = cutoffs)
                      
@@ -92,6 +93,7 @@ StatRoc <- ggproto("StatRoc", Stat,
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm Remove missing observations
 #' @param max.num.points maximum number of points to plot
+#' @param increasing TRUE (default) if M is positively associated with Pr(D = 1), if FALSE, assumes M is negatively associated with Pr(D = 1)
 #' @section Aesthetics:
 #' \code{stat_roc} understands the following aesthetics (required aesthetics
 #' are in bold):
@@ -121,7 +123,7 @@ StatRoc <- ggproto("StatRoc", Stat,
 #' ggplot(rocdata, aes(m = M, d = D)) + stat_roc()
 
 stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
-                     position = "identity", show.legend = NA, inherit.aes = TRUE, na.rm = TRUE, max.num.points = 1e3, ...) {
+                     position = "identity", show.legend = NA, inherit.aes = TRUE, na.rm = TRUE, max.num.points = 1e3, increasing = TRUE, ...) {
   layer(
     stat = StatRoc,
     data = data,
@@ -130,7 +132,7 @@ stat_roc <- function(mapping = NULL, data = NULL, geom = "roc",
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, max.num.points = max.num.points, ...)
+    params = list(na.rm = na.rm, max.num.points = max.num.points, increasing = TRUE, ...)
   )
   
 }
