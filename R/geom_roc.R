@@ -87,7 +87,7 @@ StatRoc <- ggproto("StatRoc", Stat,
 
 #' Calculate the empirical Receiver Operating Characteristic curve
 #' 
-#' Given a binary outcome d and continous measurement m, computes the empirical
+#' Given a binary outcome d and continuous measurement m, computes the empirical
 #' ROC curve for assessing the classification accuracy of m
 #' 
 #' @inheritParams ggplot2::stat_identity

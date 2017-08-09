@@ -59,7 +59,7 @@ often aesthetics, used to set an aesthetic to a fixed value, like
 to the paired geom/stat.}
 }
 \description{
-Given a binary outcome d and continous measurement m, computes the empirical
+Given a binary outcome d and continuous measurement m, computes the empirical
 ROC curve for assessing the classification accuracy of m
 }
 \section{Aesthetics}{

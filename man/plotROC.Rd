@@ -14,7 +14,7 @@ hidden labels, and clicking to reveal confidence regions.
 }
 \details{
 To get started, see \link{geom_roc}, \link{geom_rocci}, or the examples
-below. For tranforming data, we also provide the convenience function
+below. For transforming data, we also provide the convenience function
 \link{melt_roc}.
 
 The vignette contains some examples, along with explanations of the results. To view, run 

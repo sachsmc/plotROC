@@ -162,7 +162,7 @@ verify_d <- function(D){
 
 #' Transform biomarkers stored as wide to long
 #' 
-#' Multple biomarkers measured on the same subjects are often stored as multiple columns in a data frame. This is a convenience function that transforms the data into long format, suitable for use with ggplot and \link{geom_roc}
+#' Multiple biomarkers measured on the same subjects are often stored as multiple columns in a data frame. This is a convenience function that transforms the data into long format, suitable for use with ggplot and \link{geom_roc}
 #' 
 #' @param data Data frame containing disease status and biomarkers stored in columns
 #' @param d Column containing binary disease status. Can be a column name or index

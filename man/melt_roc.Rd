@@ -19,7 +19,7 @@ melt_roc(data, d, m, names = NULL)
 A data frame in long format with three columns: D = binary disease status, M = biomarker value, and name = biomarker name
 }
 \description{
-Multple biomarkers measured on the same subjects are often stored as multiple columns in a data frame. This is a convenience function that transforms the data into long format, suitable for use with ggplot and \link{geom_roc}
+Multiple biomarkers measured on the same subjects are often stored as multiple columns in a data frame. This is a convenience function that transforms the data into long format, suitable for use with ggplot and \link{geom_roc}
 }
 \examples{
 D.ex <- rbinom(50, 1, .5)
