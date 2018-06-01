@@ -13,7 +13,7 @@ Most ROC curve plots obscure the cutoff values and inhibit
     
 ## Installation
 
-This version of the package is not on CRAN. It also requires the development version of ggplot2. It can be installed with
+This is the development version of the package. It can be installed from github with
 
 ```r
 devtools::install_github("hadley/ggplot2")

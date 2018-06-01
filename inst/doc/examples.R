@@ -85,6 +85,7 @@ head(longtest)
 
 ## ----group---------------------------------------------------------------
 ggplot(longtest, aes(d = D, m = M, color = name)) + geom_roc() + style_roc()
+ggplot(longtest, aes(d = D, m = M, color = name)) + geom_roc(n.cuts = 0) + style_roc()
 ggplot(longtest, aes(d = D, m = M)) + geom_roc() + facet_wrap(~ name) + style_roc()
 ggplot(longtest, aes(d = D, m = M, linetype = name)) + geom_roc() + geom_rocci()
 ggplot(longtest, aes(d = D, m = M, color = name)) + geom_roc() + style_roc()

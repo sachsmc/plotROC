@@ -8,7 +8,13 @@
 #' 
 roc_key <- function(data, params, size) {
   
-  grobTree(
+  if (params$n.cuts == 0) {
+    grobTree(
+      draw_key_path(data, params, size)
+      )
+    
+  } else {
+    grobTree(
       draw_key_path(data, params, size), 
       pointsGrob(0.5, 0.5,
                  pch = data$shape,
@@ -20,7 +26,7 @@ roc_key <- function(data, params, size) {
                  )
       )
     )
-  
+  }
   
 }
 

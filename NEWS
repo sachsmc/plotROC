@@ -1,3 +1,9 @@
+plotROC 2.2.1
+-------------
+Bug fixes: 
+  - Quosure fixes to be compatible with upcoming ggplot2 release. 
+  - Don't plot points in legend when no labels present (fixes #61)
+
 plotROC 2.2.0
 -------------
 New features:

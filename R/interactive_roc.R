@@ -61,7 +61,7 @@ export_interactive_roc <- function(ggroc_p, add.cis = TRUE, hide.points = FALSE,
       
     } else {
       
-      Mran <- ggroc_p$data[, paste(ggroc_p$mapping$m)]
+      Mran <- ggroc_p$data[, quo_name(ggroc_p$mapping$m)]
       if(length(Mran) > 100){
         
         thisciat <- sort(unique(sample(Mran, 100)))
