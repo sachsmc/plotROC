@@ -20,10 +20,10 @@
 #' @param hide.points Logical, if true, hides points layer so that points with cutoff values are
 #'  only visible when hovering. Recommended for plots containing more than 3 curves.
 #' @param prefix A string to assign to the objects within the svg. Enables 
-#'   unique idenfication by the javascript code
+#'   unique identification by the javascript code
 #' @param width,height Width and height in inches of plot
 #' @param omit.js Logical. If true, omit inclusion of javascript source in 
-#'   output. Useful for documents with multple interactive plots
+#'   output. Useful for documents with multiple interactive plots
 #' @param style A call to the function \link{style_roc}
 #' @param ... Other arguments passed to \link{geom_rocci} when \code{add.cis = 
 #'   TRUE}
@@ -61,7 +61,7 @@ export_interactive_roc <- function(ggroc_p, add.cis = TRUE, hide.points = FALSE,
       
     } else {
       
-      Mran <- ggroc_p$data[, paste(ggroc_p$mapping$m)]
+      Mran <- ggroc_p$data[, quo_name(ggroc_p$mapping$m)]
       if(length(Mran) > 100){
         
         thisciat <- sort(unique(sample(Mran, 100)))

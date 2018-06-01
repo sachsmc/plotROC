@@ -26,4 +26,3 @@ by. These can be scalars or vectors the same length as the number of labels}
 \description{
 Add direct labels to a ROC plot
 }
-

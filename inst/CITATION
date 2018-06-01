@@ -1,13 +1,19 @@
-citHeader("To cite plotROC in publications use:")
+bibentry(bibtype = "Article",
+  title        = "{plotROC}: A Tool for Plotting ROC Curves",
+  author       = person(given = c("Michael", "C."),
+                        family = "Sachs",
+                        email = "sachsmc@gmail.com"),
+  journal      = "Journal of Statistical Software, Code Snippets",
+  year         = "2017",
+  volume       = "79",
+  number       = "2",
+  pages        = "1--19",
+  doi          = "10.18637/jss.v079.c02",
 
-year = sub('.*(2[[:digit:]]{3})-.*', '\\1', meta$Date, perl = TRUE)
-vers = paste('R package version', meta$Version)
-
-citEntry(entry = "Manual",
- title = paste('plotROC:', meta$Title),
-  author = 'Michael C. Sachs',
-  year = year,
-  note = vers,
-  url = meta$URL,
-  textVersion = paste('Michael C. Sachs (', year, '). plotROC: ', meta$Title, '. ', vers, '.', sep = '')
+  header       = "To cite plotROC in publications use:",
+  textVersion  =
+  paste("Michael C. Sachs (2017).",
+        "plotROC: A Tool for Plotting ROC Curves.",
+        "Journal of Statistical Software, Code Snippets, 79(2), 1-19.",
+        "doi:10.18637/jss.v079.c02")
 )

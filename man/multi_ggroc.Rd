@@ -46,4 +46,3 @@ using ggplot with sensible defaults. Pass the resulting object and data to
 \link{export_interactive_roc}, \link{plot_interactive_roc}, or
 \link{plot_journal_roc}.
 }
-

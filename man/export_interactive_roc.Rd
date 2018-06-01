@@ -21,12 +21,12 @@ regions}
 only visible when hovering. Recommended for plots containing more than 3 curves.}
 
 \item{prefix}{A string to assign to the objects within the svg. Enables 
-unique idenfication by the javascript code}
+unique identification by the javascript code}
 
 \item{width, height}{Width and height in inches of plot}
 
 \item{omit.js}{Logical. If true, omit inclusion of javascript source in 
-output. Useful for documents with multple interactive plots}
+output. Useful for documents with multiple interactive plots}
 
 \item{style}{A call to the function \link{style_roc}}
 
@@ -49,4 +49,3 @@ If you intend to include more than one of these objects in a single
   output. See the vignette for examples. Older browsers (< IE7) are not 
   supported.
 }
-

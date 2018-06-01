@@ -1,7 +1,7 @@
 
 [![Build Status](https://travis-ci.org/sachsmc/plotROC.png?branch=master)](https://travis-ci.org/sachsmc/plotROC)
 [![DOI](https://zenodo.org/badge/9473/sachsmc/plotROC.svg)](http://dx.doi.org/10.5281/zenodo.14678)
-[![](http://cranlogs.r-pkg.org/badges/plotROC)](http://cran.rstudio.com/web/packages/plotROC/index.html)
+[![](http://cranlogs.r-pkg.org/badges/plotROC)](https://CRAN.R-project.org/package=plotROC)
 
 # Generate interactive ROC plots from R using ggplot
 
@@ -13,7 +13,7 @@ Most ROC curve plots obscure the cutoff values and inhibit
     
 ## Installation
 
-This version of the package is not on CRAN. It also requires the development version of ggplot2. It can be installed with
+This is the development version of the package. It can be installed from github with
 
 ```r
 devtools::install_github("hadley/ggplot2")
@@ -32,10 +32,14 @@ This package would not be possible without the following:
   - [gridSVG](http://sjp.co.nz/projects/gridsvg/)
   - [d3.js](http://d3js.org)
   
+# Citation
+
+Read the code snippet article at JSS! (Coming soon)
+  
 # License
 The MIT License (MIT)
 
-Copyright (c) 2014 Michael C Sachs
+Copyright (c) 2017 Michael C Sachs
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
