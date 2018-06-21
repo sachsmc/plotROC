@@ -62,11 +62,27 @@ direct_label <- function(ggroc_p, labels = NULL, label.angle = 45, nudge_x = 0, 
     pb2 <- pb$plot
     if(pbdat$group[1] == -1L){
       
-      labels <- quo_name(pb2$mapping$m)
+      if (packageVersion("ggplot2") <= "2.2.1") {
+        
+        labels <- as.character(pb2$mapping$m)
+        
+      } else {
+        
+        labels <- quo_name(pb2$mapping$m)
+      }
       
     } else {
     
-    labels <- as.character(sort(unique(pb2$data[, quo_name(pb2$mapping$colour)])))
+      if (packageVersion("ggplot2") <= "2.2.1") {
+        
+        lab.name <- as.character(pb2$mapping$color)
+        
+      } else {
+        
+        lab.name <- quo_name(pb2$mapping$colour)
+      }
+      
+    labels <- as.character(sort(unique(pb2$data[, lab.name])))
     
     }
   }

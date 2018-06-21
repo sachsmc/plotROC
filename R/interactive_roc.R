@@ -61,7 +61,17 @@ export_interactive_roc <- function(ggroc_p, add.cis = TRUE, hide.points = FALSE,
       
     } else {
       
-      Mran <- ggroc_p$data[, quo_name(ggroc_p$mapping$m)]
+      if (packageVersion("ggplot2") <= "2.2.1") {
+        
+        Mran.name <- paste(ggroc_p$mapping$m)
+        
+      } else {
+        
+        Mran.name <- quo_name(ggroc_p$mapping$m)
+        
+      }
+      
+      Mran <- ggroc_p$data[, Mran.name]
       if(length(Mran) > 100){
         
         thisciat <- sort(unique(sample(Mran, 100)))
