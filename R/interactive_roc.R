@@ -1,4 +1,3 @@
-
 #' Generate svg code for an ROC curve object
 #' 
 #' Takes a ggplot object that contains a GeomRoc layer and returns a string that
@@ -32,6 +31,7 @@
 #' 
 #' @return A character object containing the html necessary to plot the ROC 
 #'   curve in a web browser
+#' @importFrom utils packageVersion
 #'   
 export_interactive_roc <- function(ggroc_p, add.cis = TRUE, hide.points = FALSE, 
                                    prefix = "a", 
