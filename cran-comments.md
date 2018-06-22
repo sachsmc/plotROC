@@ -5,7 +5,7 @@ This update includes several bugfixes and enhancements. Also, it contains some i
 * ubuntu 12.04 (on travis-ci), R 3.4.1
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. There was one NOTE: 
+There were no ERRORs or WARNINGs or NOTEs. 
 
 ## Downstream dependencies
 There is one downstream dependency: 
