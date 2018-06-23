@@ -25,7 +25,8 @@ Imports:
     grid,
     gridSVG,
     shiny,
-    plyr
+    plyr,
+    rlang
 Suggests:
     knitr,
     testthat,

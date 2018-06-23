@@ -43,4 +43,5 @@
 #' @importFrom grid grobName grobTree unit.c grobHeight grobWidth viewport 
 #'   grid.draw grobX grobY gTree gList rectGrob pointsGrob textGrob polylineGrob
 #'   segmentsGrob nullGrob gpar
+#' @importFrom rlang quo_name
 NULL
