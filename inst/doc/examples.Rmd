@@ -9,7 +9,6 @@ output:
 vignette: >
     %\VignetteIndexEntry{plotROC Examples}
     %\VignetteEngine{knitr::rmarkdown}
-    %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, echo=FALSE}
