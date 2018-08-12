@@ -55,4 +55,5 @@ test_that(desc = "plotROC can be thinned when there is too much data",
             
             expect_equal(object = nrow(whole_plot_data), expected = num_obs + 1)
             expect_equal(object = nrow(thinned_plot_data), expected = 21)
-          })
+          }
+)
