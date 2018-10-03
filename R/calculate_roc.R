@@ -222,7 +222,7 @@ calc_auc <- function(ggroc){
   lays <- sapply(ggroc$layers, function(g) class(g$geom)[1])
   stopifnot("GeomRoc" %in% lays)
   
-  l1 <- ggplot_build(ggroc)$data[[1]]
+  l1 <- ggplot_build(ggroc)$data[[which(lays == "GeomRoc")[1]]]
   
   comp_auc <- function(df){
     

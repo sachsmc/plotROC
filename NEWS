@@ -1,3 +1,8 @@
+plotROC 2.2.2
+-------------
+Bug fixes: 
+  - calc_auc when roc is not the first layer (fixes #70)
+
 plotROC 2.2.1
 -------------
 Bug fixes: 
