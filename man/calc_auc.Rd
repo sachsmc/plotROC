@@ -9,6 +9,9 @@ calc_auc(ggroc)
 \arguments{
 \item{ggroc}{A ggplot object that contains a GeomRoc layer}
 }
+\value{
+A data frame with the estimated AUCs for each panel and group
+}
 \description{
 Given a ggplot object with a GeomRoc layer, computes the area under the ROC curve for each group
 }

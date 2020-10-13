@@ -4,8 +4,17 @@
 \alias{plot_journal_roc}
 \title{Plot an ROC curve for use in print}
 \usage{
-plot_journal_roc(ggroc_p, font.size = 3, n.cuts = 20, ci.at = NULL,
-  opacity = 0.3, lty = NULL, color = NULL, lwd = NULL, legend = FALSE)
+plot_journal_roc(
+  ggroc_p,
+  font.size = 3,
+  n.cuts = 20,
+  ci.at = NULL,
+  opacity = 0.3,
+  lty = NULL,
+  color = NULL,
+  lwd = NULL,
+  legend = FALSE
+)
 }
 \arguments{
 \item{ggroc_p}{An object as returned by \link{ggroc} or \link{multi_ggroc}.

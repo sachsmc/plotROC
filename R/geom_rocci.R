@@ -33,7 +33,6 @@
 #'   \item{TPFU}{upper bound of confidence region for TPF}
 #' }
 #' @export
-#' @rdname stat_roc
 #' @references \itemize{
 #' \item Clopper, C. J., and Egon S. Pearson. "The use of confidence or fiducial limits illustrated in the case of the binomial." Biometrika (1934): 404-413.
 #' \item Pepe, M.S. "The Statistical Evaluation of Medical Tests for Classification and Prediction." Oxford (2003). 

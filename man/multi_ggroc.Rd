@@ -4,12 +4,20 @@
 \alias{multi_ggroc}
 \title{Plot multiple ROC curves}
 \usage{
-multi_ggroc(datalist, fpf_string = rep("FPF", length(datalist)),
-  tpf_string = rep("TPF", length(datalist)), c_string = rep("c",
-  length(datalist)), label = NULL, legend = TRUE, label.adj.x = rep(0,
-  length(datalist)), label.adj.y = rep(0, length(datalist)),
-  label.angle = rep(45, length(datalist)), plotmath = FALSE,
-  xlabel = "False positive fraction", ylabel = "True positive fraction")
+multi_ggroc(
+  datalist,
+  fpf_string = rep("FPF", length(datalist)),
+  tpf_string = rep("TPF", length(datalist)),
+  c_string = rep("c", length(datalist)),
+  label = NULL,
+  legend = TRUE,
+  label.adj.x = rep(0, length(datalist)),
+  label.adj.y = rep(0, length(datalist)),
+  label.angle = rep(45, length(datalist)),
+  plotmath = FALSE,
+  xlabel = "False positive fraction",
+  ylabel = "True positive fraction"
+)
 }
 \arguments{
 \item{datalist}{List of data frames each containing true and false positive

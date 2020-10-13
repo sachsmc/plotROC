@@ -1,12 +1,14 @@
 Package: plotROC
 Type: Package
 Title: Generate Useful ROC Curve Charts for Print and Interactive Use
-Version: 2.2.1
-Date: 2018-06-01
+Version: 2.3.0
+Date: 2020-10-13
 Authors@R: c(person("Michael C.", "Sachs", role = c("aut", "cre"),
                      email = "sachsmc@gmail.com"),
               person("Robert W.", "Corty", role = "ctb",
-                     email = "rcorty@gmail.com"))
+                     email = "rcorty@gmail.com"), 
+                     person("Luis Crouch", role = "ctb", 
+                     comment = "Modification to calc_auc"))
 Maintainer: Michael C. Sachs <sachsmc@gmail.com>
 Description: Most ROC curve plots obscure the cutoff values and inhibit
     interpretation and comparison of multiple curves. This attempts to address
@@ -34,4 +36,4 @@ Suggests:
     survivalROC,
     rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.1

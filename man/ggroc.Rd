@@ -4,10 +4,20 @@
 \alias{ggroc}
 \title{Plot an ROC curve}
 \usage{
-ggroc(rocdata, fpf_string = "FPF", tpf_string = "TPF", c_string = "c",
-  ci = FALSE, label = NULL, label.adj.x = 0, label.adj.y = 0,
-  label.angle = 45, plotmath = FALSE, xlabel = "False positive fraction",
-  ylabel = "True positive fraction")
+ggroc(
+  rocdata,
+  fpf_string = "FPF",
+  tpf_string = "TPF",
+  c_string = "c",
+  ci = FALSE,
+  label = NULL,
+  label.adj.x = 0,
+  label.adj.y = 0,
+  label.angle = 45,
+  plotmath = FALSE,
+  xlabel = "False positive fraction",
+  ylabel = "True positive fraction"
+)
 }
 \arguments{
 \item{rocdata}{Data frame containing true and false positive fractions, and

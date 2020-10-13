@@ -1,5 +1,5 @@
 ---
-title: "Generate Useful ROC Curve Charts for Print and Interactive Use"
+title: "Generate ROC Curve Charts for Print and Interactive Use"
 author: "Michael C Sachs"
 date: "`r Sys.Date()`"
 output: 
@@ -7,9 +7,9 @@ output:
       fig_width: 5
       fig_height: 5
 vignette: >
-  %\VignetteIndexEntry{plotROC Examples}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
+    %\VignetteIndexEntry{plotROC Examples}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, echo=FALSE}
@@ -62,7 +62,7 @@ I created a [shiny application](http://shiny.rstudio.com) in order to make the f
 
 ## Installation and loading
 
-**plotROC** can be installed from CRAN or github. It also requires a recent version of **ggplot2**.
+**plotROC** can be installed from github or CRAN. It requires a recent version of **ggplot2** (>2.0.0).
 
 ```{r load, eval = FALSE}
 devtools::install_github("hadley/ggplot2")
@@ -191,6 +191,7 @@ Then, the dataset can be passed to the ggplot function, with the marker name giv
 
 ```{r group}
 ggplot(longtest, aes(d = D, m = M, color = name)) + geom_roc() + style_roc()
+ggplot(longtest, aes(d = D, m = M, color = name)) + geom_roc(n.cuts = 0) + style_roc()
 ggplot(longtest, aes(d = D, m = M)) + geom_roc() + facet_wrap(~ name) + style_roc()
 ggplot(longtest, aes(d = D, m = M, linetype = name)) + geom_roc() + geom_rocci()
 ggplot(longtest, aes(d = D, m = M, color = name)) + geom_roc() + style_roc()
@@ -241,6 +242,35 @@ bygend <- ggplot(test.cov, aes(d = D, m = M, color = gender)) + geom_roc(show.le
 direct_label(bygend) + style_roc()
 ```
 
+## New Features
+
+### AUC tables
+
+```{r auctab}
+test.cov2 <- data.frame(D = D.cov, gender = gender, M = M.diff, 
+                        group = c("A", "B")[rbinom(400, 1, .4) + 1])
+bygend2 <- ggplot(test.cov2, aes(d = D, m = M, color = gender)) + 
+           geom_roc() + facet_wrap(~ group)
+calc_auc(bygend2)
+
+```
+
+### Custom labels and locations
+
+```{r cuslab}
+ggplot(test, aes(d = D, m = M1)) + geom_roc(cutoffs.at = c(2, 1, .5, 0, -.5, -1))
+ggplot(test, aes(d = D, m = M1)) + geom_roc(cutoffs.at = c(2, 1, .5, 0, -.5, -1), cutoff.labels = letters[1:6])
+``` 
+
+
+### Increasing parameter
+
+By default, the ROC calculation assumes that larger M is associated with a larger Pr(D = 1), you can now change this by setting `increasing = FALSE`.
+
+```{r increasing}
+ggplot(test, aes(d = D, m = M1)) + geom_roc(increasing = FALSE)
+ggplot(test, aes(d = D, m = -M1)) + geom_roc(increasing = FALSE)
+```
 
 ## Advanced options
 

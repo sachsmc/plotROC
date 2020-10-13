@@ -9,7 +9,10 @@ T.ex <- rnorm(n = num_obs, mean = D.ex, sd = .5)
 D.str <- c("Healthy", "Ill")[D.ex + 1]
 
 
-testdata <- data.frame(T1 = T.ex, T2 = T.ex + rnorm(n = num_obs), D = D.ex, D.str = D.str)
+testdata <- data.frame(T1 = T.ex, T2 = T.ex + rnorm(n = num_obs), 
+                       D = D.ex, D.str = D.str, 
+                       grp = c("A", "B")[rbinom(num_obs, 1, .4) + 1], 
+                       grp2 = c("X", "Y")[rbinom(num_obs, 1, .6) + 1])
 testroc <- ggplot_build(ggplot(testdata, aes(m = T1, d = D)) + geom_roc())$data[[1]]
 ggroc_p <- ggplot(testdata, aes(m = T1, d = D)) + geom_roc() + geom_rocci()
 
@@ -56,3 +59,20 @@ test_that(desc = "plotROC can be thinned when there is too much data",
             expect_equal(object = nrow(whole_plot_data), expected = num_obs + 1)
             expect_equal(object = nrow(thinned_plot_data), expected = 21)
           })
+
+
+test_that(desc = "Calc AUC modification works", 
+          code = {
+            
+            expect_equal(nrow(calc_auc(ggroc_p)), 1)
+            ggroc_2 <- ggplot(testdata, aes(m = T1, d = D, color = grp)) + 
+              geom_roc() + geom_rocci()
+            aucs <- calc_auc(ggroc_2)
+            expect_equal(nrow(aucs), 2)
+            autab2 <- calc_auc(ggplot(testdata, aes(m = T1, d = D, color = grp)) + geom_roc() + 
+                                 facet_wrap(~ grp2))
+            expect_equal(nrow(autab2), 4)
+            expect_true("grp" %in% colnames(autab2))
+            
+          }
+          )

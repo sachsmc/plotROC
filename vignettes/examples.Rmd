@@ -244,6 +244,17 @@ direct_label(bygend) + style_roc()
 
 ## New Features
 
+### AUC tables
+
+```{r auctab}
+test.cov2 <- data.frame(D = D.cov, gender = gender, M = M.diff, 
+                        group = c("A", "B")[rbinom(400, 1, .4) + 1])
+bygend2 <- ggplot(test.cov2, aes(d = D, m = M, color = gender)) + 
+           geom_roc() + facet_wrap(~ group)
+calc_auc(bygend2)
+
+```
+
 ### Custom labels and locations
 
 ```{r cuslab}

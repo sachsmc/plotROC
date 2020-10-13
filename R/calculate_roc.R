@@ -204,6 +204,7 @@ is.discrete <- function(x) {
 #' Given a ggplot object with a GeomRoc layer, computes the area under the ROC curve for each group
 #' 
 #' @param ggroc A ggplot object that contains a GeomRoc layer
+#' @return A data frame with the estimated AUCs for each panel and group
 #' 
 #' @export
 #' @examples 
@@ -217,22 +218,68 @@ is.discrete <- function(x) {
 #' ggroc2 <- ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc()
 #' calc_auc(ggroc2)
 
-calc_auc <- function(ggroc){
-  
-  lays <- sapply(ggroc$layers, function(g) class(g$geom)[1])
+calc_auc <- function(ggroc) {
+  lays <- sapply(ggroc$layers, function(g)
+    class(g$geom)[1])
   stopifnot("GeomRoc" %in% lays)
   
-  l1 <- ggplot_build(ggroc)$data[[which(lays == "GeomRoc")[1]]]
+  l2 <- ggplot_build(ggroc)
+  l1 <- l2$data[[which(lays == "GeomRoc")[1]]]
   
-  comp_auc <- function(df){
-    
+  comp_auc <- function(df) {
     auc <- 0
     for (i in 2:length(df$x)) {
-      auc <- auc + 0.5 * (df$x[i] - df$x[i-1]) * (df$y[i] + df$y[i-1])
+      auc <- auc + 0.5 * (df$x[i] - df$x[i - 1]) * (df$y[i] + df$y[i - 1])
     }
     return(data.frame(AUC = auc))
   }
   
-  plyr::ddply(l1, ~ PANEL + group, comp_auc)
+  auc_output <- plyr::ddply(l1, ~ PANEL + group, comp_auc)
+  
+  # get panel (facet) names
+  roc_layout <- l2$layout$layout
+  drop_names <- c("ROW", "COL", "SCALE_X", "SCALE_Y")
+  panel_names <-
+    names(roc_layout)[!(names(roc_layout) %in% c("PANEL", drop_names))]
+  auc_output_panels <- merge(auc_output,
+                             roc_layout[, !(names(roc_layout) %in% drop_names), drop = FALSE], 
+                             by = "PANEL", suffixes = c("", ".data"))
+  
+  # get group (aesthetic) names
+  if (which(names(l1) == "x") == 1) {
+    auc_output_panels_groups <- auc_output_panels
+    
+    # format final output
+    formatted_output <- auc_output_panels_groups[order(auc_output_panels_groups$PANEL,
+                                                       auc_output_panels_groups$group),
+                                                 c("PANEL", panel_names, "group", "AUC")]
+    formatted_output
+  } else {
+    aesthetics_used <- names(l1)[1:(which(names(l1) == "x") - 1)]
+    aesthetic_names <- rep(NA, length(aesthetics_used))
+    for (i in 1:length(aesthetics_used)) {
+      current_name <- aesthetics_used[i]
+      aesthetic_names[i] <-
+        as.character(rlang::quo_get_expr(l2$plot$mapping[current_name][[1]]))
+    }
+    group_df <- data.frame(l2$plot$data[, aesthetic_names])
+    group_labels <- unique(group_df)
+    group_labels <-
+      data.frame(group_labels[do.call(order, group_labels),])
+    names(group_labels) <- aesthetic_names
+    group_mapping <-
+      data.frame("group" = unique(l1$group),  group_labels)
+    auc_output_panels_groups <-
+      merge(auc_output_panels, group_mapping, by.x = "group", by.y = "group")
+    
+    # format final output
+    formatted_output <- auc_output_panels_groups[order(auc_output_panels_groups$PANEL,
+                                                       auc_output_panels_groups$group),
+                                                 c("PANEL", panel_names, "group", 
+                                                   names(group_mapping)[-1], "AUC")]
+    formatted_output
+  }
   
 }
+
+

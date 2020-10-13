@@ -4,8 +4,15 @@
 \alias{direct_label}
 \title{Add direct labels to a ROC plot}
 \usage{
-direct_label(ggroc_p, labels = NULL, label.angle = 45, nudge_x = 0,
-  nudge_y = 0, size = 6, ...)
+direct_label(
+  ggroc_p,
+  labels = NULL,
+  label.angle = 45,
+  nudge_x = 0,
+  nudge_y = 0,
+  size = 6,
+  ...
+)
 }
 \arguments{
 \item{ggroc_p}{A ggplot object that contains a \link{geom_roc} layer}

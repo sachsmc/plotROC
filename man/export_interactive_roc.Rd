@@ -4,9 +4,17 @@
 \alias{export_interactive_roc}
 \title{Generate svg code for an ROC curve object}
 \usage{
-export_interactive_roc(ggroc_p, add.cis = TRUE, hide.points = FALSE,
-  prefix = "a", width = 6, height = 6, omit.js = FALSE,
-  style = style_roc(theme = theme_grey()), ...)
+export_interactive_roc(
+  ggroc_p,
+  add.cis = TRUE,
+  hide.points = FALSE,
+  prefix = "a",
+  width = 6,
+  height = 6,
+  omit.js = FALSE,
+  style = style_roc(theme = theme_grey()),
+  ...
+)
 }
 \arguments{
 \item{ggroc_p}{A ggplot object with a GeomRoc layer and optionally a

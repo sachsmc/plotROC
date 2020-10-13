@@ -1,3 +1,9 @@
+plotROC 2.3.0
+-------------
+New feature: 
+  - calc_auc returns informative value labels for the panels and/or groups (fixes #74)
+
+
 plotROC 2.2.2
 -------------
 Bug fixes: 
