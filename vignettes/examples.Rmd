@@ -12,13 +12,13 @@ vignette: >
     %\VignetteEncoding{UTF-8}
 ---
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning = FALSE}
 library(knitr)
 knit_hooks$set(source = function(x, options){
   if (!is.null(options$verbatim) && options$verbatim){
     opts = gsub(",\\s*verbatim\\s*=\\s*TRUE\\s*", "", options$params.src)
     opts = gsub(",\\s*eval\\s*=\\s*FALSE\\s*", "", opts)
-    bef = sprintf('\n\n    ```{r %s}\n', opts, "\n")
+    bef = sprintf('\n\n    ```{r %s}\n', opts)
     stringr::str_c(
       bef, 
       knitr:::indent_block(paste(x, collapse = '\n'), "    "), 
@@ -58,15 +58,15 @@ In the medical literature, ROC curves are commonly plotted without the cutoff va
 
 ## Shiny application
 
-I created a [shiny application](http://shiny.rstudio.com) in order to make the features more accessible to non-R users. A limited subset of the functions of the plotROC package can be performed on an example dataset or on data that users upload to the website. Resulting plots can be saved to the users' machine as a pdf or as a stand-alone html file.  It can be used in any modern web browser with no other dependencies at the website here: http://sachsmc.shinyapps.io/plotROC. 
+I created a [shiny application](https://shiny.rstudio.com) in order to make the features more accessible to non-R users. A limited subset of the functions of the plotROC package can be performed on an example dataset or on data that users upload to the website. Resulting plots can be saved to the users' machine as a pdf or as a stand-alone html file.  It can be used in any modern web browser with no other dependencies at the website here: https://sachsmc.shinyapps.io/plotROC. 
 
 ## Installation and loading
 
 **plotROC** can be installed from github or CRAN. It requires a recent version of **ggplot2** (>2.0.0).
 
 ```{r load, eval = FALSE}
-devtools::install_github("hadley/ggplot2")
-devtools::install_github("sachsmc/plotROC")
+install.packages("ggplot2")
+install.packages("plotROC")
 library(plotROC)
 ```
 
@@ -106,7 +106,7 @@ The disease status aesthetic can be specified as a string or factor, but with a 
 ggplot(test, aes(d = D.str, m = M1)) + geom_roc()
 ```
 
-The `geom_roc` layer includes the ROC curve line combined with points and labels to display the values of the biomarker at the different cutpoints. It accepts the argument `n.cuts` to define the number of cutpoints to display along the curve. Labels can be supressed by using `n.cuts = 0` or `labels = FALSE`. The size of the labels and the number of significant digits can be adjusted with `labelsize` and `labelround`, respectively. 
+The `geom_roc` layer includes the ROC curve line combined with points and labels to display the values of the biomarker at the different cutpoints. It accepts the argument `n.cuts` to define the number of cutpoints to display along the curve. Labels can be suppressed by using `n.cuts = 0` or `labels = FALSE`. The size of the labels and the number of significant digits can be adjusted with `labelsize` and `labelround`, respectively. 
 
 ```{r opts}
 ggplot(test, aes(d = D, m = M1)) + geom_roc(n.cuts = 0)
@@ -114,7 +114,7 @@ ggplot(test, aes(d = D, m = M1)) + geom_roc(n.cuts = 5, labelsize = 5, labelroun
 ggplot(test, aes(d = D, m = M1)) + geom_roc(n.cuts = 50, labels = FALSE)
 ```
 
-We provide a function `style_roc` that can be added to a ggplot that contains an ROC curve layer. This adds a diagonal guideline, sets the axis labels, and adjusts the major and minor grid lines. The `direct_label` function operates on a ggplot object, adding a direct label to the plot. It attempts to intellegently select an appropriate location for the label, but the location can be adjusted with `nudge_x, nudge_y` and `label.angle`. If the `labels` argument is NULL, it will take the name from the mapped aesthetic. 
+We provide a function `style_roc` that can be added to a ggplot that contains an ROC curve layer. This adds a diagonal guideline, sets the axis labels, and adjusts the major and minor grid lines. The `direct_label` function operates on a ggplot object, adding a direct label to the plot. It attempts to intelligently select an appropriate location for the label, but the location can be adjusted with `nudge_x, nudge_y` and `label.angle`. If the `labels` argument is NULL, it will take the name from the mapped aesthetic. 
 
 ```{r style}
 styledplot <- basicplot + style_roc()
@@ -130,7 +130,7 @@ direct_label(basicplot, labels = "Biomarker", nudge_y = -.1) + style_roc()
 
 It is common to compute confidence regions for points on the ROC curve using the Clopper and Pearson (1934) exact method. Briefly, exact confidence intervals are calculated for the $FPF$ and $TPF$ separately, each at level $1 - \sqrt{1 - \alpha}$. Based on result 2.4 from Pepe (2003), the cross-product of these intervals yields a $100 * (1 - \alpha)$ percent rectangular confidence region for the pair. 
 
-This is implemented in the `stat_rocci` and displayed as a `geom_rocci` layer. These both require the same aesthetics as the ROC geom, `d` for disease status and `m` for marker. By default, a set of 3 evenly spaced points along the curve are chosed to display confidence regions. You can select points by passing a vector of values in the range of `m` to the `ci.at` argument. By default, the significance level $\alpha$ is set to 0.05, this can be changed using the `sig.level` option. 
+This is implemented in the `stat_rocci` and displayed as a `geom_rocci` layer. These both require the same aesthetics as the ROC geom, `d` for disease status and `m` for marker. By default, a set of 3 evenly spaced points along the curve are chosen to display confidence regions. You can select points by passing a vector of values in the range of `m` to the `ci.at` argument. By default, the significance level $\alpha$ is set to 0.05, this can be changed using the `sig.level` option. 
 
 ```{r test-a-ci}
 styledplot + geom_rocci()
@@ -150,7 +150,7 @@ Hovering over the display shows the cutoff value at the point nearest to the cur
 plot_interactive_roc(basicplot)
 ```
 
-An interactive ROC plot can be exported by using the `export_interactive_roc` function, which returns a character string containing the necessary `HTML` and `JavaScript`. The character string can be copy-pasted into an html document, or better yet, incorporated directly into a dynamic document using `knitr` ([knitr homepage](http://yihui.name/knitr)). 
+An interactive ROC plot can be exported by using the `export_interactive_roc` function, which returns a character string containing the necessary `HTML` and `JavaScript`. The character string can be copy-pasted into an html document, or better yet, incorporated directly into a dynamic document using `knitr` ([knitr homepage](https://yihui.org/knitr/)). 
 
 In a `knitr` document, it is necessary to use the `cat` function on the results and use the chunk options `results = 'asis'` and `fig.keep='none'` so that the interactive plot is displayed correctly. For documents that contain multiple interactive plots, it is necessary to assign each plot a unique name using the `prefix` argument of `export_interactive_roc`. This is necessary to ensure that the JavaScript code manipulates the correct svg elements. The next code block shows an example `knitr` chunk that can be used in an .Rmd document to display an interactive plot. 
 
@@ -314,7 +314,7 @@ binorm.plot
 
 Interactive plots with `stat = "identity"` are not currently supported. 
 
-Another potential use of this approach is for plotting time-dependent ROC curves for time-to-event outcomes estimated as desribed in Heagerty, Lumley, and Pepe (2000).
+Another potential use of this approach is for plotting time-dependent ROC curves for time-to-event outcomes estimated as described in Heagerty, Lumley, and Pepe (2000).
 
 ```{r surv}
 library(survivalROC)
@@ -341,9 +341,9 @@ ggplot(sroclong, aes(x = FPF, y = TPF, label = c, color = time)) +
 
 This package would not be possible without the following:
 
-  - [ggplot2](http://ggplot2.org/)
-  - [gridSVG](http://sjp.co.nz/projects/gridsvg/)
-  - [d3.js](http://d3js.org)
+  - [ggplot2](https://ggplot2.tidyverse.org/)
+  - [gridSVG](https://sjp.co.nz/projects/gridsvg/)
+  - [d3.js](https://d3js.org/)
   
 
 

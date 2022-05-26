@@ -1,17 +1,17 @@
-Resubmission to fix missing import from rlang. Checked again on winbuilder.
-
-This update includes several bugfixes and enhancements. Also, it contains some important fixes to prepare for the upcoming release of ggplot2 version 2.3.0 which is planned for submission on June 25. 
+Resubmission to implement a new feature and fix a few documentation issues.
 
 ## Test environments
-* local Windows install, R 3.5.0
-* ubuntu 12.04 (on travis-ci), R 3.4.1
-* winbuilder dev
+* local Windows install, R 4.1.0
+* Rhub ubuntu linux release
+* win-builder, dev and release
 
 ## R CMD check results
 There were no ERRORs or WARNINGs or NOTEs. 
 
 ## Downstream dependencies
-There is one downstream dependency: 
 
-auditor:
-  No ERRORs or WARNINGs
+We checked 8 reverse dependencies (5 from CRAN + 3 from Bioconductor), comparing R CMD check results across CRAN and dev versions of this package.
+
+ * We saw 0 new problems
+ * We failed to check 0 packages
+

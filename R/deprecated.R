@@ -31,7 +31,7 @@ ggroc <- function(rocdata, fpf_string = "FPF", tpf_string = "TPF", c_string = "c
   
   message("ggroc is deprecated. Please use geom_roc instead. Type ?geom_roc for more information. ")
   
-  if(class(rocdata) == "performance"){
+  if(inherits(rocdata, "performance")){
     
     x <- rocdata
     lookup <- c("x.values", "y.values")

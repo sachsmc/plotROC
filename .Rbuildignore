@@ -4,3 +4,4 @@
 ^Meta$
 index\.*
 cran-comments\.md$
+^revdep$
