@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/9473/sachsmc/plotROC.svg/)](http://dx.doi.org/10.5281/zenodo.14678/)
+[![DOI](https://zenodo.org/badge/9473/sachsmc/plotROC.svg/)](http://dx.doi.org/10.5281/zenodo.14678)
 [![](https://cranlogs.r-pkg.org/badges/plotROC/)](https://CRAN.R-project.org/package=plotROC/)
 
 # Generate interactive ROC plots from R using ggplot
