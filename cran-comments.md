@@ -1,8 +1,8 @@
-Resubmission to implement a new feature and fix a few documentation issues.
+Resubmission to fix a few documentation issues and warnings.
 
 ## Test environments
-* local Windows install, R 4.1.0
-* Rhub ubuntu linux release
+* local Ubuntu install, R 4.2.1
+* Rhub ubuntu linux release and dev
 * win-builder, dev and release
 
 ## R CMD check results

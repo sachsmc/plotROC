@@ -1,3 +1,9 @@
+plotROC 2.3.1
+-------------
+Bug fixes:
+  - Get rid of warnings about aesthetics (thanks to @mjakubczak)
+  - Fix plotROC-package documentation
+
 plotROC 2.3.0
 -------------
 New feature: 

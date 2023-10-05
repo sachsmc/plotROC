@@ -53,7 +53,9 @@ StatRocci <- ggproto("StatRocci", Stat,
                      required_aes = c("m", "d"), ## biomarker, binary outcome
                      default_aes = aes(x = ..FPF.., y = ..TPF.., 
                                        xmin = ..FPFL.., xmax = ..FPFU.., ymin = ..TPFL.., ymax = ..TPFU.., label = ..cutoffs..),
-                     
+                     ## both aesthetics are dropped during the statistical transformation,
+                     ## this has to be defined in order to suppress the annoying ggplot warning
+                     dropped_aes = c("m", "d"),
                      setup_data = function(data, params){
                        data$d <- verify_d(data$d)
                        data$group <- NULL

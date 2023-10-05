@@ -6,7 +6,7 @@
 \alias{stat_rocci}
 \title{Calculate confidence regions for the empirical ROC curve}
 \format{
-An object of class \code{StatRocci} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 5.
+An object of class \code{StatRocci} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 6.
 }
 \usage{
 StatRocci
