@@ -40,6 +40,10 @@ StatRoc <- ggproto("StatRoc", Stat,
                    required_aes = c("m", "d"), ## biomarker, binary outcome
                    default_aes = aes(x = ..false_positive_fraction.., y = ..true_positive_fraction.., label = ..cutoffs..),
                    
+                   ## both aesthetics are dropped during the statistical transformation,
+                   ## this has to be defined in order to suppress the annoying ggplot warning
+                   dropped_aes = c("m", "d"),
+                   
                    setup_data = function(data, params){
                      data$d <- verify_d(data$d)
                      data$group <- NULL
