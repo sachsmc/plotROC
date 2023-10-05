@@ -3,6 +3,7 @@
 \docType{package}
 \name{plotROC}
 \alias{plotROC}
+\alias{plotROC-package}
 \title{Tools for plotting ROC Curves}
 \description{
 Generate Useful ROC Curve Charts for Print and Interactive Use. This defines
@@ -40,6 +41,14 @@ rocplot <- ggplot(rocdata, aes(m = M, d = D)) + geom_roc()
 plot_interactive_roc(rocplot)
 plot_interactive_roc(rocplot + aes(color = Z))
 plot_interactive_roc(rocplot + facet_wrap( ~ Z))
+}
+
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://sachsmc.github.io/plotROC/}
+  \item Report bugs at \url{https://github.com/sachsmc/plotROC/issues/}
 }
 
 }

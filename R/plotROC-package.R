@@ -44,4 +44,4 @@
 #'   grid.draw grobX grobY gTree gList rectGrob pointsGrob textGrob polylineGrob
 #'   segmentsGrob nullGrob gpar
 #' @importFrom rlang quo_name quo_get_expr
-NULL
+"_PACKAGE"
