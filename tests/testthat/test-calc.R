@@ -76,3 +76,42 @@ test_that(desc = "Calc AUC modification works",
             
           }
           )
+
+
+test_that(desc = "Calc AUC works for data passed within geom_roc, and multiple rocs", {
+  
+  ## Create data
+  set.seed(123)
+  x <- rnorm(100)
+  y <- round(plogis(3*x + rnorm(100, sd = 5)))
+  df <- data.frame(x, y, gp = c("A", "B"), pan = sample(c("Z", "W"), 100, replace = TRUE))
+  
+  x2 <- rnorm(100)
+  y2 <- round(plogis(3*x + rnorm(100, sd = 2)))
+  df2 <- data.frame(x2, y2, gp = c("X", "Y"), pan = sample(c("Z", "W"), 100, replace = TRUE))
+  # Here, aesthetics defined in ggplot
+  p1 <- ggplot(df, aes(d = y, m = x, color = gp)) + geom_roc()
+  
+  # Here they are defined in geom_roc. The plots are the same
+  p2 <- ggplot(df) + geom_roc(aes(d = y, m = x, color = gp))
+  
+  auc1 <- calc_auc(p1)
+  auc2 <- calc_auc(p2) # Error
+  
+  expect_equal(auc1$AUC, auc2$AUC)
+  
+  p3 <- ggplot(df, aes(d = y, m = x, color = gp)) + geom_roc() + 
+    geom_roc(data = df2, aes(d = y2, m = x2, color = gp))
+  
+  auc3 <- calc_auc(p3)
+  expect_equal(nrow(auc3), 4)
+  
+  
+  p4 <- ggplot(df, aes(d = y, m = x, color = gp)) + geom_roc() + 
+    geom_roc(data = df2, aes(d = y2, m = x2, color = gp)) + 
+    facet_wrap(~ pan)
+  
+  expect_equal(nrow(calc_auc(p4)), 8)
+  
+})
+

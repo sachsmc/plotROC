@@ -10,7 +10,7 @@ calc_auc(ggroc)
 \item{ggroc}{A ggplot object that contains a GeomRoc layer}
 }
 \value{
-A data frame with the estimated AUCs for each panel and group
+A data frame with the estimated AUCs for each layer, panel and group
 }
 \description{
 Given a ggplot object with a GeomRoc layer, computes the area under the ROC curve for each group

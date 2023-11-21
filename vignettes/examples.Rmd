@@ -255,6 +255,36 @@ calc_auc(bygend2)
 
 ```
 
+
+Also works for multiple panels, and layers. 
+
+```{r auctab2}
+set.seed(123)
+x <- rnorm(100)
+y <- round(plogis(3*x + rnorm(100, sd = 5)))
+df <- data.frame(x, y, gp = c("A", "B"), pan = sample(c("Z", "W"), 100, replace = TRUE))
+
+x2 <- rnorm(100)
+y2 <- round(plogis(3*x + rnorm(100, sd = 2)))
+df2 <- data.frame(x2, y2, gp = c("X", "Y"), pan = sample(c("Z", "W"), 100, replace = TRUE))
+
+
+p3 <- ggplot(df, aes(d = y, m = x, color = gp)) + geom_roc() + 
+  geom_roc(data = df2, aes(d = y2, m = x2, color = gp))
+
+calc_auc(p3)
+
+
+p4 <- ggplot(df, aes(d = y, m = x, color = gp)) + geom_roc() + 
+  geom_roc(data = df2, aes(d = y2, m = x2, color = gp)) + 
+  facet_wrap(~ pan)
+
+calc_auc(p4)
+  
+
+```
+
+
 ### Custom labels and locations
 
 ```{r cuslab}
