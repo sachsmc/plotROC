@@ -115,3 +115,16 @@ test_that(desc = "Calc AUC works for data passed within geom_roc, and multiple r
   
 })
 
+test_that(desc = "Calc AUC works for specific cut-offs", {
+  set.seed(123)
+  x <- runif(1000)
+  y <- round(x)
+  df <- data.frame(x, y, gp = c("A", "B"))
+
+  p1 <- ggplot(df, aes(d = y, m = x, color = gp)) + geom_roc()
+
+  auc1 <- calc_auc(p1)
+  auc2 <- calc_auc(p1, 0.25)
+
+  expect_true(all(auc1$AUC - auc2$AUC - 0.75 < 0.1))
+})

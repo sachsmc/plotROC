@@ -255,10 +255,15 @@ calc_auc(bygend2)
 
 ```
 
+May be usefull to calc AUC only for top scoring records.
+
+```{r auctab2}
+calc_auc(bygend2, cutoff.perc = 0.05)
+```
 
 Also works for multiple panels, and layers. 
 
-```{r auctab2}
+```{r auctab3}
 set.seed(123)
 x <- rnorm(100)
 y <- round(plogis(3*x + rnorm(100, sd = 5)))

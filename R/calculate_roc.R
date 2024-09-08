@@ -204,6 +204,7 @@ is.discrete <- function(x) {
 #' Given a ggplot object with a GeomRoc layer, computes the area under the ROC curve for each group
 #' 
 #' @param ggroc A ggplot object that contains a GeomRoc layer
+#' @param cutoff.perc The cut-off percentage to compute the AUCs
 #' @return A data frame with the estimated AUCs for each layer, panel and group
 #' 
 #' @export
@@ -218,7 +219,7 @@ is.discrete <- function(x) {
 #' ggroc2 <- ggplot(rocdata, aes(m = M, d = D, color = Z)) + geom_roc()
 #' calc_auc(ggroc2)
 
-calc_auc <- function(ggroc) {
+calc_auc <- function(ggroc, cutoff.perc = 1.0) {
   lays <- sapply(ggroc$layers, function(g)
     class(g$geom)[1])
   
@@ -229,7 +230,7 @@ calc_auc <- function(ggroc) {
   
   auc_list_output <- vector(mode = "list", length = length(l1))
   for(i in 1:length(auc_list_output)) {
-    auc_output <- plyr::ddply(l1[[i]], ~ PANEL + group, comp_auc)
+    auc_output <- plyr::ddply(l1[[i]], ~ PANEL + group, function(df) { comp_auc(df, cutoff.perc) })
     
     # get panel (facet) names
     roc_layout <- l2$layout$layout
@@ -294,9 +295,12 @@ calc_auc <- function(ggroc) {
 
 
 
-comp_auc <- function(df) {
+comp_auc <- function(df, cutoff.perc) {
   auc <- 0
   for (i in 2:length(df$x)) {
+    if (df$x[i] > cutoff.perc) {
+      break
+    }
     auc <- auc + 0.5 * (df$x[i] - df$x[i - 1]) * (df$y[i] + df$y[i - 1])
   }
   return(data.frame(AUC = auc))
