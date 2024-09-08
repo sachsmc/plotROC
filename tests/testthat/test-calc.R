@@ -126,5 +126,5 @@ test_that(desc = "Calc AUC works for specific cut-offs", {
   auc1 <- calc_auc(p1)
   auc2 <- calc_auc(p1, 0.25)
 
-  expect_true(all(auc1$AUC - auc2$AUC - 0.75 < 0.1))
+  expect_true(all(auc1$AUC - auc2$AUC - 0.75 < 0.01))
 })
