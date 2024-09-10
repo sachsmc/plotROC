@@ -145,18 +145,26 @@ calculate_multi_roc <- function(data, M_string, D_string){
 #' }
 #' 
 verify_d <- function(D){
+  
+  lev <- levels(as.factor(D))
 
-  if(length(levels(as.factor(D))) > 2) stop("Only labels with 2 classes supported")
-  
-  slev <- sort(levels(as.factor(D)))
-  if(slev[1] == 0 & slev[2] == 1) return(D)
-  
-  warning(paste0("D not labeled 0/1, assuming ", slev[1], " = 0 and ", slev[2], " = 1!"))
-  
-  zero1 <- c(0, 1)
-  names(zero1) <- slev
-  
-  zero1[as.character(D)]
+  if (length(lev) > 2) {
+    stop("Only labels with 2 classes supported")
+  }
+  else if (length(lev) < 2) {
+    warning("Single class or empty group detected. Proceeding with an empty plot.")
+    return(D)
+  }
+  else {
+    slev <- sort(lev)
+    if(slev[1] == 0 & slev[2] == 1) {
+      return(D)
+    }
+    warning(paste0("D not labeled 0/1, assuming ", slev[1], " = 0 and ", slev[2], " = 1!"))
+    zero1 <- c(0, 1)
+    names(zero1) <- slev
+    zero1[as.character(D)]
+  }
   
 }
 

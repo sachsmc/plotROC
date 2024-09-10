@@ -128,3 +128,13 @@ test_that(desc = "Calc AUC works for specific cut-offs", {
 
   expect_true(all(auc1$AUC - auc2$AUC - 0.75 < 0.01))
 })
+
+
+test_that(desc = "Single class or empty group works", {
+  set.seed(123)
+  x <- runif(1)
+  y <- round(x)
+  df <- data.frame(x, y)
+  p1 <- ggplot(df, aes(d = y, m = x)) + geom_roc()
+  expect_warning(print(p1), "Single class or empty group detected. Proceeding with an empty plot.")
+})
