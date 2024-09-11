@@ -32,6 +32,7 @@ style_roc <- function(major.breaks = c(0, .1, .25, .5, .75, .9, 1),
     if(guide){
       
       if(is.null(guide_col)) guide_col <- theme()$panel.grid.major$colour
+      if(is.null(guide_col)) guide_col <- theme()$panel.grid$colour
       if(is.null(guide_col)) guide_col <- "white"
       res <- append(res, geom_abline(slope = 1, intercept = 0, color = guide_col))
       
