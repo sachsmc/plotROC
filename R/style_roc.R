@@ -5,6 +5,7 @@
 #' @param major.breaks vector of breakpoints for the major gridlines and axes
 #' @param minor.breaks vector of breakpoints for the minor gridlines and axes
 #' @param guide logical, if TRUE draws diagonal guideline
+#' @param guide_col character, if guide is TRUE sets colour of diagonal guideline. Takes precedence over colour set by a theme.
 #' @param xlab X-axis label
 #' @param ylab Y-axis label
 #' @param theme Theme function compatible with ggplot2
@@ -20,7 +21,7 @@
 
 style_roc <- function(major.breaks = c(0, .1, .25, .5, .75, .9, 1), 
                       minor.breaks = c(seq(0, .1, by = .01), seq(.9, 1, by = .01)), 
-                      guide = TRUE, xlab = "False positive fraction", 
+                      guide = TRUE, guide_col = NULL, xlab = "False positive fraction", 
                       ylab = "True positive fraction", theme = theme_bw){
   
   
@@ -30,9 +31,9 @@ style_roc <- function(major.breaks = c(0, .1, .25, .5, .75, .9, 1),
     
     if(guide){
       
-      pcol <- theme()$panel.grid.major$colour
-      if(is.null(pcol)) pcol <- "white"
-      res <- append(res, geom_abline(slope = 1, intercept = 0, color = pcol))
+      if(is.null(guide_col)) guide_col <- theme()$panel.grid.major$colour
+      if(is.null(guide_col)) guide_col <- "white"
+      res <- append(res, geom_abline(slope = 1, intercept = 0, color = guide_col))
       
     }
     
