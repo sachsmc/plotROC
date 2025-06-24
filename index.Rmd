@@ -58,7 +58,7 @@ In the medical literature, ROC curves are commonly plotted without the cutoff va
 
 ## Shiny application
 
-I created a [shiny application](https://shiny.rstudio.com) in order to make the features more accessible to non-R users. A limited subset of the functions of the plotROC package can be performed on an example dataset or on data that users upload to the website. Resulting plots can be saved to the users' machine as a pdf or as a stand-alone html file.  It can be used in any modern web browser with no other dependencies at the website here: https://sachsmc.shinyapps.io/plotROC. 
+I created a [shiny application](https://shiny.posit.co/) in order to make the features more accessible to non-R users. A limited subset of the functions of the plotROC package can be performed on an example dataset or on data that users upload to the website. Resulting plots can be saved to the users' machine as a pdf or as a stand-alone html file.  It can be used in any modern web browser with no other dependencies at the website here: https://sachsmc.shinyapps.io/plotROC. 
 
 ## Installation and loading
 
@@ -254,6 +254,7 @@ bygend2 <- ggplot(test.cov2, aes(d = D, m = M, color = gender)) +
 calc_auc(bygend2)
 
 ```
+
 
 Also works for multiple panels, and layers. 
 

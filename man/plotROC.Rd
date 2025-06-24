@@ -2,8 +2,8 @@
 % Please edit documentation in R/plotROC-package.R
 \docType{package}
 \name{plotROC}
-\alias{plotROC}
 \alias{plotROC-package}
+\alias{plotROC}
 \title{Tools for plotting ROC Curves}
 \description{
 Generate Useful ROC Curve Charts for Print and Interactive Use. This defines

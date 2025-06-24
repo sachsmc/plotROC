@@ -32,7 +32,7 @@ test_that("Calculate ROC returns a valid ROC curve", {
 
 test_that("ggroc returns a ggplot object", {
   
-  expect_true(ggplot2::is.ggplot(ggroc_p))
+  expect_true(ggplot2::is_ggplot(ggroc_p))
   expect_true("GeomRoc" %in% layers)
   expect_true("GeomRocci" %in% layers)
   

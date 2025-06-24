@@ -241,7 +241,7 @@ calc_auc <- function(ggroc) {
                                by = "PANEL", suffixes = c("", ".data"))
     
     # get group (aesthetic) names
-    if (which(names(l1[[i]]) == "x") == 1) {
+    if (length(unique(l1[[i]]$group)) == 1) {
       auc_output_panels_groups <- auc_output_panels
       
       # format final output
@@ -251,18 +251,13 @@ calc_auc <- function(ggroc) {
       auc_list_output[[i]] <- formatted_output
       next
     } else {
-      aesthetics_used <- names(l1[[i]])[1:(which(names(l1[[i]]) == "x") - 1)]
-      aesthetic_names <- rep(NA, length(aesthetics_used))
-      for (j in 1:length(aesthetics_used)) {
-        current_name <- aesthetics_used[j]
-        ## if the mapping isn't in the layer, it is in the base plot element
-        if(is.null(ggroc$layers[[i]]$mapping)) {
-          aesthetic_names[j] <-
-            as.character(rlang::quo_get_expr(l2$plot$mapping[current_name][[1]]))
-        } else {
-          aesthetic_names[j] <-
-            as.character(rlang::quo_get_expr(ggroc$layers[[i]]$mapping[current_name][[1]]))
-        }
+      
+      mapping <- ggroc$layers[[i]]$mapping %||% l2$plot$mapping
+      aesthetics_used <- intersect(names(mapping), names(l1[[i]]))
+      aesthetic_names <- unlist(lapply(aesthetics_used, function(x) {
+        deparse1(rlang::quo_get_expr(mapping[x][[1]]))
+        }))
+      
       }
       
       group_df <- if(length(ggroc$layers[[i]]$data) == 0) {
@@ -286,7 +281,7 @@ calc_auc <- function(ggroc) {
                                                      names(group_mapping)[-1], "AUC")]
       auc_list_output[[i]] <- formatted_output
     }
-  }
+  
   
   do.call(rbind, auc_list_output)
   

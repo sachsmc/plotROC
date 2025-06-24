@@ -8,6 +8,7 @@ style_roc(
   major.breaks = c(0, 0.1, 0.25, 0.5, 0.75, 0.9, 1),
   minor.breaks = c(seq(0, 0.1, by = 0.01), seq(0.9, 1, by = 0.01)),
   guide = TRUE,
+  guide_col = NULL,
   xlab = "False positive fraction",
   ylab = "True positive fraction",
   theme = theme_bw
@@ -19,6 +20,8 @@ style_roc(
 \item{minor.breaks}{vector of breakpoints for the minor gridlines and axes}
 
 \item{guide}{logical, if TRUE draws diagonal guideline}
+
+\item{guide_col}{character, if guide is TRUE sets colour of diagonal guideline. Takes precedence over colour set by a theme.}
 
 \item{xlab}{X-axis label}
 

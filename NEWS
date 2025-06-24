@@ -1,3 +1,8 @@
+plotROC 2.3.3
+-------------
+- bugfix for new ggplot2 release, thanks @teunbrand
+
+
 plotROC 2.3.2
 -------------
 Bug fixes and improvements: 
