@@ -1,0 +1,9 @@
+pandoc: '3.4'
+pkgdown: 2.1.0
+pkgdown_sha: ~
+articles:
+  examples: examples.html
+last_built: 2025-06-30T07:40Z
+urls:
+  reference: https://sachsmc.github.io/plotROC/reference
+  article: https://sachsmc.github.io/plotROC/articles
