@@ -1,6 +1,7 @@
 plotROC 2.3.3
 -------------
 - bugfix for new ggplot2 release, thanks @teunbrand
+- Fix cross references
 
 
 plotROC 2.3.2

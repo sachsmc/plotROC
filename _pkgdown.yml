@@ -1,0 +1,43 @@
+template:
+  bootstrap: 5
+  bootswatch: lux
+  bslib:
+    pkgdown-nav-height: 100px
+
+url: https://sachsmc.github.io/plotROC
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+    right: [search, github]
+
+reference:
+- title: "Layers"
+  desc: ggplot2 Layers for ROC curves
+  contents:
+    - plotROC
+    - GeomRoc
+    - geom_rocci
+    - StatRoc
+    - StatRocci
+    - style_roc
+    - direct_label
+    - shiny_plotROC
+    - export_interactive_roc
+- title: "Calculations"
+  desc: Internal and other calculations
+  contents: 
+    - calc_auc
+    - melt_roc
+    - verify_d
+- title: "Deprecated functions"
+  desc: No need to use these anymore
+  contents:
+    - ggroc
+    - multi_ggroc
+    - calculate_multi_roc
+    - calculate_roc
+    - getD3
+    - plot_journal_roc
+    - plot_interactive_roc
+    - roc_key
