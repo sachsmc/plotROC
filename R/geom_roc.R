@@ -383,6 +383,7 @@ GeomRoc <- ggproto("GeomRoc", Geom,
 #'
 #' @param stat Use to override the default connection between
 #'   \code{geom_roc} and \code{stat_roc}.
+#' @param inherit.aes If FALSE, overrides the default aesthetics, rather than combining with them. 
 #' @seealso See \code{\link{geom_rocci}} for
 #'   displaying rectangular confidence regions for the empirical ROC curve, \code{\link{style_roc}} for 
 #'   adding guidelines and labels, and \code{\link{direct_label}} for adding direct labels to the 
