@@ -104,6 +104,7 @@ StatRoc <- ggproto("StatRoc", Stat,
 #' @param na.rm Remove missing observations
 #' @param max.num.points maximum number of points to plot
 #' @param increasing TRUE (default) if M is positively associated with Pr(D = 1), if FALSE, assumes M is negatively associated with Pr(D = 1)
+#' @param inherit.aes If FALSE, overrides the default aesthetics, rather than combining with them. 
 #' @section Aesthetics:
 #' \code{stat_roc} understands the following aesthetics (required aesthetics
 #' are in bold):

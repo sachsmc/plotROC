@@ -124,6 +124,7 @@ StatRocci <- ggproto("StatRocci", Stat,
 #'   NULL, will automatically choose 3 evenly spaced points to display the regions
 #' @param sig.level Significance level for the confidence regions
 #' @param na.rm Remove missing observations
+#' @param inherit.aes If FALSE, overrides the default aesthetics, rather than combining with them. 
 
 
 stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
@@ -167,6 +168,7 @@ stat_rocci <- function(mapping = NULL, data = NULL, geom = "rocci",
 #'   \code{geom_rocci} and \code{stat_rocci}.
 #' @param ci.at Vector of values in the range of the biomarker where confidence regions will be displayed
 #' @param sig.level Significance level for the confidence regions
+#' @param inherit.aes If FALSE, overrides the default aesthetics, rather than combining with them. 
 #' @export
 
 geom_rocci <- function(mapping = NULL, data = NULL, stat = "rocci", ci.at = NULL, sig.level = .05, na.rm = TRUE, 
